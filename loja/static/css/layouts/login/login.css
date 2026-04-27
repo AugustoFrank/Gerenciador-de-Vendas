@@ -1,0 +1,131 @@
+/* =========================================
+   ESTILOS DA TELA DE LOGIN
+   ========================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+/* O fundo azul escuro da tela toda */
+.fundo-azul {
+    background-color: #131A33; /* O mesmo azul escuro do seu painel */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+}
+
+/* O cartão branco central */
+.cartao-login {
+    background-color: #FFFFFF;
+    width: 400px;
+    padding: 40px 35px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* --- ÁREA DA LOGO --- */
+.cabecalho-logo {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.bolinha-laranja {
+    width: 24px;
+    height: 24px;
+    background-color: #FF7A00;
+    border-radius: 50%;
+    margin: 0 auto 10px auto;
+}
+
+.titulo-marca {
+    color: #1E294A;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.texto-azul-claro {
+    color: #61ACD3;
+}
+
+.subtitulo {
+    color: #86868B;
+    font-size: 12px;
+}
+
+/* --- FORMULÁRIO E CAMPOS --- */
+.formulario {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Espaço entre os campos */
+}
+
+.grupo-entrada {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.etiqueta {
+    font-size: 11px;
+    font-weight: 700;
+    color: #333333;
+}
+
+.campo-texto {
+    width: 100%;
+    height: 45px;
+    padding: 0 15px;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #333333;
+    outline: none;
+    transition: 0.3s;
+}
+
+.campo-texto:focus {
+    border-color: #FF7A00;
+    box-shadow: 0 0 5px rgba(255, 122, 0, 0.2);
+}
+
+.campo-texto::placeholder {
+    color: #A0ABC0;
+}
+
+/* --- BOTÃO --- */
+.botao-entrar {
+    width: 100%;
+    height: 45px;
+    background-color: #FF7A00;
+    color: white;
+    font-weight: 700;
+    font-size: 14px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.3s;
+}
+
+.botao-entrar:hover {
+    background-color: #E66A00; /* Laranja um pouco mais escuro ao passar o mouse */
+}
+
+/* --- CRÉDITOS NO RODAPÉ --- */
+.rodape-creditos {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 10px;
+    color: #A0ABC0;
+    line-height: 1.6;
+}

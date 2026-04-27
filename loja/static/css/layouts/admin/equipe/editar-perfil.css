@@ -1,0 +1,173 @@
+/* =========================================================
+   ESTILIZAÇÃO DO MODAL DE EDITAR PERFIL (BASEADO NO DESENHO)
+   ========================================================= */
+
+#modal-editar-perfil .card-edit-size {
+    width: 650px;
+    height: auto;
+}
+
+/* Cabeçalho */
+#modal-editar-perfil .modal-header-edit {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #E5E5EA;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+#modal-editar-perfil .modal-header-edit h2 {
+    text-transform: uppercase;
+    font-size: 20px;
+    margin: 0;
+    color: #131A33;
+}
+
+#modal-editar-perfil .btn-close-x {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #86868B;
+    transition: 0.3s;
+}
+
+#modal-editar-perfil .btn-close-x:hover {
+    color: #F43F5E;
+}
+
+/* Seção da Foto (Círculo) */
+#modal-editar-perfil .avatar-edit-section {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+#modal-editar-perfil .avatar-wrapper {
+    margin: 0 auto;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 2px solid #1E294A;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+}
+
+#modal-editar-perfil .avatar-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#modal-editar-perfil .overlay-icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    opacity: 0;
+    transition: 0.3s;
+}
+
+#modal-editar-perfil .avatar-wrapper:hover .overlay-icon {
+    opacity: 1;
+}
+
+#modal-editar-perfil .edit-photo-label {
+    display: block;
+    margin-top: 10px;
+    font-weight: 600;
+    color: #86868B;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 13px;
+}
+
+#modal-editar-perfil .edit-profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    width: 100%;
+}
+
+#modal-editar-perfil .coluna-esq, 
+#modal-editar-perfil .coluna-dir {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#modal-editar-perfil .full-width-input {
+    width: 100% !important;
+    box-sizing: border-box;
+}
+
+#modal-editar-perfil .label-grid {
+    text-transform: uppercase;
+}
+
+#modal-editar-perfil .simple-color-picker {
+    display: flex;
+    gap: 12px;
+    margin-top: 5px;
+}
+
+#modal-editar-perfil .modal-footer-edit {
+    display: flex;
+    justify-content: center;
+    margin-top: 35px;
+    border-top: none; /* Remove a linha de cima do footer antigo */
+}
+
+#modal-editar-perfil .btn-save-edit {
+    padding: 12px 50px;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background-color: var(--orange-color);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* 1. Esconde o radio button padrão do navegador */
+#modal-editar-perfil .color-radio input {
+    display: none;
+}
+
+/* 2. Cria a nossa bolinha de cor com tamanho fixo */
+#modal-editar-perfil .color-ball {
+    display: inline-block;
+    width: 28px;  /* Largura da bolinha */
+    height: 28px; /* Altura da bolinha */
+    border-radius: 50%; /* Deixa redonda */
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+/* 3. Efeito de hover (cresce um pouquinho ao passar o mouse) */
+#modal-editar-perfil .color-ball:hover {
+    transform: scale(1.1);
+}
+
+/* 4. Efeito de SELECIONADO (cria uma bordinha indicando qual está marcada) */
+#modal-editar-perfil .color-radio input:checked + .color-ball {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 2px #FFFFFF inset, 0 0 0 2px #1E294A;
+}
+
+/* 5. As Cores (Garantindo que elas vão aplicar) */
+#modal-editar-perfil .pc1 { background-color: #1E294A; }
+#modal-editar-perfil .pc2 { background-color: #7C3AED; }
+#modal-editar-perfil .pc3 { background-color: #10B981; }
+#modal-editar-perfil .pc4 { background-color: #FF7A00; }
+#modal-editar-perfil .pc5 { background-color: #F43F5E; }

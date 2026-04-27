@@ -1,0 +1,126 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visão Geral | Sistema Willy Bolsas</title>
+    <link rel="stylesheet" href="{% static 'css/layouts/geral/geral.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="logo-container">
+             <img src="{% static 'img/logo.png' %}" alt="Willy Bolsas" class="logo">
+        </div>
+        <nav class="menu-lateral">
+            <a href="{% url 'visao_geral' %}" class="menu-item active">
+                <i class="fas fa-chart-line"></i> Visão Geral
+            </a>
+            <a href="#" class="menu-item">
+                <i class="fas fa-shopping-cart"></i> Nova Venda
+            </a>
+            <a href="#" class="menu-item">
+                <i class="fas fa-boxes"></i> Meu Estoque
+            </a>
+            <a href="#" class="menu-item">
+                <i class="fas fa-percentage"></i> Minhas Comissões
+            </a>
+        </nav>
+    </aside>
+
+    <main class="container">
+        
+        <header>
+            <h1>Painel de Visão Geral</h1>
+            <p>Monitoramento de vendas e performance em tempo real</p>
+        </header>
+
+        <div class="dashboard-grid">
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-shopping-basket"></i></div>
+                <div class="card-content">
+                    <h3>Vendas Hoje</h3>
+                    <p class="numero">{{ qtd_vendas }}</p>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-money-bill-wave"></i></div>
+                <div class="card-content">
+                    <h3>Faturamento Hoje</h3>
+                    <p class="numero">R$ {{ total_faturado|floatformat:2 }}</p>
+                </div>
+            </div>
+        
+            <div class="card comissao">
+                <div class="card-icon"><i class="fas fa-hand-holding-usd"></i></div>
+                <div class="card-content">
+                    <h3>Comissões a Pagar</h3>
+                    <p class="numero">R$ {{ total_comissoes|floatformat:2 }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="painel-inferior">
+            
+            <section class="estoque-alerta">
+                <div class="titulo-sessao">
+                    <i class="fas fa-exclamation-triangle"></i> Estoque Central Baixo
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Produto</th>
+                                <th>Qtd. Restante</th>
+                                <th>Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for produto in alertas_estoque %}
+                            <tr>
+                                <td><strong>{{ produto.nome }}</strong></td>
+                                <td class="qtd-critica">{{ produto.estoque }}</td>
+                                <td>
+                                    <a href="/admin/loja/produto/{{ produto.id }}/change/" class="btn-editar">
+                                        Repor
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="empty-msg">Tudo certo no estoque central!</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="ranking-vendedores">
+                <div class="titulo-sessao">
+                    <i class="fas fa-trophy"></i> Top Vendedores (Hoje)
+                </div>
+                <div class="ranking-lista">
+                    {% for v in ranking %}
+                    <div class="ranking-item">
+                        <div class="vendedor-info">
+                            <span class="posicao">{{ forloop.counter }}º</span>
+                            <strong>{{ v.vendedor__username }}</strong>
+                        </div>
+                        <span class="valor-venda">R$ {{ v.total|floatformat:2 }}</span>
+                    </div>
+                    {% empty %}
+                    <p class="empty-msg">Sem vendas registradas.</p>
+                    {% endfor %}
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <script src="{% static 'js/scripts/admin/geral.js' %}" defer></script>
+</body>
+</html>

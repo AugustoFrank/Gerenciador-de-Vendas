@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Willy Bolsas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/layouts/login/login.css">
+</head>
+<body class="fundo-azul">
+
+    <div class="container-centralizado">
+        
+        <div class="cartao-login">
+            <div class="cabecalho-logo">
+                <div class="bolinha-laranja"></div>
+                <h1 class="titulo-marca">Willy<span class="texto-azul-claro">Bolsas</span></h1>
+                <p class="subtitulo">Acesso ao Painel Administrativo</p>
+            </div>
+
+            <form class="formulario" id="form-login">
+                
+                <div class="grupo-entrada">
+                    <label class="etiqueta">ID DO USUÁRIO</label>
+                    <input type="text" class="campo-texto" placeholder="ex: anselmo.willy" required>
+                </div>
+
+                <div class="grupo-entrada">
+                    <label class="etiqueta">SEU NOME</label>
+                    <input type="text" class="campo-texto" placeholder="Digite seu nome completo" required>
+                </div>
+
+                <div class="grupo-entrada">
+                    <label class="etiqueta">SENHA</label>
+                    <input type="password" class="campo-texto" placeholder="........" required>
+                </div>
+
+                <button class="botao-entrar" onclick="entrarNoSistema(event)"><a href="./admin.html"></a>ENTRAR NO SISTEMA</button>
+            </form>
+
+            <div class="rodape-creditos">
+                <p>AugustoFrank Tech Solutions © 2026</p>
+                <p>Hospedagem Cloud Locaweb</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="/static/js/scripts/login/login.js" defer></script>
+</body>
+</html>

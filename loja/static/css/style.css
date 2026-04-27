@@ -1,0 +1,30 @@
+@import url(/loja/static/css/layouts/admin/equipe/main.css);
+@import url(/loja/static/css/layouts/admin/equipe/grid-list.css);
+@import url(/loja/static/css/layouts/admin/equipe/modal.css);
+@import url(/loja/static/css/layouts/admin/equipe/editar-perfil.css);
+@import url(/loja/static/css/layouts/admin/geral/geral.css);
+@import url(/loja/static/css/layouts/usuario/usuario.css);
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Jersey+25&family=Montserrat:ital,wght@0,100..900;1,100..900&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Poppins:wght@100;400&family=Quicksand:wght@300..700&family=Reenie+Beanie&family=Roboto:ital,wght@0,100..9₀;1,1₀₀..9₀₀&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Jersey+25&family=Montserrat:ital,wght@0,100..900;1,100..900&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Poppins:wght@100;400&family=Quicksand:wght@300..700&family=Reenie+Beanie&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root{
+    --blue-color: #131A33;
+    --orange-color: #FF7A00;
+    --white-color: #ffffff;
+    --gray-menu: #A0ABC0;
+    --gray-color: #717275;
+    --light-blue-color: #E0F2FE;
+    --light-gray-color: #E5E7EB;
+    --blue-bg-color: #1E294A;
+    --dark-blue-color: #61ACD3
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+}

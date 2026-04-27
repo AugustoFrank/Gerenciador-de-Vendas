@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo | Willy Bolsas</title>
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> -->
+    <link rel="stylesheet" href="/loja/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        
+        <div class="aba-esquerda">
+            <img src="/loja/static/img/logo willy.png" alt="" id="logo">
+            <nav class="menu">
+                <a href="/admin/visao-geral">Visão Geral</a>
+                <a href="/admin/estoque">Estoque</a>
+                <a href="/admin/equipe">Equipe</a>
+                <a href="/admin/comissoes">Comissões</a>
+            </nav>
+        </div>
+
+        <main>
+            <header>
+                <div class="header-info">
+                    <h1>Controle de Equipe</h1>
+                    <span>Gerencie acessos, comissões e dados dos colaboradores.</span>
+                </div>
+                <div class="header-actions">
+                    <div class="view-toggle">
+                        <button id="btn-lista" class="active" onclick="changeView('list')">
+                            <i class="fa-solid fa-list"></i>
+                        </button>
+                        <button id="btn-grid" onclick="changeView('grid')">
+                            <i class="fa-solid fa-border-all"></i>
+                        </button>
+                    </div>
+                    <button id="btn-adiciona-modal" class="btn-adc"><i class="fa-solid fa-user-plus"></i>Adicionar Colaborador</button>
+                </div>
+            </header>
+
+            <div id="view-list" class="view-list active">
+                <table>
+                    <tr>
+                        <th>ID / Acesso</th>
+                        <th>Colaborador</th>
+                        <th>Nível</th>
+                        <th>Comissão</th>
+                        <th>Ações</th>
+                    </tr>
+                    <tbody>
+                        <tr>
+                            <td><span>12345</span></td>
+                            <td><span>João Silva</span></td>
+                            <td>Administrador</td>
+                            <td>10%</td>
+                            <td>
+                                <button class="btn-card-action" style="border: none; padding: 0;" onclick="toggleModal('modal-editar-perfil')">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="view-grid" class="view-section active">
+                <div class="grid-container">
+                    
+                    <div class="user-card">
+                        <div class="card-banner banner-color-1"></div>
+                        <img src="/static/images/avatar.png" class="card-avatar" alt="Avatar">
+                        <div class="card-content">
+                            <h3>Anselmo Silva</h3>
+                            <p class="userid">@anselmo.adm</p>
+                            <span class="badge badge-blue">Administrador</span>
+                            <div class="card-metrics">
+                                <div class="metric"><span>Comissão</span><strong>-</strong></div>
+                                <div class="metric"><span>Vendas (Mês)</span><strong>R$ 0,00</strong></div>
+                            </div>
+                        </div>
+                        <button class="btn-card-action" onclick="toggleModal('modal-editar-perfil')">Editar Perfil</button>
+                    </div>
+                
+                    <div class="user-card">
+                        <div class="card-banner banner-color-2"></div>
+                        <img src="/static/images/avatar.png" class="card-avatar" alt="Avatar">
+                        <div class="card-content">
+                            <h3>João Pedro</h3>
+                            <p class="userid">@joao.vendas</p>
+                            <span class="badge badge-orange">Vendedor</span>
+                            <div class="card-metrics">
+                                <div class="metric"><span>Comissão</span><strong>5.5%</strong></div>
+                                <div class="metric"><span>Vendas (Mês)</span><strong>R$ 4.250,00</strong></div>
+                            </div>
+                        </div>
+                        <button class="btn-card-action" onclick="toggleModal('modal-editar-perfil')">Editar Perfil</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-overlay hidden" id="modal-colaborador">
+                <div class="modal-card">
+                    <form class="modal-body">
+                        <span>Adicionar Colaborador</span>
+                        <div class="input-grid">
+                            <div id="primeiro-bloco">
+                                <div class="input-field">
+                                    <label class="label-grid">ID / Username</label>
+                                    <input class="inpt-grid" type="text" placeholder="Ex: 12345">
+                                </div>
+                                <div class="input-field">
+                                    <label class="label-grid">Nome Completo</label>
+                                    <input class="inpt-grid" type="text" placeholder="Nome do funcionário">
+                                </div>
+                            </div>
+                            <div id="segundo-bloco">
+                                <div class="input-field">
+                                    <label class="label-grid">Data de Nascimento</label>
+                                    <input class="inpt-grid" type="date">
+                                </div>
+                                <div class="input-field">
+                                    <label class="label-grid">Endereço</label>
+                                    <input class="inpt-grid" type="text" placeholder="Endereço completo">
+                                </div>
+                            </div>
+                            <div id="terceiro-bloco">
+                                <div class="input-field">
+                                    <label class="label-grid">Nível de Acesso</label>
+                                    <select class="inpt-grid">
+                                        <option value="vendedor">Vendedor</option>
+                                        <option value="admin">Administrador</option>
+                                    </select>
+                                </div>
+                                <div class="input-field">
+                                    <label class="label-grid">Comissão (%)</label>
+                                    <input class="inpt-grid" type="number" step="0.1" placeholder="Ex: 5.0">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="input-field full-width">
+                            <label>Cor do Perfil (Banner)</label>
+                            <div class="custom-color-picker">
+                                <div class="color-trigger-btn" id="pickerTrigger" onclick="toggleColorPopover()">
+                                    <div class="color-preview-inside" id="currentView"></div>
+                                    <i class="fa-solid fa-palette"></i>
+                                </div>
+                                <div class="color-popover" id="colorPopover">
+                                    <div class="popover-arrow"></div>
+                                    <h3>Selecione uma cor</h3>
+                                    <div class="popover-grid">
+                                        <label class="p-opt"><input type="radio" name="color" value="1" checked onclick="selectColorValue('#1E294A')"><span class="p-dot pc1"></span></label>
+                                        <label class="p-opt"><input type="radio" name="color" value="2" onclick="selectColorValue('#7C3AED')"><span class="p-dot pc2"></span></label>
+                                        <label class="p-opt"><input type="radio" name="color" value="3" onclick="selectColorValue('#10B981')"><span class="p-dot pc3"></span></label>
+                                        <label class="p-opt"><input type="radio" name="color" value="4" onclick="selectColorValue('#FF7A00')"><span class="p-dot pc4"></span></label>
+                                        <label class="p-opt"><input type="radio" name="color" value="5" onclick="selectColorValue('#F43F5E')"><span class="p-dot pc5"></span></label>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn-cancel">Cancelar</button>
+                                    <button type="submit" class="btn-save">Salvar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="modal-overlay hidden" id="modal-editar-perfil">
+                <div class="modal-card card-edit-size"> 
+                    
+                    <div class="modal-header-edit">
+                        <h2>Editar Perfil</h2>
+                        <button class="btn-close-x" onclick="toggleModal('modal-editar-perfil')">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                
+                    <form class="modal-body">
+                        <div class="avatar-edit-section">
+                            <div class="avatar-wrapper" onclick="document.getElementById('editFileInput').click()">
+                                <img src="/static/images/avatar.png" id="editAvatarPreview" alt="Avatar">
+                                <div class="overlay-icon"><i class="fa-solid fa-camera"></i></div>
+                            </div>
+                            <input type="file" id="editFileInput" hidden accept="image/*" onchange="previewEditImage(event)">
+                            <span class="edit-photo-label">Alterar</span>
+                        </div>
+                    
+                        <div class="edit-profile-grid">
+                            <div class="coluna-esq">
+                                <div class="input-field">
+                                    <label class="label-grid">Nome</label>
+                                    <input type="text" class="inpt-grid full-width-input" id="edit-nome" placeholder="Ex: João da Silva">
+                                </div>
+                                <div class="input-field">
+                                    <label class="label-grid">Endereço</label>
+                                    <input type="text" class="inpt-grid full-width-input" id="edit-endereco" placeholder="Ex: Rua...">
+                                </div>
+                                <div class="input-field">
+                                    <label class="label-grid">Comissão</label>
+                                    <input type="text" class="inpt-grid full-width-input" id="edit-comissao" placeholder="Ex: 5.0%">
+                                </div>
+                            </div>
+                        
+                            <div class="coluna-dir">
+                                <div class="input-field">
+                                    <label class="label-grid">Data de Nascimento</label>
+                                    <input type="date" class="inpt-grid full-width-input" id="edit-nascimento">
+                                </div>
+                                <div class="input-field">
+                                    <label class="label-grid">Nível de Acesso</label>
+                                    <select class="inpt-grid full-width-input" id="edit-nivel">
+                                        <option value="admin" selected>Administrador</option>
+                                        <option value="vendedor">Vendedor</option>
+                                    </select>
+                                </div>
+                                <div class="input-field color-field-wrapper">
+                                    <label class="label-grid">Cor do Baner</label> 
+                                    <div class="simple-color-picker">
+                                        <label class="color-radio"><input type="radio" name="edit-color" value="1" checked onclick="selectColorValue('#1E294A')"><span class="color-ball pc1"></span></label>
+                                        <label class="color-radio"><input type="radio" name="edit-color" value="2" onclick="selectColorValue('#F59E0B')"><span class="color-ball pc2"></span></label>
+                                        <label class="color-radio"><input type="radio" name="edit-color" value="3" onclick="selectColorValue('#10B981')"><span class="color-ball pc3"></span></label>
+                                        <label class="color-radio"><input type="radio" name="edit-color" value="4" onclick="selectColorValue('#3B82F6')"><span class="color-ball pc4"></span></label>
+                                        <label class="color-radio"><input type="radio" name="edit-color" value="5" onclick="selectColorValue('#8B5CF6')"><span class="color-ball pc5"></span></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="modal-footer-edit">
+                            <button class="btn-save btn-save-edit">Salvar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="/loja/static/js/scripts/admin/equipe/modal.js" defer></script>
+    <script src="/loja/static/js/scripts/admin/equipe/editarPerfil.js" defer></script>
+    <script src="/loja/static/js/scripts/admin/equipe/adminPerfil.js" defer></script>
+    <script src="/loja/static/js/scripts/admin/equipe/toggle.js" defer></script>
+    <script src="/loja/static/js/scripts/admin/equipe/cor.js" defer></script>
+</body>
+</html>
