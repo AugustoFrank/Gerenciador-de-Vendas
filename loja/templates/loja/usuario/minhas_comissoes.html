@@ -1,0 +1,100 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas Comissões | Willy Bolsas</title>
+    <link rel="stylesheet" href="{% static 'css/layouts/usuario/comissoes.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body id="page-minhas-comissoes">
+
+    <aside class="sidebar">
+        <div class="logo-container">
+             <img src="{% static 'img/logo willy.png' %}" alt="Willy Bolsas" class="logo">
+        </div>
+        <nav class="menu-lateral">
+            <a href="{% url 'visao_geral' %}" class="menu-item"><i class="fas fa-chart-line"></i> Visão Geral</a>
+            <a href="{% url 'nova_venda' %}" class="menu-item"><i class="fas fa-shopping-cart"></i> Nova Venda</a>
+            <a href="{% url 'estoque_vendedor' %}" class="menu-item"><i class="fas fa-boxes"></i> Meu Estoque</a>
+            <a href="{% url 'comissoes_vendedor' %}" class="menu-item active"><i class="fas fa-percentage"></i> Minhas Comissões</a>
+        </nav>
+    </aside>
+
+    <main>
+        <header>
+            <div class="header-info">
+                <h1>Minhas Comissões</h1>
+                <p>Acompanhe seus ganhos detalhados por venda realizada.</p>
+            </div>
+            <div class="header-vendedor">
+                <button id="dark-mode-toggle" class="btn-dark-mode">
+                    <i class="fas fa-sun"></i>
+                </button>
+                <i class="fas fa-wallet"></i> Saldo: <strong id="saldo-total">R$ {{ total_comissoes|floatformat:2 }}</strong>
+            </div>
+        </header>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="icon-box pc3"><i class="fas fa-hand-holding-usd"></i></div>
+                <div class="metric-info">
+                    <span>TOTAL ACUMULADO</span>
+                    <h2>R$ {{ total_comissoes|floatformat:2 }}</h2>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="icon-box pc2"><i class="fas fa-percentage"></i></div>
+                <div class="metric-info">
+                    <span>SUA TAXA ATUAL</span>
+                    <h2>{{ user.perfil.comissao|floatformat:1 }}%</h2>
+                </div>
+            </div>
+        </div>
+
+        <section class="comissoes-container">
+            <div class="comissoes-header">
+                <h3>Histórico de Ganhos</h3>
+                <div class="filtros-data">
+                    <input type="date" id="filtro-inicio">
+                    <span>até</span>
+                    <input type="date" id="filtro-fim">
+                </div>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Produto</th>
+                            <th>Valor Venda</th>
+                            <th>% Comis.</th>
+                            <th>Seu Ganho</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-comissoes">
+                        {% for venda in vendas %}
+                        <tr class="linha-venda" data-data="{{ venda.data_venda|date:'Y-m-d' }}">
+                            <td>{{ venda.data_venda|date:"d/m/Y H:i" }}</td>
+                            <td><strong>{{ venda.produto.nome }}</strong></td>
+                            <td>R$ {{ venda.preco_total|floatformat:2 }}</td>
+                            <td class="taxa-cell">{{ venda.comissao_aplicada }}%</td>
+                            <td class="valor-ganho">R$ {{ venda.valor_comissao|floatformat:2 }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="empty-state">Nenhuma comissão registrada até o momento.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script src="{% static 'js/scripts/usuario/comissoes.js' %}" defer></script>
+</body>
+</html>

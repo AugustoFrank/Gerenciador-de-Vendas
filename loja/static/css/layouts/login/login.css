@@ -1,5 +1,5 @@
 /* =========================================
-   ESTILOS DA TELA DE LOGIN
+   DESIGN EXCLUSIVO WILLY BOLSAS 2026
    ========================================= */
 
 * {
@@ -9,9 +9,9 @@
     font-family: 'Inter', sans-serif;
 }
 
-/* O fundo azul escuro da tela toda */
+/* Fundo com degradê radial vindo do centro para as bordas escuras */
 .fundo-azul {
-    background-color: #131A33; /* O mesmo azul escuro do seu painel */
+    background: radial-gradient(circle, #1e2b5e 0%, #0f172a 100%);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -19,37 +19,41 @@
     width: 100%;
 }
 
-/* O cartão branco central */
+.container-centralizado {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+/* Cartão Branco com sombra suave e bordas arredondadas modernas */
 .cartao-login {
     background-color: #FFFFFF;
-    width: 400px;
-    padding: 40px 35px;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 380px;
+    padding: 45px 40px;
+    border-radius: 24px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-/* --- ÁREA DA LOGO --- */
-.cabecalho-logo {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
+/* Elementos da Marca */
 .bolinha-laranja {
-    width: 24px;
-    height: 24px;
+    width: 26px;
+    height: 26px;
     background-color: #FF7A00;
     border-radius: 50%;
-    margin: 0 auto 10px auto;
+    margin-bottom: 12px;
+    box-shadow: 0 0 15px rgba(255, 122, 0, 0.4);
 }
 
 .titulo-marca {
-    color: #1E294A;
-    font-size: 22px;
-    font-weight: 700;
-    margin-bottom: 5px;
+    color: #1a1a3a;
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
 }
 
 .texto-azul-claro {
@@ -57,75 +61,129 @@
 }
 
 .subtitulo {
-    color: #86868B;
+    color: #94a3b8;
     font-size: 12px;
+    margin-bottom: 35px;
+    font-weight: 500;
 }
 
-/* --- FORMULÁRIO E CAMPOS --- */
+/* Inputs e Labels */
 .formulario {
     width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 20px; /* Espaço entre os campos */
 }
 
 .grupo-entrada {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    margin-bottom: 18px;
 }
 
 .etiqueta {
-    font-size: 11px;
+    display: block;
+    font-size: 10px;
     font-weight: 700;
-    color: #333333;
+    color: #475569;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .campo-texto {
     width: 100%;
-    height: 45px;
-    padding: 0 15px;
-    border: 1px solid #E5E7EB;
-    border-radius: 8px;
+    height: 48px;
+    padding: 0 16px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
     font-size: 14px;
-    color: #333333;
-    outline: none;
-    transition: 0.3s;
+    background-color: #f8fafc;
+    color: #1e293b;
+    transition: all 0.2s ease;
 }
 
 .campo-texto:focus {
-    border-color: #FF7A00;
-    box-shadow: 0 0 5px rgba(255, 122, 0, 0.2);
+    border-color: #61ACD3;
+    background-color: #fff;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(97, 172, 211, 0.1);
 }
 
-.campo-texto::placeholder {
-    color: #A0ABC0;
+.input-readonly {
+    background-color: #f1f5f9;
+    color: #64748b;
+    cursor: not-allowed;
+    border-style: dashed; /* Diferencia visualmente o campo automático */
 }
 
-/* --- BOTÃO --- */
+/* O BOTÃO BRILHANTE (Vibrant Orange Glow) */
 .botao-entrar {
     width: 100%;
-    height: 45px;
-    background-color: #FF7A00;
+    height: 54px;
+    background: linear-gradient(135deg, #FF9500 0%, #FF7A00 100%);
     color: white;
     font-weight: 700;
-    font-size: 14px;
+    font-size: 15px;
     border: none;
-    border-radius: 8px;
+    border-radius: 14px;
     cursor: pointer;
-    margin-top: 10px;
-    transition: 0.3s;
+    text-transform: uppercase;
+    box-shadow: 0 10px 20px rgba(255, 122, 0, 0.35); /* O Brilho da imagem */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-top: 15px;
 }
 
 .botao-entrar:hover {
-    background-color: #E66A00; /* Laranja um pouco mais escuro ao passar o mouse */
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px rgba(255, 122, 0, 0.5); /* Brilho aumenta no foco */
+    filter: brightness(1.05);
 }
 
-/* --- CRÉDITOS NO RODAPÉ --- */
+.botao-entrar:active {
+    transform: translateY(0);
+}
+
 .rodape-creditos {
-    margin-top: 30px;
+    margin-top: 35px;
     text-align: center;
-    font-size: 10px;
-    color: #A0ABC0;
+    font-size: 9px;
+    color: #cbd5e1;
     line-height: 1.6;
+}
+
+@media (max-width: 388px) {
+    .container-centralizado {
+        width: 280px;
+        height: 300px;
+        border: 5px solid red;
+    }
+
+    .cartao-login {
+        padding: 30px 20px;
+        max-width: 100%;
+    }
+
+    .botao-entrar {
+        background: linear-gradient(135deg, #5900ff 0%, #6200ff 100%);
+    
+    }
+
+    .titulo-marca {
+        font-size: 22px;
+    }
+
+    .subtitulo {
+        font-size: 10px;
+    }
+
+    .campo-texto {
+        height: 44px;
+    }
+
+    .botao-entrar {
+        height: 50px;
+        font-size: 14px;
+    }
+
+        .rodape-creditos {
+            font-size: 8px;
+        }
+
+
 }

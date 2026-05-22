@@ -1,0 +1,181 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estoque Central | Willy Bolsas</title>
+    <link rel="stylesheet" href="{% static './css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'estoque-admin/estoque-admin.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body id="page-estoque">
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo-container">
+                <img src="{% static 'img/logo willy.png' %}" alt="Willy Bolsas" class="logo">
+            </div>
+            <nav class="menu-lateral">
+                <a href="{% url 'visao_geral_admin' %}" class="menu-item {% if request.resolver_match.url_name == 'visao_geral_admin' %}active{% endif %}">
+                    <i class="fas fa-chart-pie" style="width: 24px; text-align: center;"></i> Visão Geral
+                </a>                
+                <a href="{% url 'admin_estoque' %}" class="menu-item {% if request.resolver_match.url_name == 'admin_estoque' %}active{% endif %}">
+                    <i class="fas fa-boxes" style="width: 24px; text-align: center;"></i> Estoque Central
+                </a>                
+                <a href="{% url 'admin_equipe' %}" class="menu-item {% if request.resolver_match.url_name == 'admin_equipe' %}active{% endif %}">
+                    <i class="fas fa-users" style="width: 24px; text-align: center;"></i> Equipe
+                </a>
+                <a href="{% url 'relatorio_faturamento' %}" class="menu-item"><i class="fas fa-file-invoice-dollar"  style="width: 24px; text-align: center;"></i> Relatórios</a>
+            </nav>
+        </aside>
+
+        <main>
+            <header>
+                <div class="header-left" style="display: flex; align-items: center; gap: 15px;">
+                    <button id="menu-toggle" class="btn-menu-mobile">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="header-info">
+                        <h1>Estoque Central</h1>
+                        <span>Gestão de saldo e precificação histórica da Willy Bolsas.</span>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button id="btn-adc" class="btn-adc"><i class="fas fa-plus"></i> Adicionar Produto</button>
+                    <button id="dark-mode-toggle" class="btn-dark-mode"><i class="fas fa-sun"></i></button>
+                </div>
+            </header>
+
+            <div class="dashboard-content">
+                <div class="inventario-container fade-in">
+                    <div class="inventario-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px;">
+                        <div class="inventario-info-left" style="display: flex; align-items: center; gap: 10px;">
+                            <div class="icon-warehouse-orange" style="background: #FFF3E0; color: #FF7A00; padding: 10px; border-radius: 8px;">
+                                <i class="fas fa-warehouse fa-lg"></i>
+                            </div>
+                            <div>
+                                <h3 style="margin: 0;">Inventário Geral</h3>
+                                <p style="margin: 0; font-size: 13px; color: #666;">Saldo total e margens atuais</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="search-produto" placeholder="Buscar por SKU ou Nome...">
+                            </div>
+                            <span class="badge-count-tipos">{{ produtos_loja.count }} Itens Cadastrados</span>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>SKU</th>
+                                    <th>PRODUTO</th>
+                                    <th style="cursor: pointer;" onclick="ordenarTabela('estoque')">
+                                        SALDO EM ESTOQUE
+                                        <i class="fas fa-sort" id="icon-estoque"></i>
+                                    </th>
+                                    <th>PREÇO VAREJO</th>
+                                    <th>PREÇO ATACADO</th>
+                                    <th>AÇÕES</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabela-produtos-corpo">
+                                {% for produto in produtos_loja %}
+                                <tr class="produto-item" 
+                                    data-compra="{{ produto.valor_compra|stringformat:'.2f' }}"
+                                    data-imposto="{{ produto.perc_imposto|stringformat:'.2f' }}"
+                                    data-varejo="{{ produto.perc_varejo|stringformat:'.2f' }}"
+                                    data-atacado="{{ produto.perc_atacado|stringformat:'.2f' }}">
+                                    
+                                    <td><strong>#{{ produto.referencia }}</strong></td>
+                                    <td class="produto-nome">{{ produto.nome }}</td>
+                                    <td>
+                                        <span class="badge-status {% if produto.estoque < 10 %}baixo{% else %}normal{% endif %}">
+                                            {{ produto.estoque }} un
+                                        </span>
+                                    </td>
+                                    <td>R$ {{ produto.valor_venda_atacado|floatformat:"2g" }}</td>
+                                    <td>R$ {{ produto.valor_venda_varejo|floatformat:"2g" }}</td>
+                                    <td>
+                                        <button class="btn-edit-table" title="Repor Estoque / Mudar Preço">
+                                            <i class="fas fa-sync-alt"></i> Repor
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr><td colspan="6" class="empty-msg">Nenhum produto cadastrado no sistema.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div id="modalAdicionar" class="modal-estoque hidden">
+            <div class="modal-content card-pdv">
+
+                <div class="modal-header">
+                    <h3><i class="fas fa-cart-plus"></i> Entrada de Mercadoria</h3>
+                    <div class="badge-saldo-modal">
+                        Saldo em Loja: <span id="valor-saldo-atual" style="color: #80b283;">0</span> un
+                    </div>
+                </div>
+            
+                <form action="{% url 'adicionar_estoque_admin' %}" method="POST">
+                    {% csrf_token %}
+
+                    <div class="grid-identificacao">
+                        <div class="input-group">
+                            <label>SKU/REF</label>
+                            <input type="text" name="sku" id="modal-sku" class="input-readonly" readonly>
+                        </div>
+                        <div class="input-group">
+                            <label>PRODUTO</label>
+                            <input type="text" name="nome" id="modal-nome" required>
+                        </div>
+                    </div>
+                
+                    <div class="container-qtd-entrada">
+                        <label>QUANTIDADE A ADICIONAR AO ESTOQUE</label>
+                        <input type="number" name="quantidade" min="0" value="0" required class="input-destaque">
+                        <small>(Deixe 0 se quiser apenas atualizar preços/margens)</small>
+                    </div>
+                
+                    <div class="grid-financeiro">
+                        <div class="input-group">
+                            <label>CUSTO UNITÁRIO (R$)</label>
+                            <input type="text" name="valor_compra" id="modal-compra" required>
+                        </div>
+                        <div class="input-group">
+                            <label>IMPOSTO (%)</label>
+                            <input type="text" name="perc_imposto" id="modal-imposto">
+                        </div>
+                        <div class="input-group">
+                            <label>MARGEM ATACADO (%)</label>
+                            <input type="text" name="perc_varejo" id="modal-varejo">
+                        </div>
+                        <div class="input-group">
+                            <label>MARGEM VAREJO (%)</label>
+                            <input type="text" name="perc_atacado" id="modal-atacado">
+                        </div>
+                    </div>
+                
+                    <div class="modal-footer-estoque">
+                        <button type="button" id="btn-cancelar-modal" class="btn-cancelar">CANCELAR</button>
+                        <button type="submit" class="btn-confirmar">CONFIRMAR ENTRADA</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'js/scripts/admin/estoque/estoque-admin.js' %}" defer></script>
+    <!-- <script src="{% static 'js/script.js' %}" type="module" defer></script> -->
+</body>
+</html>

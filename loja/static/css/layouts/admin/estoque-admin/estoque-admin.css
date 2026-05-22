@@ -1,0 +1,509 @@
+/* ==========================================
+   ESTOQUE CENTRAL ADMIN - LAYOUT ISOLADO
+   ========================================== */
+#page-estoque .search-box {
+    display: flex;
+    align-items: center;
+    background-color: var(--white-color, #ffffff);
+    border: 1px solid var(--light-gray-color, #E5E7EB);
+    border-radius: 10px;
+    padding: 0 15px;
+    height: 43px;
+    width: 300px;
+    gap: 10px;
+}
+
+#page-estoque .search-box input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 14px;
+    color: var(--blue-color, #131A33);
+}
+
+.sidebar, 
+.aba-esquerda {
+    width: 260px;
+    height: 100vh;
+    background-color: #1E294A;
+    display: flex;
+    flex-direction: column;
+}
+
+.menu-lateral, 
+.menu {
+    display: flex;
+    flex-direction: column;
+    margin-top: 40px;
+    margin-left: 16px;
+    margin-right: 16px;
+    width: 228px; /* Largura exata do nova-venda */
+    gap: 16px;
+}
+
+.menu-item, 
+.menu a {
+    font-size: 15px;
+    font-weight: 500;
+    color: #8E94A8;
+    text-decoration: none;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    height: 43px;
+    gap: 12px;
+    transition: 0.2s;
+}
+
+.menu-item:hover, 
+.menu a:hover {
+    color: #FFFFFF;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.menu-item.active, 
+.active-menu {
+    background-color: #27345C !important;
+    color: #FFFFFF !important;
+    border-left: 4px solid #0A84FF;
+}
+
+/* Header do Inventário */
+.inventario-container {
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.inventario-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px;
+    background-color: #fff;
+    border-bottom: 1px solid #f0f2f5;
+}
+
+.inventario-info-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.icon-warehouse-orange {
+    width: 45px;
+    height: 45px;
+    background-color: #FFF0E5;
+    color: #FF7A00;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    font-size: 1.2rem;
+}
+
+.inventario-info-left h3 {
+    font-size: 1.1rem;
+    color: #131A33;
+    margin-bottom: 2px;
+}
+
+.inventario-info-left p {
+    font-size: 0.85rem;
+    color: #A0ABC0;
+}
+
+.badge-count-tipos {
+    background-color: #F0F2F5;
+    color: #718096;
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+/* Tabela Estilo Imagem */
+#page-estoque table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#page-estoque table th {
+    text-align: left;
+    padding: 15px 25px;
+    font-size: 0.75rem;
+    color: #A0ABC0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background-color: #fff;
+}
+
+#page-estoque table td {
+    padding: 18px 25px;
+    font-size: 0.9rem;
+    color: #131A33;
+    border-bottom: 1px solid #F0F2F5;
+}
+
+/* Status Badges */
+.badge-status {
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.75rem;
+}
+
+.badge-status.normal { background-color: #E6F4EA; color: #1E8E3E; }
+.badge-status.baixo { background-color: #FCE8E6; color: #D93025; }
+
+/* Botão Editar Tabela */
+.btn-edit-table {
+    background: #F0F2F5;
+    border: none;
+    padding: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-edit-table:hover { background: #E2E8F0; }
+
+/* Modal Footer e Botões */
+.modal-footer-estoque {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.btn-salvar-entrada {
+    background-color: #FF7A00;
+    color: #fff;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    flex: 1;
+}
+
+.modal-estoque {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-estoque:not(.hidden) {
+    display: flex !important;
+}
+
+.modal-content {
+    background-color: var(--white-color, #ffffff);
+    /* width: 90%; */
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Título */
+#modalAdicionar h3 {
+    color: var(--blue-color, #131A33);
+    margin-bottom: 20px;
+    font-size: 1.4rem;
+    font-weight: 700;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 15px;
+}
+
+/* Inputs */
+#modalAdicionar .input-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+#modalAdicionar label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    text-align: left;
+    /* border: 2px solid red; */
+
+}
+
+#modalAdicionar input, 
+#modalAdicionar select {
+    padding: 10px 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+}
+
+#modalAdicionar input:focus {
+    border-color: var(--orange-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 122, 0, 0.1);
+}
+
+/* Grid de colunas */
+#modalAdicionar .row-inputs {
+    display: grid;
+    grid-template-columns: 220px 220px;
+    gap: 15px;
+}
+
+
+#modalAdicionar .btn-adc {
+    background-color: var(--orange-color);
+    color: white;
+    padding: 12px 24px; /* Padding simétrico */
+    border-radius: 10px;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    flex: 1; /* Agora ambos podem ter flex 1 para tamanhos iguais */
+    transition: background 0.2s;
+    width: 200px;
+}
+
+
+
+#modalAdicionar .btn-cancelar {
+    background-color: #f1f5f9;
+    /* width: 100%; */
+    width: 200px;
+    color: #475569;
+    padding: 12px 24px;
+    border-radius: 10px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+/* DARK MODE */
+body.dark-mode .modal-content {
+    background-color: #1e293b;
+    color: #f8fafc;
+}
+
+body.dark-mode #modalAdicionar h3 {
+    color: #f8fafc;
+    border-color: #334155;
+}
+
+body.dark-mode #modalAdicionar input, 
+body.dark-mode #modalAdicionar select {
+    background-color: #0f172a;
+    border-color: #334155;
+    color: white;
+}
+
+body.dark-mode #modalAdicionar .btn-cancelar {
+    background-color: #334155;
+    color: #cbd5e1;
+}
+
+.dark-mode table {
+    background-color: #1e293b;
+    color: #cbd5e1;
+}
+
+.dark-mode .inventario-header {
+    background-color: #1e293b;
+    border-color: #334155;
+}
+
+.dark-mode .badge-count-tipos {
+    background-color: #334155;
+    color: #cbd5e1;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+ 
+
+/* Card do Modal */
+.modal-content {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    width: 95%;
+    max-width: 550px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #131A33;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #f0f2f5;
+    padding-bottom: 15px;
+}
+
+
+.badge-saldo-modal {
+    background: #E8F5E9;
+    color: #2E7D32;
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.badge-saldo-modal span {
+    font-size: 14px;
+    font-weight: 700;
+    color: #2E7D32;
+}
+
+/* Grids e Espaçamentos */
+.grid-identificacao {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.grid-financeiro {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+/* Container de Quantidade (Destaque) */
+.container-qtd-entrada {
+    background: #FFF8E1;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #FFECB3;
+    margin-bottom: 15px;
+}
+
+.container-qtd-entrada label {
+    display: block;
+    font-size: 12px;
+    font-weight: bold;
+    color: #F57F17;
+    margin-bottom: 5px;
+}
+
+.input-destaque {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #FFD54F;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Estilos de Inputs */
+.modal-estoque label {
+    font-size: 11px;
+    font-weight: bold;
+    color: #888;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.modal-estoque input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+.input-readonly {
+    background: #f4f4f4;
+    font-weight: bold;
+    cursor: not-allowed;
+}
+
+/* Rodapé e Botões */
+.modal-footer-estoque {
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    gap: 12px;
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+}
+
+.btn-confirmar {
+    background: #FF7A00;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(255, 122, 0, 0.3);
+    transition: 0.2s;
+}
+
+.btn-confirmar:hover { background: #E66E00; }
+
+.btn-cancelar {
+    background: #f5f5f5;
+    border: 2px solid red;
+    color: #666;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.dark-mode .container-qtd-entrada {
+    background-color: #1E294A;
+    border: none;
+}
+
+#valor-saldo-atual {
+    color: #E2E8F0;
+}
+
+.dark-mode .badge-status.normal {
+    color: #10B981 !important;
+    background: rgba(16, 185, 129, 0.1) !important;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.dark-mode .badge-status.baixo {
+    color: #F43F5E !important;
+    background: rgba(244, 63, 94, 0.1) !important;
+    border: 1px solid rgba(244, 63, 94, 0.2);
+}
+
+.dark-mode .btn-confirmar {
+    background-color: #FF7A00;
+    color: white;
+    box-shadow: 0 4px 12px rgba(255, 122, 0, 0.3);
+}
+
+.dark-mode .btn-confirmar:hover {
+    background-color: #E66E00;
+}
+
+.dark-mode .search-box input{
+    background-color: #141C31;
+    border: 1px solid #27345C;
+}

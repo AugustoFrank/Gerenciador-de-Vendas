@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visão Geral | Willy Bolsas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/layouts/usuario/visao-geral.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    </head>
+<body id="page-visao-geral">
+    <div class="container">
+        
+        <aside class="sidebar">
+    <div class="logo-container">
+        <img src="{% static 'img/logo willy.png' %}" alt="Willy Bolsas" class="logo">
+    </div>
+    <nav class="menu-lateral">
+        <a href="{% url 'visao_geral' %}" class="menu-item active"><i class="fas fa-chart-line"></i> Visão Geral</a>
+        <a href="{% url 'nova_venda' %}" class="menu-item"><i class="fas fa-shopping-cart"></i> Nova Venda</a>
+        <a href="{% url 'estoque_vendedor' %}" class="menu-item"><i class="fas fa-boxes"></i> Meu Estoque</a>
+        <a href="{% url 'comissoes_vendedor' %}" class="menu-item"><i class="fas fa-percentage"></i> Minhas Comissões</a>
+    </nav>
+</aside>
+
+        <main>
+            <header>
+                <div class="header-info">
+                    <h1>Visão Geral</h1>
+                    <span>Acompanhe o desempenho das suas vendas em tempo real.</span>
+                </div>
+                <div class="header-actions">
+                    <button id="dark-mode-toggle" class="btn-dark-mode">
+                        <i class="fas fa-sun"></i>
+                    </button>
+                    <div class="user-display">
+                        <i class="fas fa-user-circle"></i> 
+                        Vendedor: <strong>{{ user.username|default:"Anselmo Silva" }}</strong>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-body">
+                <div class="filter-bar">
+                    <form method="GET" class="form-filtro">
+                        <input type="date" name="data_busca" class="inpt-date">
+                        <button type="submit" class="btn-search">
+                            <i class="fas fa-search"></i> Buscar
+                        </button>
+                    </form>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="dash-card">
+                        <div class="icon-shape blue"><i class="fas fa-shopping-basket"></i></div>
+                        <div class="dash-data">
+                            <h3>Vendas Hoje</h3>
+                            <p class="val">{{ qtd_vendas|default:"0" }}</p>
+                        </div>
+                    </div>
+                
+                    <div class="dash-card">
+                        <div class="icon-shape green"><i class="fas fa-money-bill-wave"></i></div>
+                        <div class="dash-data">
+                            <h3>Faturamento Hoje</h3>
+                            <p class="val">R$ {{ total_faturado|default:"0.00"|floatformat:2 }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <section class="alerta-section">
+                    <div class="sec-header">
+                        <i class="fas fa-exclamation-triangle"></i> Estoque Central Baixo
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Produto</th>
+                                    <th>Qtd. Restante</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for produto in alertas_estoque %}
+                                <tr>
+                                    <td class="sku-id">#{{ produto.referencia }}</td>
+                                    <td class="prod-name"><strong>{{ produto.nome }}</strong></td>
+                                    <td class="qty-num critical">{{ produto.estoque }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="empty-row">Tudo certo no estoque central!</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="{% static 'js/scripts/usuario/visao-geral.js' %}" defer></script>
+</body>
+</html>

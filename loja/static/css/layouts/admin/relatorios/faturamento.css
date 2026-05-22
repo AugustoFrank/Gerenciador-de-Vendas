@@ -1,0 +1,675 @@
+/* Layout de Abas */
+.tabs-relatorios {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    padding-bottom: 12px;
+}
+
+.tab-item {
+    text-decoration: none;
+    color: #8E94A8;
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: 0.3s ease;
+    cursor: pointer;
+    border: none;
+    background: none;
+}
+
+.tab-item:hover { background: rgba(0,0,0,0.03); }
+
+.tab-item.active {
+    background-color: #FF7A00; /* Laranja Willy */
+    color: white !important;
+}
+
+/* Cores dos Ícones de Pagamento */
+.pix-color { background-color: #32BCAD; color: white; }
+.money-color { background-color: #10B981; color: white; }
+.card-color { background-color: #3B82F6; color: white; }
+
+.faturamento-cards {
+    grid-template-columns: repeat(4, 1fr) !important;
+    margin: 20px 0 30px 0 !important;
+}
+
+.metrics-vendedores {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin: 20px 0 30px 0;
+    animation: GridFadeIn 0.3s ease-in-out;
+}
+
+.report-tabs {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.date-faturamento {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 25px;
+    gap: 12px;
+}
+
+.btn-exportar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #ef4444; /* Vermelho elegante padrão para PDF, ou use a cor padrão do seu sistema */
+    color: #ffffff;
+    border: none;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    height: 40px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-exportar:hover {
+    background-color: #dc2626; /* Tom ligeiramente mais escuro no hover */
+}
+
+.btn-exportar:active {
+    transform: scale(0.98);
+}
+
+.btn-exportar i {
+    font-size: 16px;
+}
+
+#date-picker, #date-picker-end {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    border: 1px solid #E5E7EB;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+}
+
+.report-section {
+    display: none;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.report-section.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================
+   NOVO DESIGN DA TABELA (WILLY BOLSAS)
+   ========================================= */
+
+.table-card {
+    margin-bottom: 40px;
+}
+
+
+.table-card table th:first-child,
+.table-card table td:first-child {
+    padding-left: 45px;
+    text-align: left;
+}
+
+.willy-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.willy-table thead {
+    background-color: #F8FAFC;
+    border-bottom: 2px solid #E2E8F0;
+}
+
+.willy-table th {
+    padding: 16px 24px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 700;
+    color: #64748B;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.willy-table td {
+    padding: 16px 24px;
+    border-bottom: 1px solid #F1F5F9;
+    color: #475569;
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+/* Efeito Hover na Linha */
+.willy-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.willy-table tbody tr:hover {
+    background-color: #F8FAFC;
+}
+
+/* Utilitários de Texto da Tabela */
+.willy-table .txt-center { text-align: center; }
+.willy-table .txt-right { text-align: right; }
+
+.text-highlight { font-weight: 600; color: #0F172A; }
+.text-success { color: #10B981; font-weight: 600; }
+.text-muted { color: #94A3B8; font-size: 13px; }
+
+.empty-state {
+    text-align: center;
+    padding: 30px !important;
+    color: #94A3B8;
+    font-style: italic;
+}
+
+/* =========================================
+   DARK MODE
+   ========================================= */
+.dark-mode .tabs-relatorios { border-color: rgba(255,255,255,0.1); }
+.dark-mode .tab-item:hover { background: rgba(255,255,255,0.05); }
+.dark-mode #date-picker, .dark-mode #date-picker-end {
+    background-color: #1E293B;
+    border-color: #334155;
+    color: #F8FAFC;
+}
+
+/* Dark Mode - Tabela */
+.dark-mode .table-card {
+    background: #1E293B;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.dark-mode .willy-table thead {
+    background-color: #0F172A;
+    border-bottom-color: #334155;
+}
+
+.dark-mode .willy-table th { color: #94A3B8; }
+
+.dark-mode .willy-table td {
+    border-bottom-color: #334155;
+    color: #E2E8F0;
+}
+
+.dark-mode .willy-table tbody tr:hover { background-color: #0F172A; }
+
+.dark-mode .text-highlight { color: #F8FAFC; }
+
+
+/* =========================================
+   RESPONSIVIDADE
+   ========================================= */
+
+@keyframes GridFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 1320px) {
+    .metrics-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+
+@media (max-width: 1139px) {
+
+    /* .metric-card {
+        padding: 16px;
+        font-size: 0.75rem;
+    } */
+
+
+    .metric-data h2 {
+        font-size: 1.2rem;
+    }
+
+
+    .btn-menu-mobile {
+        display: block;
+    }
+
+    .sidebar-overlay.active {
+        display: block;
+        opacity: 1;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        z-index: 999;
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 4px 0 15px rgba(0,0,0,0.2);
+    }
+}
+
+
+@media (max-width: 878px) {
+    .metric-card {
+        padding: 16px;
+        font-size: 0.7rem;
+    }
+
+    .metrics-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        /* animation: GridFadeIn 0.3s ease-in-out; */
+    }
+
+
+    
+}
+
+/* --- AJUSTES ESPECÍFICOS PARA TABLETS (755px) --- */
+
+@media (max-width: 755px) {
+
+    .header-left span {
+        display: none;
+    }
+
+    /* Container principal */
+    .report-tabs {
+        flex-direction: column;
+        /* align-items: stretch; */
+        gap: 16px;
+    }
+
+    /* Abas */
+    .tabs-relatorios {
+        width: 100%;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 5px;
+    }
+
+    .tab-item {
+        flex: 1;
+        text-align: center;
+        padding: 12px;
+    }
+
+    /* Datas */
+    .date-faturamento {
+        width: 100%;
+        display: flex;
+        gap: 10px;
+        /* margin-top: 5px; */
+        margin-bottom: 5px;
+    }
+
+    .header-left h1 {
+        font-size: 1.5rem;
+    }
+
+    #date-picker,
+    #date-picker-end {
+        width: 100%;
+    }
+}
+
+@media (max-width: 680px) {
+
+    /* Container principal */
+    .report-tabs {
+        gap: 14px;
+    }
+
+    /* Datas */
+    .date-faturamento {
+        gap: 8px;
+        margin-bottom:5px;
+    }
+
+    .date-faturamento form {
+        gap: 8px;
+    }
+
+    #date-picker,
+    #date-picker-end {
+        padding: 8px 10px;
+        font-size: 13px;
+    }
+
+    /* Cards */
+    .metric-card {
+        padding: 14px;
+    }
+
+    .metric-data h2 {
+        font-size: 1.2rem;
+    }
+
+    /* .metric-data span {
+        font-size: 0.75rem;
+    } */
+
+    /* Grid continua em 2 colunas */
+    .metrics-grid,
+    .metrics-vendedores {
+        gap: 14px;
+    }
+
+    /* Tabela */
+    .table-card {
+        overflow-x: auto;
+    }
+
+    .table-card table th,
+    .table-card table td {
+        padding: 14px 18px;
+        font-size: 13px;
+    }
+
+}
+
+@media (max-width: 635px) {
+
+    .metric-card {
+        padding: 14px;
+    }
+
+    .metric-data h2 {
+        font-size: 1.15rem;
+    }
+
+    .btn-exportar {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+
+    .btn-exportar span {
+        display: none;
+    }
+
+    .metric-card h2 {
+        font-size: 1rem;
+    }
+
+    /* .tab-item {
+        padding: 10px 12px;
+        font-size: 12px;
+    } */
+}
+
+@media (max-width: 480px) {
+    .metric-card {
+        padding: 12px;
+    }
+
+    .metric-data h2 {
+        font-size: 1rem;
+    }
+
+    .btn-exportar {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+
+    .btn-exportar span {
+        display: none;
+    }
+
+    .metric-card h2 {
+        font-size: 0.9rem;
+    }
+
+    .table-card table th:first-child,
+    .table-card table td:first-child {
+        padding-left: 30px;
+    }
+
+    .table-card {
+        overflow-x: auto;
+        overflow-y: hidden;
+        width: 100%;
+        border-radius: 12px;
+    }
+
+    .table-card table {
+        min-width: 600px;
+        border-collapse: collapse;
+    }
+}
+
+@media (max-width: 450px) {
+
+    .dashboard-content {
+        padding: 14px;
+    }
+
+    .header-left h1 {
+        font-size: 1.35rem;
+    }
+
+    .header-actions {
+        gap: 6px;
+    }
+
+    .btn-exportar {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+
+    .btn-exportar span {
+        display: none;
+    }
+
+    .tabs-relatorios {
+        gap: 8px;
+    }
+
+    .tab-item {
+        padding: 10px;
+        font-size: 12px;
+    }
+
+    .date-faturamento form {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    #date-picker,
+    #date-picker-end {
+        width: 100%;
+        font-size: 12px;
+    }
+
+    .metrics-grid,
+    .metrics-vendedores {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .metric-card {
+        padding: 14px;
+    }
+
+    .metric-data h2 {
+        font-size: 0.9rem;
+    }
+
+    .metric-data span {
+        font-size: 0.5rem;
+    }
+
+    .table-card table th {
+        padding: 12px 14px;
+    }
+
+    .table-card table td {
+        padding: 12px 14px;
+    }
+
+}
+
+/* 420 */
+
+@media (max-width: 420px) {
+
+    .dashboard-content {
+        padding: 12px;
+    }
+
+    .header-left h1 {
+        font-size: 1.25rem;
+    }
+
+    .metric-card {
+        padding: 12px;
+    }
+
+    .metric-data h2 {
+        font-size: 0.9rem;
+    }
+
+    .metric-data span {
+        font-size: 0.6rem;
+    }
+
+}
+
+@media (max-width: 400px) {
+
+    .dashboard-content {
+        padding: 12px;
+    }
+
+    .header-left {
+        gap: 10px;
+    }
+
+    .header-left h1 {
+        font-size: 1.2rem;
+    }
+
+    .btn-exportar {
+        padding: 6px 8px;
+        font-size: 11px;
+    }
+
+    .btn-dark-mode {
+        width: 38px;
+        height: 38px;
+    }
+
+    .tabs-relatorios {
+        flex-direction: column;
+    }
+
+    .tab-item {
+        width: 100%;
+        padding: 11px;
+    }
+
+    .metric-card {
+        padding: 11px;
+    }
+
+    .metric-data h2 {
+        font-size: 0.8rem;
+    }
+
+    .metric-data span {
+        font-size: 0.5rem;
+    }
+
+}
+
+@media (max-width: 360px) {
+
+    .dashboard-content {
+        padding: 10px;
+    }
+
+    .header-left h1 {
+        font-size: 1.05rem;
+    }
+
+    .tab-item {
+        font-size: 11px;
+        padding: 10px 8px;
+    }
+
+    #date-picker,
+    #date-picker-end {
+        padding: 7px 8px;
+        font-size: 11px;
+    }
+
+    .metric-card {
+        padding: 10px;
+    }
+
+    .metric-data h2 {
+        font-size: 0.75rem;
+    }
+
+    .metric-data span {
+        font-size: 0.45rem;
+    }
+
+    .table-card table th,
+    .table-card table td {
+        padding: 9px 10px;
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 330px) {
+
+    .dashboard-content {
+        padding: 8px;
+    }
+
+    .header-left h1 {
+        font-size: 1rem;
+    }
+
+    .tab-item {
+        font-size: 10px;
+        padding: 9px 6px;
+    }
+
+    #date-picker,
+    #date-picker-end {
+        padding: 6px 8px;
+        font-size: 10px;
+    }
+
+    .metric-card {
+        padding: 9px;
+    }
+
+    .metric-data h2 {
+        font-size: 0.6rem;
+    }
+
+    .metric-data span {
+        font-size: 0.4rem;
+    }
+
+    .table-card table th,
+    .table-card table td {
+        padding: 8px 10px;
+        font-size: 9px;
+    }
+}

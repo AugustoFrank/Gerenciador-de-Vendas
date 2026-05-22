@@ -1,0 +1,61 @@
+/* ==========================================
+   PÁGINA COMISSÕES
+   ========================================== */
+.comissoes-container { 
+    background: #FFFFFF; 
+    border-radius: 12px; 
+    border: 1px solid #E5E7EB; 
+    padding: 24px; 
+    margin: 0 48px 48px 48px; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+}
+
+.comissoes-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 20px; 
+}
+
+.filtros-data { 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+}
+
+.filtros-data input { 
+    padding: 10px 15px; 
+    border: 1px solid #E5E7EB; 
+    border-radius: 8px; 
+    font-size: 14px; 
+    outline: none; 
+    background: #fff; 
+    color: #1a1a1a; 
+}
+
+.filtros-data input:focus {
+    border-color: #0A84FF;
+}
+
+.valor-ganho { 
+    font-weight: 700; 
+    color: #10B981; 
+}
+
+.taxa-cell { 
+    color: #7C3AED; 
+    font-weight: 600; 
+}
+
+.dark-mode .pc2 { 
+    background-color: rgba(139, 92, 246, 0.15) !important; 
+    color: #a78bfa !important; 
+}
+
+.dark-mode .taxa-cell { 
+    color: #a78bfa !important; 
+}
+
+.dark-mode .valor-ganho { 
+    color: #34d399 !important; 
+}

@@ -1,27 +1,32 @@
-
-function toggleColorPopover() {
+window.toggleColorPopover = function() {
     const popover = document.getElementById('colorPopover');
-    if (!popover) return;
-    popover.classList.toggle('open');
-}
+    if (popover) popover.classList.toggle('open');
+};
 
-function selectColorValue(hexColor) {
+window.selectColorValue = function(hexColor) {
     const previewInside = document.getElementById('currentView');
-    if (!previewInside) return;
-    
-    previewInside.style.backgroundColor = hexColor;
-    
-}
+    if (previewInside) previewInside.style.backgroundColor = hexColor;
+};
 
+window.toggleColorPopoverEdit = function() {
+    const popover = document.getElementById('colorPopoverEdit');
+    if (popover) popover.classList.toggle('open');
+};
+
+window.selectEditColor = function(hexColor) {
+    const previewInside = document.getElementById('currentViewEdit');
+    if (previewInside) previewInside.style.backgroundColor = hexColor;
+    
+    const popover = document.getElementById('colorPopoverEdit');
+    if (popover) popover.classList.remove('open');
+};
+
+// Fecha o popover de cor se clicar fora
 window.addEventListener('click', (e) => {
     const popover = document.getElementById('colorPopover');
     const trigger = document.getElementById('pickerTrigger');
-    
     if (popover && popover.classList.contains('open') && 
-        !popover.contains(e.target) && !trigger.contains(e.target)) {
+        !popover.contains(e.target) && trigger && !trigger.contains(e.target)) {
         popover.classList.remove('open');
     }
 });
-
-window.toggleColorPopover = toggleColorPopover;
-window.selectColorValue = selectColorValue;

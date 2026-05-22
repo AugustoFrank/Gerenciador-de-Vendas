@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -5,12 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | Willy Bolsas</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/layouts/login/login.css">
+    <link rel="stylesheet" href="{% static './css/style.css' %}">
 </head>
 <body class="fundo-azul">
 
     <div class="container-centralizado">
-        
         <div class="cartao-login">
             <div class="cabecalho-logo">
                 <div class="bolinha-laranja"></div>
@@ -18,34 +18,46 @@
                 <p class="subtitulo">Acesso ao Painel Administrativo</p>
             </div>
 
-            <form class="formulario" id="form-login">
+            <form class="formulario" method="POST" action="{% url 'login' %}">
+                {% csrf_token %}
                 
                 <div class="grupo-entrada">
-                    <label class="etiqueta">ID DO USUÁRIO</label>
-                    <input type="text" class="campo-texto" placeholder="ex: anselmo.willy" required>
+                    <label class="etiqueta" for="id_matricula">ID DO USUÁRIO</label>
+                    <input type="text" class="campo-texto" id="id_matricula" name="matricula_digitada" placeholder="ex: 00123" required autocomplete="off">
                 </div>
-
-                <div class="grupo-entrada">
-                    <label class="etiqueta">SEU NOME</label>
-                    <input type="text" class="campo-texto" placeholder="Digite seu nome completo" required>
+                
+                <div class="grupo-entrada" style="margin-top: 15px;">
+                    <label class="etiqueta" for="id_username">SEU NOME DE ACESSO</label>
+                    <!-- Campo preenchido automaticamente pelo JS -->
+                    <input type="text" class="campo-texto" id="id_username" name="username" readonly style="background-color: #F3F4F6; color: #86868B; cursor: not-allowed;" placeholder="Buscando...">
                 </div>
-
-                <div class="grupo-entrada">
-                    <label class="etiqueta">SENHA</label>
-                    <input type="password" class="campo-texto" placeholder="........" required>
+                
+                <div class="grupo-entrada" style="margin-top: 15px;">
+                    <label class="etiqueta" for="id_password">SENHA</label>
+                    <input type="password" class="campo-texto" id="id_password" name="password" placeholder="........" required>
                 </div>
-
-                <button class="botao-entrar" onclick="entrarNoSistema(event)"><a href="./admin.html"></a>ENTRAR NO SISTEMA</button>
+            
+                <button type="submit" class="botao-entrar" style="margin-top: 20px;">ENTRAR NO SISTEMA</button>
             </form>
+
+            <!-- Div de Erro para o JS usar -->
+            <div id="erro-id" style="display: none; margin-top: 15px; color: #DC2626; background-color: #FEF2F2; padding: 10px; border-radius: 8px; font-size: 13px; text-align: center;">
+                ID não encontrado no sistema.
+            </div>
+
+            {% if form.errors %}
+            <div style="margin-top: 15px; color: #DC2626; background-color: #FEF2F2; padding: 10px; border-radius: 8px; font-size: 13px; text-align: center;">
+                Credenciais inválidas.
+            </div>
+            {% endif %}
 
             <div class="rodape-creditos">
                 <p>AugustoFrank Tech Solutions © 2026</p>
                 <p>Hospedagem Cloud Locaweb</p>
             </div>
         </div>
-
     </div>
 
-    <script src="/static/js/scripts/login/login.js" defer></script>
+    <script src="{% static 'js/scripts/login/login.js' %}" defer></script>
 </body>
 </html>

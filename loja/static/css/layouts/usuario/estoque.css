@@ -1,0 +1,141 @@
+/* ==========================================
+   ESTOQUE USUÁRIO / VENDEDOR
+   ========================================== */
+
+/* 1. O Grid Mágico que separa Card e Tabela */
+.estoque-content-wrapper {
+    display: grid;
+    grid-template-columns: 280px 1fr; /* Coluna 1 com 280px, Coluna 2 ocupa o resto */
+    align-items: start; /* Impede o card da esquerda de esticar para baixo */
+    gap: 24px;
+    margin: 32px 48px 48px 48px;
+}
+
+/* 2. O Card de Métrica (Lado Esquerdo) */
+.estoque-content-wrapper .dash-card {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid #E5E7EB;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    margin: 0; /* A margem é controlada pelo gap do wrapper */
+    width: 100%;
+}
+
+/* 3. A Caixa Branca da Tabela (Lado Direito) */
+.estoque-container {
+    background: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    border: 1px solid #E5E7EB;
+    padding: 24px;
+    margin: 0; /* A margem é controlada pelo gap do wrapper */
+    width: 100%;
+}
+
+/* 4. Cabeçalho da Tabela e Barra de Busca */
+.estoque-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.estoque-header h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #131A33;
+    font-weight: 700;
+}
+
+.busca-container {
+    position: relative;
+    width: 300px;
+}
+
+.busca-container i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #86868B;
+}
+
+#busca-estoque {
+    width: 100%;
+    padding: 12px 15px 12px 40px;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    outline: none;
+    font-size: 14px;
+    transition: border-color 0.2s;
+}
+
+#busca-estoque:focus {
+    border-color: #0A84FF;
+}
+
+.estoque-content-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+/* 5. Células e Textos da Tabela */
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.sku-cell {
+    color: #86868B;
+    font-weight: 600;
+}
+
+.qtd-cell {
+    font-weight: 700;
+    font-size: 16px;
+    color: #131A33;
+}
+
+/* 6. Badges de Status Coloridos */
+.status {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    display: inline-block;
+    text-align: center;
+    min-width: 80px;
+}
+
+.status-bom { background-color: #ECFDF5; color: #10B981; }
+.status-alerta { background-color: #FFF7ED; color: #FF7A00; }
+.status-zerado { background-color: #FEF2F2; color: #EF4444; }
+
+/* ==========================================
+   MODO ESCURO ESPECÍFICO DESTA TELA
+   ========================================== */
+.dark-mode .estoque-container,
+.dark-mode .dash-card {
+    background-color: #1e293b;
+    border-color: #334155;
+}
+
+.dark-mode #busca-estoque {
+    background-color: #0f172a;
+    border-color: #334155;
+    color: #f1f5f9;
+}
+
+.dark-mode .qtd-cell {
+    color: #f1f5f9;
+}
+
+.dark-mode .status-bom { background-color: rgba(16, 185, 129, 0.15) !important; color: #10b981 !important; }
+.dark-mode .status-alerta { background-color: rgba(251, 146, 60, 0.15) !important; color: #fb923c !important; }
+.dark-mode .status-zerado { background-color: rgba(239, 68, 68, 0.15) !important; color: #ef4444 !important; }
+
+.dark-mode .dash-data h3 { color: #94a3b8 !important; }
+.dark-mode .dash-data .val { color: #f1f5f9 !important; }

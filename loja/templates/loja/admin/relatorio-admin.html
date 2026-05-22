@@ -1,0 +1,140 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatórios de Comissões | Willy Bolsas</title>
+    <link rel="stylesheet" href="{% static './css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body id="page-comissoes">
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+        
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo-container">
+                <img src="{% static 'img/logo willy.png' %}" alt="Willy Bolsas" class="logo">
+            </div>
+            <nav class="menu-lateral">
+                <a href="{% url 'visao_geral_admin' %}" class="menu-item {% if request.resolver_match.url_name == 'visao_geral_admin' %}active{% endif %}">
+                    <i class="fas fa-chart-pie" style="width: 24px; text-align: center;"></i> Visão Geral
+                </a>                
+                <a href="{% url 'admin_estoque' %}" class="menu-item {% if request.resolver_match.url_name == 'admin_estoque' %}active{% endif %}">
+                    <i class="fas fa-boxes" style="width: 24px; text-align: center;"></i> Estoque Central
+                </a>                
+                <a href="{% url 'admin_equipe' %}" class="menu-item {% if request.resolver_match.url_name == 'admin_equipe' %}active{% endif %}">
+                    <i class="fas fa-users" style="width: 24px; text-align: center;"></i> Equipe
+                </a>
+                <a href="{% url 'relatorio_faturamento' %}" class="menu-item"><i class="fas fa-file-invoice-dollar" style="width: 24px; text-align: center;"></i> Relatórios</a>
+            </nav>
+        </aside>
+
+        <main>
+            <header>
+                <div class="header-left" style="display: flex; align-items: center; gap: 15px;">
+                    <button id="menu-toggle" class="btn-menu-mobile">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="header-info">
+                        <h1>Relatórios de Comissões</h1>
+                        <span>Acompanhe o desempenho e comissionamento da equipe.</span>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button id="btn-exportar" class="btn-adc">
+                        <i class="fas fa-download"></i> Exportar PDF
+                    </button>
+                    <button id="dark-mode-toggle" class="btn-dark-mode">
+                        <i class="fas fa-sun"></i>
+                    </button>
+                </div>
+            </header>
+
+            <div class="dashboard-content">
+                
+                <div class="filter-bar">
+                    <form class="form-filtro" method="GET" id="form-relatorio">
+                        <input type="date" name="data_inicio" class="inpt-date" auto-submit>
+                        <input type="date" name="data_fim" class="inpt-date" auto-submit>
+                    </form>
+                </div>
+
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="icon-box pc2">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
+                        <div class="metric-info">
+                            <span>VENDAS NO PERÍODO</span>
+                            <h2>R$ {{ total_vendas|floatformat:"2g"|default:"0,00" }}</h2>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="icon-box pc3">
+                            <i class="fas fa-hand-holding-usd"></i>
+                        </div>
+                        <div class="metric-info">
+                            <span>COMISSÕES A PAGAR</span>
+                            <h2>R$ {{ total_comissoes|floatformat:"2g"|default:"0,00" }}</h2>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="icon-box pc4">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="metric-info">
+                            <span>TICKET MÉDIO</span>
+                            <h2>R$ {{ ticket_medio|floatformat:"2g"|default:"0,00" }}</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="view-list active">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Vendedor</th>
+                                <th>Valor da Venda</th>
+                                <th>Taxa (%)</th>
+                                <th>Comissão</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for comissao in comissoes %}
+                            <tr>
+                                <td>{{ comissao.data_venda|date:"d/m/Y" }}</td>
+                                <td>
+                                    <strong>
+                                        {% if comissao.vendedor %}
+                                            {{ comissao.vendedor.first_name|default:comissao.vendedor.username }}
+                                        {% else %}
+                                            <span style="color: #888; font-style: italic;">Usuário Desativado</span>
+                                        {% endif %}
+                                    </strong>
+                                </td>
+                                <td>R$ {{ comissao.preco_total|floatformat:"2g" }}</td>
+                                <td class="taxa-cell">{{ comissao.comissao_aplicada }}%</td>
+                                <td class="valor-ganho">R$ {{ comissao.valor_comissao|floatformat:"2g" }}</td>
+                                <td>
+                                    <span class="badge badge-blue">{{ comissao.get_forma_pagamento_display }}</span>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="empty-state">Nenhuma comissão encontrada no período.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </main>
+    </div>
+    <script src="{% static 'js/scripts/admin/comissoes/comissoes.js' %}" defer></script>   
+    <!-- <script src="{% static 'js/script.js' %}" type="module" defer></script> -->
+</body>
+</html>

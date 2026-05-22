@@ -4,123 +4,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visão Geral | Sistema Willy Bolsas</title>
-    <link rel="stylesheet" href="{% static 'css/layouts/admin/geral/geral.css' %}">
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> -->
+    <title>Painel Administrativo | Willy Bolsas</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
 
-    <aside class="sidebar">
-        <div class="logo-container">
-             <img src="{% static 'img/logo.png' %}" alt="Willy Bolsas" class="logo">
-        </div>
-        <nav class="menu-lateral">
-            <a href="{% url 'visao_geral' %}" class="menu-item active">
-                <i class="fas fa-chart-line"></i> Visão Geral
-            </a>
-            <a href="#" class="menu-item">
-                <i class="fas fa-shopping-cart"></i> Nova Venda
-            </a>
-            <a href="#" class="menu-item">
-                <i class="fas fa-boxes"></i> Meu Estoque
-            </a>
-            <a href="#" class="menu-item">
-                <i class="fas fa-percentage"></i> Minhas Comissões
-            </a>
-        </nav>
-    </aside>
-
-    <main class="container">
-        
-        <header>
-            <h1>Painel de Visão Geral</h1>
-            <p>Monitoramento de vendas e performance em tempo real</p>
-        </header>
-
-        <div class="dashboard-grid">
-            <div class="card">
-                <div class="card-icon"><i class="fas fa-shopping-basket"></i></div>
-                <div class="card-content">
-                    <h3>Vendas Hoje</h3>
-                    <p class="numero">{{ qtd_vendas }}</p>
-                </div>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo-container">
+                <img src="{% static 'img/logo willy.png' %}" alt="Willy Bolsas" class="logo">
             </div>
-        
-            <div class="card">
-                <div class="card-icon"><i class="fas fa-money-bill-wave"></i></div>
-                <div class="card-content">
-                    <h3>Faturamento Hoje</h3>
-                    <p class="numero">R$ {{ total_faturado|floatformat:2 }}</p>
-                </div>
-            </div>
-        
-            <div class="card comissao">
-                <div class="card-icon"><i class="fas fa-hand-holding-usd"></i></div>
-                <div class="card-content">
-                    <h3>Comissões a Pagar</h3>
-                    <p class="numero">R$ {{ total_comissoes|floatformat:2 }}</p>
-                </div>
-            </div>
-        </div>
+            <nav class="menu-lateral">
+                <a href="{% url 'visao_geral_admin' %}" class="menu-item {% if request.resolver_match.url_name == 'visao_geral_admin' %}active{% endif %}">
+                    <i class="fas fa-chart-pie" style="width: 24px; text-align: center;"></i> Visão Geral
+                </a>                
+                <a href="{% url 'admin_estoque' %}" class="menu-item {% if request.resolver_match.url_name == 'admin_estoque' %}active{% endif %}">
+                    <i class="fas fa-boxes" style="width: 24px; text-align: center;"></i> Estoque Central
+                </a>                
+                <a href="{% url 'admin_equipe' %}" class="menu-item {% if request.resolver_match.url_name == 'admin_equipe' %}active{% endif %}">
+                    <i class="fas fa-users" style="width: 24px; text-align: center;"></i> Equipe
+                </a>
+                <a href="{% url 'relatorio_faturamento' %}" class="menu-item"><i class="fas fa-file-invoice-dollar"  style="width: 24px; text-align: center;"></i> Relatórios</a>
+            </nav>
+        </aside>
 
-        <div class="painel-inferior">
-            
-            <section class="estoque-alerta">
-                <div class="titulo-sessao">
-                    <i class="fas fa-exclamation-triangle"></i> Estoque Central Baixo
-                </div>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Produto</th>
-                                <th>Qtd. Restante</th>
-                                <th>Ação</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for produto in alertas_estoque %}
-                            <tr>
-                                <td><strong>{{ produto.nome }}</strong></td>
-                                <td class="qtd-critica">{{ produto.estoque }}</td>
-                                <td>
-                                    <a href="/admin/loja/produto/{{ produto.id }}/change/" class="btn-editar">
-                                        Repor
-                                    </a>
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="3" class="empty-msg">Tudo certo no estoque central!</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <section class="ranking-vendedores">
-                <div class="titulo-sessao">
-                    <i class="fas fa-trophy"></i> Top Vendedores (Hoje)
-                </div>
-                <div class="ranking-lista">
-                    {% for v in ranking %}
-                    <div class="ranking-item">
-                        <div class="vendedor-info">
-                            <span class="posicao">{{ forloop.counter }}º</span>
-                            <strong>{{ v.vendedor__username }}</strong>
-                        </div>
-                        <span class="valor-venda">R$ {{ v.total|floatformat:2 }}</span>
+        <main>
+            <header>
+                <div class="header-left" style="display: flex; align-items: center; gap: 15px;">
+                    <button id="menu-toggle" class="btn-menu-mobile">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="header-info">
+                        <h1>Dashboard Administrativo</h1>
+                        <span>Resumo global de operações de {{ periodo_label|lower }}.</span>
                     </div>
-                    {% empty %}
-                    <p class="empty-msg">Sem vendas registradas.</p>
-                    {% endfor %}
                 </div>
-            </section>
+                <div class="header-actions">
+                    <button id="dark-mode-toggle" class="btn-dark-mode">
+                        <i class="fas fa-sun"></i>
+                    </button>
+                </div>
+            </header>
 
-        </div>
-    </main>
+            <div class="dashboard-content">
+                <div class="filter-bar">
+                    <form class="form-filtro" method="GET" id="form-relatorio">
+                        <input type="date" name="data_inicio" class="inpt-date" value="{{ data_inicio_str|default:'' }}" auto-submit>
+                        <input type="date" name="data_fim" class="inpt-date" value="{{ data_fim_str|default:'' }}" auto-submit>
+                    </form>
+                </div>
 
-    <script src="{% static 'js/scripts/admin/geral.js' %}" defer></script>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon pc2"><i class="fas fa-shopping-bag"></i></div>
+                        <div class="metric-data">
+                            <span>FATURAMENTO TOTAL</span>
+                            <h2>R$ {{ total_faturado|floatformat:"2g" }}</h2>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon pc3"><i class="fas fa-shopping-basket"></i></div>
+                        <div class="metric-data">
+                            <span>TOTAL VAREJO</span>
+                            <h2>R$ {{ total_varejo|floatformat:"2g" }}</h2>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon pc4"><i class="fas fa-truck-loading"></i></div>
+                        <div class="metric-data">
+                            <span>TOTAL ATACADO</span>
+                            <h2>R$ {{ total_atacado|floatformat:"2g" }}</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-content-grid">
+                    <section class="card-ranking">
+                        <h3>Produtos mais Vendidos ({{ periodo_label }})</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Pos.</th>
+                                    <th>Mercadoria</th>
+                                    <th style="text-align: center;">Qtd.</th>
+                                    <th style="text-align: right;">Total Faturado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in ranking %}
+                                <tr>
+                                    <td>{{ forloop.counter }}º</td>
+                                    <td><strong>{{ item.produto__nome }}</strong></td>
+                                    <td style="text-align: center;">{{ item.qtd_total }} un.</td>
+                                    <td style="text-align: right;"><strong>R$ {{ item.total_faturado|floatformat:"2g" }}</strong></td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="empty-state">Nenhuma movimentação de produtos no período.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </section>
+
+                    <section class="card-alertas">
+                        <h3>Alertas de Estoque</h3>
+                        {% for p in alertas_estoque %}
+                        <div class="alerta-item">
+                            <span>{{ p.nome }}</span>
+                            <span class="badge-repor">Repor</span>
+                        </div>
+                        {% empty %}
+                        <div class="estoque-ok">
+                            <i class="fas fa-check-circle"></i>
+                            <p>Estoque regularizado.</p>
+                        </div>
+                        {% endfor %}
+                    </section>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="{% static 'js/scripts/admin/geral/geral.js' %}" defer></script>
+    <!-- <script src="{% static 'js/script.js' %}" type="module" defer></script> -->
+
 </body>
 </html>

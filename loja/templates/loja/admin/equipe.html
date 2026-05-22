@@ -1,247 +1,320 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Administrativo | Willy Bolsas</title>
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> -->
-    <link rel="stylesheet" href="/loja/static/css/style.css">
+    <title>Equipe | Willy Bolsas</title>
+    <link rel="stylesheet" href="{% static './css/style.css' %}">
+    <link rel="stylesheet" href="{% static './css/layouts/admin/equipe/main.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body>
+<body id="page-equipe">
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
     <div class="container">
-        
-        <div class="aba-esquerda">
-            <img src="/loja/static/img/logo willy.png" alt="" id="logo">
-            <nav class="menu">
-                <a href="/admin/visao-geral">Visão Geral</a>
-                <a href="/admin/estoque">Estoque</a>
-                <a href="/admin/equipe">Equipe</a>
-                <a href="/admin/comissoes">Comissões</a>
+        <aside class="sidebar">
+            <div class="logo-container">
+                <img src="{% static 'img/logo willy.png' %}" alt="Willy Bolsas" class="logo">
+            </div>
+            <nav class="menu-lateral">
+                <a href="{% url 'visao_geral_admin' %}" class="menu-item {% if request.resolver_match.url_name == 'visao_geral_admin' %}active{% endif %}">
+                    <i class="fas fa-chart-pie" style="width: 24px; text-align: center;"></i> Visão Geral
+                </a>                
+                <a href="{% url 'admin_estoque' %}" class="menu-item {% if request.resolver_match.url_name == 'admin_estoque' %}active{% endif %}">
+                    <i class="fas fa-boxes" style="width: 24px; text-align: center;"></i> Estoque Central
+                </a>                
+                <a href="{% url 'admin_equipe' %}" class="menu-item {% if request.resolver_match.url_name == 'admin_equipe' %}active{% endif %}">
+                    <i class="fas fa-users" style="width: 24px; text-align: center;"></i> Equipe
+                </a>
+                <a href="{% url 'relatorio_faturamento' %}" class="menu-item "><i class="fas fa-file-invoice-dollar"  style="width: 24px; text-align: center;"></i> Relatórios</a>          
             </nav>
-        </div>
+        </aside>
 
         <main>
             <header>
-                <div class="header-info">
-                    <h1>Controle de Equipe</h1>
-                    <span>Gerencie acessos, comissões e dados dos colaboradores.</span>
+                <div class="header-left" style="display: flex; align-items: center; gap: 15px;">
+                    <button id="menu-toggle" class="btn-menu-mobile">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="header-info">
+                        <h1>Controle de Equipe</h1>
+                        <span>Gerencie acessos, comissões e dados dos colaboradores.</span>
+                    </div>
                 </div>
                 <div class="header-actions">
+                    <button id="btn-excluir-massa" class="btn-cancelar hidden" onclick="document.getElementById('form-excluir-equipe').submit()">
+                        <i class="fa-solid fa-trash"></i> Excluir Selecionados
+                    </button>
+
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="search-equipe" placeholder="Buscar ID, nome ou cargo...">
+                    </div>
+                
                     <div class="view-toggle">
-                        <button id="btn-lista" class="active" onclick="changeView('list')">
+                        <button id="btn-lista" class="btn-view active" onclick="changeView('list')">
                             <i class="fa-solid fa-list"></i>
                         </button>
-                        <button id="btn-grid" onclick="changeView('grid')">
+                        <button id="btn-grid" class="btn-view" onclick="changeView('grid')">
                             <i class="fa-solid fa-border-all"></i>
                         </button>
                     </div>
-                    <button id="btn-adiciona-modal" class="btn-adc"><i class="fa-solid fa-user-plus"></i>Adicionar Colaborador</button>
+
+                    <button id="btn-adiciona-modal" class="btn-adc" onclick="toggleModal('modal-colaborador')">
+                        <i class="fas fa-user-plus"></i> Adicionar Colaborador
+                    </button>
+                
+                    <button id="dark-mode-toggle" class="btn-dark-mode">
+                        <i class="fas fa-sun"></i>
+                    </button>
                 </div>
             </header>
 
-            <div id="view-list" class="view-list active">
-                <table>
-                    <tr>
-                        <th>ID / Acesso</th>
-                        <th>Colaborador</th>
-                        <th>Nível</th>
-                        <th>Comissão</th>
-                        <th>Ações</th>
-                    </tr>
-                    <tbody>
-                        <tr>
-                            <td><span>12345</span></td>
-                            <td><span>João Silva</span></td>
-                            <td>Administrador</td>
-                            <td>10%</td>
-                            <td>
-                                <button class="btn-card-action" style="border: none; padding: 0;" onclick="toggleModal('modal-editar-perfil')">
-                                    <i class="fa-solid fa-pen"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div id="view-grid" class="view-section active">
-                <div class="grid-container">
+            <form id="form-excluir-equipe" method="POST" action="{% url 'excluir_colaboradores' %}">
+                {% csrf_token %}
                     
-                    <div class="user-card">
-                        <div class="card-banner banner-color-1"></div>
-                        <img src="/static/images/avatar.png" class="card-avatar" alt="Avatar">
-                        <div class="card-content">
-                            <h3>Anselmo Silva</h3>
-                            <p class="userid">@anselmo.adm</p>
-                            <span class="badge badge-blue">Administrador</span>
-                            <div class="card-metrics">
-                                <div class="metric"><span>Comissão</span><strong>-</strong></div>
-                                <div class="metric"><span>Vendas (Mês)</span><strong>R$ 0,00</strong></div>
+                <div id="view-list" class="view-list active dash-card" style="margin: 32px 48px; padding: 24px; border-radius: 12px; overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 40px;"><input type="checkbox" id="select-all-equipe"></th>
+                                <th>ID / Acesso</th>
+                                <th onclick="ordenarTabela('colaborador')" style="cursor: pointer;" title="Clique para ordenar">
+                                    Colaborador <i class="fa-solid fa-sort"></i>
+                                </th>
+                                <th onclick="ordenarTabela('nivel')" style="cursor: pointer;" title="Clique para ordenar">
+                                    Nível <i class="fa-solid fa-sort"></i>
+                                </th>
+                                <th>Comissão</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for perfil in equipe %}
+                            <tr>
+                                <td><input type="checkbox" name="colaboradores_ids" value="{{ perfil.usuario.username }}" class="check-colaborador"></td>
+                                <td><span>{{ perfil.usuario.username }}</span></td>
+                                <td><span>{{ perfil.usuario.first_name|default:perfil.usuario.username }}</span></td>
+                                <td>{{ perfil.get_cargo_display }}</td>
+                                <td>{{ perfil.comissao }}%</td>
+                                <td>
+                                    <button type="button" class="btn-table-action" onclick="abrirModalEditar('{{ perfil.matricula }}', '{{ perfil.usuario.first_name|default:perfil.usuario.username }}', '{{ perfil.endereco|default:'' }}', '{{ perfil.telefone|default:'' }}', '{{ perfil.data_nascimento|date:'Y-m-d' }}', '{{ perfil.cargo }}', '{{ perfil.comissao }}', '{{ perfil.cor_banner }}', '{% if perfil.foto %}{{ perfil.foto.url }}{% else %}{% endif %}')">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            
+                <div id="view-grid" class="view-section">
+                    <div class="grid-container">
+                        {% for perfil in equipe %}
+                        <div class="user-card">
+                            <input type="checkbox" name="colaboradores_ids" value="{{ perfil.usuario.username }}" class="check-colaborador card-checkbox">
+                            
+                            <div class="card-banner" style="background-color: {{ perfil.cor_banner }};"></div>
+                            {% if perfil.foto %}
+                                <img src="{{ perfil.foto.url }}" class="card-avatar" alt="Avatar">
+                            {% else %}
+                                <img src="{% static 'img/icon.jpg' %}" class="card-avatar" alt="Avatar">
+                            {% endif %}
+                            <div class="card-content">
+                                <h3>{{ perfil.usuario.first_name|default:perfil.usuario.username }}</h3>
+                                <p class="userid">@{{ perfil.matricula }}</p>
+                                <span class="badge {% if perfil.cargo == 'administrador' %}badge-blue{% else %}badge-orange{% endif %}">
+                                    {{ perfil.get_cargo_display }}
+                                </span>
+                                <div class="card-metrics">
+                                    <div class="metric"><span>Comissão</span><strong>{{ perfil.comissao }}%</strong></div>
+                                    <div class="metric"><span>Vendas</span><strong>{{ perfil.total_vendas|default:"0" }}</strong></div>
+                                </div>
                             </div>
+                            <button type="button" class="btn-card-action" id="btn-editar" onclick="abrirModalEditar('{{ perfil.matricula }}', '{{ perfil.usuario.first_name|default:perfil.usuario.username }}', '{{ perfil.endereco|default:'' }}', '{{ perfil.telefone|default:'' }}', '{{ perfil.data_nascimento|date:'Y-m-d' }}', '{{ perfil.cargo }}', '{{ perfil.comissao }}', '{{ perfil.cor_banner }}', '{% if perfil.foto %}{{ perfil.foto.url }}{% else %}{% endif %}')">Editar Perfil</button>
                         </div>
-                        <button class="btn-card-action" onclick="toggleModal('modal-editar-perfil')">Editar Perfil</button>
-                    </div>
-                
-                    <div class="user-card">
-                        <div class="card-banner banner-color-2"></div>
-                        <img src="/static/images/avatar.png" class="card-avatar" alt="Avatar">
-                        <div class="card-content">
-                            <h3>João Pedro</h3>
-                            <p class="userid">@joao.vendas</p>
-                            <span class="badge badge-orange">Vendedor</span>
-                            <div class="card-metrics">
-                                <div class="metric"><span>Comissão</span><strong>5.5%</strong></div>
-                                <div class="metric"><span>Vendas (Mês)</span><strong>R$ 4.250,00</strong></div>
-                            </div>
-                        </div>
-                        <button class="btn-card-action" onclick="toggleModal('modal-editar-perfil')">Editar Perfil</button>
+                        {% endfor %}
                     </div>
                 </div>
-            </div>
+            </form>
 
             <div class="modal-overlay hidden" id="modal-colaborador">
                 <div class="modal-card">
-                    <form class="modal-body">
-                        <span>Adicionar Colaborador</span>
-                        <div class="input-grid">
-                            <div id="primeiro-bloco">
-                                <div class="input-field">
-                                    <label class="label-grid">ID / Username</label>
-                                    <input class="inpt-grid" type="text" placeholder="Ex: 12345">
-                                </div>
-                                <div class="input-field">
-                                    <label class="label-grid">Nome Completo</label>
-                                    <input class="inpt-grid" type="text" placeholder="Nome do funcionário">
-                                </div>
+                    <form method="POST" action="{% url 'adicionar_colaborador' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                            <div><span>NOVO COLABORADOR</span></div>
+                            <div class="avatar-upload-container">
+                                <label for="newAvatarInput">
+                                    <div class="avatar-preview">
+                                        <img id="newAvatarPreview" src="{% static 'img/icon.jpg' %}" alt="Avatar">
+                                    </div>
+                                    <span class="avatar-alterar-btn">ALTERAR</span>
+                                </label>
+                                <input type="file" id="newAvatarInput" name="foto_perfil" accept="image/*" hidden onchange="previewNewImage(event)">
                             </div>
-                            <div id="segundo-bloco">
-                                <div class="input-field">
-                                    <label class="label-grid">Data de Nascimento</label>
-                                    <input class="inpt-grid" type="date">
+
+                            <div class="input-grid">
+                                <div class="form-row" style="margin-bottom: 20px;">
+                                    <div class="input-field">
+                                        <label class="label-grid">ID DE ACESSO</label>
+                                        <input type="text" id="novo_username" name="username" class="inpt-grid" placeholder="Ex: 96970" maxlength="5" required>
+                                    </div>
+                                    <div class="input-field">
+                                        <label class="label-grid">SENHA DE ACESSO</label>
+                                        <input type="text" name="senha" class="inpt-grid" placeholder="Defina a senha" required>
+                                    </div>
                                 </div>
-                                <div class="input-field">
-                                    <label class="label-grid">Endereço</label>
-                                    <input class="inpt-grid" type="text" placeholder="Endereço completo">
+                                <div class="form-row" style="margin-bottom: 20px;">
+                                    <div class="input-field">
+                                        <label class="label-grid">NOME COMPLETO</label>
+                                        <input type="text" name="nome_completo" class="inpt-grid" placeholder="João da Silva" required>
+                                    </div>
+                                    <div class="input-field">
+                                        <label class="label-grid">DATA DE NASCIMENTO</label>
+                                        <input type="date" name="data_nascimento" class="inpt-grid">
+                                    </div>
                                 </div>
-                            </div>
-                            <div id="terceiro-bloco">
-                                <div class="input-field">
-                                    <label class="label-grid">Nível de Acesso</label>
-                                    <select class="inpt-grid">
-                                        <option value="vendedor">Vendedor</option>
-                                        <option value="admin">Administrador</option>
-                                    </select>
+                                <div class="form-row" style="margin-bottom: 20px;">
+                                    <div class="input-field">
+                                        <label class="label-grid">ENDEREÇO</label>
+                                        <input type="text" name="endereco" class="inpt-grid" placeholder="Rua, Número, Bairro">
+                                    </div>
+                                    <div class="input-field">
+                                        <label class="label-grid">NÚMERO TELEFONE</label>
+                                        <input type="text" name="telefone" class="inpt-grid" placeholder="(00) 00000-0000">
+                                    </div>
                                 </div>
-                                <div class="input-field">
-                                    <label class="label-grid">Comissão (%)</label>
-                                    <input class="inpt-grid" type="number" step="0.1" placeholder="Ex: 5.0">
+                                <div class="form-row">
+                                    <div class="input-field">
+                                        <label class="label-grid">NÍVEL DE ACESSO</label>
+                                        <select name="nivel" class="inpt-grid">
+                                            <option value="vendedor">Vendedor</option>
+                                            <option value="administrador">Administrador</option>
+                                        </select>
+                                    </div>
+                                    <div class="input-field field-comissao">
+                                        <label class="label-grid">COMISSÃO (%)</label>
+                                        <input type="text" name="comissao" class="inpt-grid" placeholder="5.0">
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="input-field full-width">
-                            <label>Cor do Perfil (Banner)</label>
-                            <div class="custom-color-picker">
-                                <div class="color-trigger-btn" id="pickerTrigger" onclick="toggleColorPopover()">
-                                    <div class="color-preview-inside" id="currentView"></div>
-                                    <i class="fa-solid fa-palette"></i>
-                                </div>
-                                <div class="color-popover" id="colorPopover">
-                                    <div class="popover-arrow"></div>
-                                    <h3>Selecione uma cor</h3>
-                                    <div class="popover-grid">
-                                        <label class="p-opt"><input type="radio" name="color" value="1" checked onclick="selectColorValue('#1E294A')"><span class="p-dot pc1"></span></label>
-                                        <label class="p-opt"><input type="radio" name="color" value="2" onclick="selectColorValue('#7C3AED')"><span class="p-dot pc2"></span></label>
-                                        <label class="p-opt"><input type="radio" name="color" value="3" onclick="selectColorValue('#10B981')"><span class="p-dot pc3"></span></label>
-                                        <label class="p-opt"><input type="radio" name="color" value="4" onclick="selectColorValue('#FF7A00')"><span class="p-dot pc4"></span></label>
-                                        <label class="p-opt"><input type="radio" name="color" value="5" onclick="selectColorValue('#F43F5E')"><span class="p-dot pc5"></span></label>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn-cancel">Cancelar</button>
-                                    <button type="submit" class="btn-save">Salvar</button>
-                                </div>
-                            </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn-cancel" onclick="toggleModal('modal-colaborador')">Cancelar</button>
+                            <button type="submit" class="btn-save">Cadastrar</button>
                         </div>
                     </form>
                 </div>
             </div>
 
             <div class="modal-overlay hidden" id="modal-editar-perfil">
-                <div class="modal-card card-edit-size"> 
-                    
-                    <div class="modal-header-edit">
-                        <h2>Editar Perfil</h2>
-                        <button class="btn-close-x" onclick="toggleModal('modal-editar-perfil')">
-                            <i class="fa-solid fa-xmark"></i>
-                        </button>
-                    </div>
-                
-                    <form class="modal-body">
-                        <div class="avatar-edit-section">
-                            <div class="avatar-wrapper" onclick="document.getElementById('editFileInput').click()">
-                                <img src="/static/images/avatar.png" id="editAvatarPreview" alt="Avatar">
-                                <div class="overlay-icon"><i class="fa-solid fa-camera"></i></div>
+                <div class="modal-card">
+                    <form method="POST" action="{% url 'editar_colaborador' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <input type="hidden" name="username_edit" id="id_username_edit">
+
+                        <div class="modal-body">
+                            <div><span>EDITAR PERFIL</span></div>
+                            <div class="avatar-upload-container">
+                                <label for="editAvatarInput">
+                                    <div class="avatar-preview">
+                                        <img id="editAvatarPreview" src="{% static 'img/icon.jpg' %}" alt="Avatar">
+                                    </div>
+                                    <span class="avatar-alterar-btn">ALTERAR</span>
+                                </label>
+                                <input type="file" id="editAvatarInput" name="foto_perfil" accept="image/*" hidden onchange="previewEditImage(event)">
                             </div>
-                            <input type="file" id="editFileInput" hidden accept="image/*" onchange="previewEditImage(event)">
-                            <span class="edit-photo-label">Alterar</span>
-                        </div>
-                    
-                        <div class="edit-profile-grid">
-                            <div class="coluna-esq">
-                                <div class="input-field">
-                                    <label class="label-grid">Nome</label>
-                                    <input type="text" class="inpt-grid full-width-input" id="edit-nome" placeholder="Ex: João da Silva">
+
+                            <div class="input-grid">
+                                <div class="form-row" style="margin-bottom: 20px;">
+                                    <div class="input-field">
+                                        <label class="label-grid">NOME COMPLETO</label>
+                                        <input type="text" name="nome_completo" class="inpt-grid">
+                                    </div>
+                                    <div class="input-field">
+                                        <label class="label-grid">REDEFINIR SENHA</label>
+                                        <input type="text" name="nova_senha" class="inpt-grid" placeholder="Deixe em branco para manter">
+                                    </div>
                                 </div>
-                                <div class="input-field">
-                                    <label class="label-grid">Endereço</label>
-                                    <input type="text" class="inpt-grid full-width-input" id="edit-endereco" placeholder="Ex: Rua...">
-                                </div>
-                                <div class="input-field">
-                                    <label class="label-grid">Comissão</label>
-                                    <input type="text" class="inpt-grid full-width-input" id="edit-comissao" placeholder="Ex: 5.0%">
-                                </div>
-                            </div>
-                        
-                            <div class="coluna-dir">
-                                <div class="input-field">
-                                    <label class="label-grid">Data de Nascimento</label>
-                                    <input type="date" class="inpt-grid full-width-input" id="edit-nascimento">
-                                </div>
-                                <div class="input-field">
-                                    <label class="label-grid">Nível de Acesso</label>
-                                    <select class="inpt-grid full-width-input" id="edit-nivel">
-                                        <option value="admin" selected>Administrador</option>
+
+                                <div class="form-row" style="margin-bottom: 20px;">
+                                    <div class="input-field">
+                                        <label class="label-grid">DATA DE NASCIMENTO</label>
+                                        <input type="date" name="data_nascimento_edit" class="inpt-grid">
+                                    </div>
+                                    <div class="input-field">
+                                    <label class="label-grid">NÍVEL DE ACESSO</label>
+                                    <select name="nivel" class="inpt-grid">
                                         <option value="vendedor">Vendedor</option>
+                                        <option value="administrador">Administrador</option>
                                     </select>
                                 </div>
-                                <div class="input-field color-field-wrapper">
-                                    <label class="label-grid">Cor do Baner</label> 
-                                    <div class="simple-color-picker">
-                                        <label class="color-radio"><input type="radio" name="edit-color" value="1" checked onclick="selectColorValue('#1E294A')"><span class="color-ball pc1"></span></label>
-                                        <label class="color-radio"><input type="radio" name="edit-color" value="2" onclick="selectColorValue('#F59E0B')"><span class="color-ball pc2"></span></label>
-                                        <label class="color-radio"><input type="radio" name="edit-color" value="3" onclick="selectColorValue('#10B981')"><span class="color-ball pc3"></span></label>
-                                        <label class="color-radio"><input type="radio" name="edit-color" value="4" onclick="selectColorValue('#3B82F6')"><span class="color-ball pc4"></span></label>
-                                        <label class="color-radio"><input type="radio" name="edit-color" value="5" onclick="selectColorValue('#8B5CF6')"><span class="color-ball pc5"></span></label>
+                                </div>                        
+
+                                <div class="form-row" style="margin-bottom: 20px;">
+                                    <div class="input-field">
+                                        <label class="label-grid">ENDEREÇO</label>
+                                        <input type="text" name="endereco" class="inpt-grid">
+                                    </div>
+                                    <div class="input-field">
+                                        <label class="label-grid">TELEFONE</label>
+                                        <input type="text" name="telefone" class="inpt-grid">
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="input-field field-comissao">
+                                        <label class="label-grid">COMISSÃO (%)</label>
+                                        <input type="text" name="comissao" class="inpt-grid">
+                                    </div>
+                                    <div class="input-field">
+                                        <label class="label-grid">COR DO BANER</label>
+                                        <div class="color-picker-circles">
+                                            <input type="radio" name="cor_banner_edit" value="#1E294A" class="color-radio pc1">
+                                            <input type="radio" name="cor_banner_edit" value="#7C3AED" class="color-radio pc2">
+                                            <input type="radio" name="cor_banner_edit" value="#10B981" class="color-radio pc3">
+                                            <input type="radio" name="cor_banner_edit" value="#FF7A00" class="color-radio pc4">
+                                            <input type="radio" name="cor_banner_edit" value="#F43F5E" class="color-radio pc5">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
-                        <div class="modal-footer-edit">
-                            <button class="btn-save btn-save-edit">Salvar</button>
+                        <div class="modal-footer">
+                            <button type="button" class="btn-cancel" onclick="toggleModal('modal-editar-perfil')">Cancelar</button>
+                            <button type="submit" class="btn-save">Salvar</button>
                         </div>
                     </form>
                 </div>
             </div>
-
         </main>
     </div>
+    
+    <script src="{% static 'js/scripts/admin/equipe/adminPerfil.js' %}" defer></script>
+    <script src="{% static 'js/scripts/admin/equipe/cor.js' %}" defer></script>
+    <script src="{% static 'js/scripts/admin/equipe/editarPerfil.js' %}" defer></script>
+    <script src="{% static 'js/scripts/admin/equipe/modal.js' %}" defer></script>
+    <script src="{% static 'js/scripts/admin/equipe/toggle.js' %}" defer></script>
+    <script src="{% static 'js/scripts/admin/equipe/telefone.js' %}" defer></script>
+    <script src="{% static 'js/scripts/admin/equipe/excluirPerfil.js' %}" defer></script>
+    <!-- <script src="{% static 'js/script.js' %}" type="module" defer></script> -->
 
-    <script src="/loja/static/js/scripts/admin/equipe/modal.js" defer></script>
-    <script src="/loja/static/js/scripts/admin/equipe/editarPerfil.js" defer></script>
-    <script src="/loja/static/js/scripts/admin/equipe/adminPerfil.js" defer></script>
-    <script src="/loja/static/js/scripts/admin/equipe/toggle.js" defer></script>
-    <script src="/loja/static/js/scripts/admin/equipe/cor.js" defer></script>
+    <script>
+        // Preview para Novo Colaborador
+        window.previewNewImage = function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('newAvatarPreview');
+                    if (preview) preview.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        };
+    </script>
 </body>
 </html>

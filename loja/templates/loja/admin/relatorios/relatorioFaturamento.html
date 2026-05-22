@@ -1,0 +1,154 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatórios Detalhados | Willy Bolsas</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/layouts/admin/relatorios/faturamento.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo-container">
+                <img src="{% static 'img/logo willy.png' %}" alt="Willy Bolsas" class="logo">
+            </div>
+            <nav class="menu-lateral">
+                <a href="{% url 'visao_geral_admin' %}" class="menu-item"><i class="fas fa-chart-pie" style="width: 24px; text-align: center;"></i> Visão Geral</a>                
+                <a href="{% url 'admin_estoque' %}" class="menu-item"><i class="fas fa-boxes" style="width: 24px; text-align: center;"></i> Estoque Central</a>                
+                <a href="{% url 'admin_equipe' %}" class="menu-item"><i class="fas fa-users" style="width: 24px; text-align: center;"></i> Equipe</a>                
+                <a href="{% url 'relatorio_faturamento' %}" class="menu-item active"><i class="fas fa-file-invoice-dollar" style="width: 24px; text-align: center;"></i> Relatórios</a>
+            </nav>
+        </aside>
+
+        <main>
+            <header>
+                <div class="header-left" style="display: flex; align-items: center; gap: 15px;">
+                    <button id="menu-toggle" class="btn-menu-mobile">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="header-info">
+                        <h1 id="main-title">Faturamento Detalhado</h1>
+                        <span id="main-subtitle">Análise de entradas e saída de mercadoria (hoje).</span>
+                    </div>
+                </div>
+                <div class="header-actions" style="display: flex; align-items: center; gap: 12px;">
+                    <button id="btn-exportar-pdf" class="btn-exportar" title="Exportar Relatório para PDF">
+                        <i class="fas fa-file-pdf"></i> <span>Exportar PDF</span>
+                    </button>
+                    <button id="dark-mode-toggle" class="btn-dark-mode"><i class="fas fa-sun"></i></button>
+                </div>
+            </header>
+
+            <div class="dashboard-content">
+                <div class="report-tabs">
+                    <div class="tabs-relatorios">
+                        <button onclick="mudarTela('vendedores')" id="tab-vendedores" class="tab-item">Vendedores</button>
+                        <button onclick="mudarTela('faturamento')" id="tab-faturamento" class="tab-item active">Faturamento</button>
+                    </div>
+                    <div class="date-faturamento">
+                        <form method="GET" id="form-relatorio" style="display: flex; gap: 10px;">
+                            <input type="date" name="data_inicio" id="date-picker" value="{{ data_inicio_str|default:'' }}" auto-submit>
+                            <input type="date" name="data_fim" id="date-picker-end" value="{{ data_fim_str|default:'' }}" auto-submit>
+                        </form>
+                    </div>
+                </div>
+
+                <section id="sec-faturamento" class="report-section active">
+                    <div class="metrics-grid faturamento-cards">
+                        <div class="metric-card">
+                            <div class="metric-icon pix-color"><i class="fab fa-pix"></i></div>
+                            <div class="metric-data"><span>PIX</span><h2>R$ {{ total_pix|floatformat:"2g" }}</h2></div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon money-color"><i class="fas fa-money-bill-wave"></i></div>
+                            <div class="metric-data"><span>DINHEIRO</span><h2>R$ {{ total_dinheiro|floatformat:"2g" }}</h2></div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon card-color"><i class="fas fa-credit-card"></i></div>
+                            <div class="metric-data"><span>DÉBITO</span><h2>R$ {{ total_debito|floatformat:"2g" }}</h2></div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon card-color"><i class="fas fa-credit-card"></i></div>
+                            <div class="metric-data"><span>CRÉDITO</span><h2>R$ {{ total_credito|floatformat:"2g" }}</h2></div>
+                        </div>
+                    </div>
+                    <div class="table-card">
+                        <table>
+                            <thead>
+                                <tr><th>Mercadoria</th><th class="txt-center">Qtd</th><th class="txt-right">Total</th></tr>
+                            </thead>
+                            <tbody>
+                                {% for m in mercadorias %}
+                                <tr>
+                                    <td><strong>{{ m.produto__nome }}</strong></td>
+                                    <td class="txt-center">{{ m.qtd }} un.</td>
+                                    <td class="txt-right">R$ {{ m.total_venda|floatformat:"2g" }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr><td colspan="3" class="empty-state" style="text-align: center; padding: 20px;">Nenhuma mercadoria vendida no período.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section id="sec-vendedores" class="report-section">
+                    <div class="metrics-vendedores">
+                        <div class="metric-card">
+                            <div class="metric-icon pc2"><i class="fas fa-dollar-sign"></i></div>
+                            <div class="metric-data"><span>VENDAS EQUIPE</span><h2>R$ {{ total_faturado|floatformat:"2g" }}</h2></div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon pc3"><i class="fas fa-percentage"></i></div>
+                            <div class="metric-data"><span>COMISSÕES</span><h2>R$ {{ total_comissoes|floatformat:"2g" }}</h2></div>
+                        </div>
+                    </div>
+                    <div class="table-card">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Data - Hora</th>
+                                    <th>Vendedor</th>
+                                    <th class="txt-right">Valor Venda</th>
+                                    <th class="txt-right">Comissão</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in comissoes %}
+                                <tr>
+                                    <td>{{ item.data_venda|date:"d/m/Y" }} - {{ item.data_venda|time:"H:i" }}</td>
+                                    <td>
+                                        <strong>
+                                            {% if item.vendedor %}
+                                                {{ item.vendedor.first_name|default:item.vendedor.username }}
+                                            {% else %}
+                                                <span style="color: #ff4d4d;">Vendedor Excluído</span>
+                                            {% endif %}
+                                        </strong>
+                                    </td>
+                                    <td class="txt-right">R$ {{ item.preco_total|floatformat:"2g" }}</td>
+                                    <td class="txt-right" style="color: #10B981;">R$ {{ item.valor_comissao|floatformat:"2g" }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr><td colspan="5" class="empty-state" style="text-align: center; padding: 20px;">Nenhuma venda registrada no período.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js" defer></script>
+    <script src="{% static 'js/scripts/admin/relatorios/faturamento.js' %}" defer></script>
+    <!-- <script src="{% static 'js/script.js' %}" type="module" defer></script> -->
+</body>
+</html>

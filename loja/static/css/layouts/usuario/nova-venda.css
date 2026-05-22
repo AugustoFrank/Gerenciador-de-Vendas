@@ -1,0 +1,348 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+#page-terminal-vendas {
+    margin: 0;
+    padding: 0;
+    background-color: #F0F2F5;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100vh;
+}
+/* O container agora se comporta exatamente como a tag <main> do Visão Geral */
+#page-terminal-vendas .container {
+    flex: 1;
+    height: 100vh;
+    overflow-y: auto;
+    background-color: #F0F2F5;
+    /* Removido o margin-left e padding fixos que causavam o pulo */
+}
+/* ==========================================
+   MENU LATERAL (IDÊNTICO AO VISÃO GERAL)
+   ========================================== */
+#page-terminal-vendas .sidebar, #page-terminal-vendas .aba-esquerda{
+    width: 260px;
+    height: 100vh;
+    background-color: #1E294A;
+    display: flex;
+    flex-direction: column;
+}
+#page-terminal-vendas .logo-container {
+    padding: 0;
+    margin-top: 30px;
+    margin-left: 70px;
+}
+#page-terminal-vendas .logo {
+    width: 120px;
+    display: block;
+}
+
+.menu-lateral, .menu {
+    display: flex;
+    flex-direction: column;
+    margin-top: 40px;
+    margin-left: 16px;
+    margin-right: 16px;
+    width: 228px;
+    gap: 16px;
+}
+.menu-item, .menu a {
+    font-size: 15px;
+    font-weight: 500;
+    color: #8E94A8;
+    text-decoration: none;
+    border-radius: 5px; /* Ajustado para 5px */
+    display: flex;
+    align-items: center;
+    padding: 10px 15px; /* Alinhado */
+    height: 43px;
+    gap: 12px;
+    transition: 0.2s;
+}
+.menu-item:hover, .menu a:hover{
+    color: #FFFFFF;
+    background-color: rgba(255, 255, 255, 0.05); /* Efeito Hover do Visão Geral */
+}
+
+.menu-item.active, .menu a.active {
+    background-color: #27345C !important;
+    color: #FFFFFF !important;
+    border-left: 4px solid #0A84FF;
+}
+/* ==========================================
+   CABEÇALHO (IDÊNTICO AO VISÃO GERAL)
+   ========================================== */
+#page-terminal-vendas header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 40px 48px 0 48px; /* Margem exata */
+    height: 60px;
+}
+#page-terminal-vendas .header-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px; /* Distância exata entre título e subtítulo */
+}
+#page-terminal-vendas .header-info h1 {
+    margin: 0;
+    font-size: 28px; /* Ajustado para 28px */
+    color: #1a1a1a;
+    font-weight: 700;
+}
+#page-terminal-vendas .header-info p {
+    margin: 0;
+    font-size: 15px; /* Ajustado para 15px */
+    color: #4b5563; /* Cinza exato */
+    font-weight: 400;
+}
+#page-terminal-vendas .header-vendedor {
+    font-size: 14px;
+    color: #1a1a1a;
+    display: flex;
+    align-items: center;
+    gap: 16px; /* Ajustado para bater com as margins originais */
+}
+.btn-dark-mode {
+    background: transparent;
+    color: #1a1a1a;
+    border: 1px solid #e5e7eb;
+    width: 40px;
+    height: 40px;
+    padding: 0; /* Centraliza o ícone perfeitamente */
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+/* ==========================================
+   CONTEÚDO DA VENDA
+   ========================================== */
+/* ==========================================
+   CONTEÚDO DA VENDA (TERMINAL PDV)
+   ========================================== */
+.pdv-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 30px;
+    margin: 32px 48px 48px 48px;
+}
+
+.card-pdv {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    border: 1px solid #e5e7eb;
+}
+
+.card-pdv h3 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 18px;
+    color: #1a1a1a;
+    font-weight: 700;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.input-group.full { width: 100%; }
+
+.row-inputs {
+    display: flex;
+    gap: 20px;
+}
+
+.half {
+    flex: 1;
+}
+
+.card-pdv label {
+    font-size: 11px;
+    font-weight: 800;
+    color: #4b5563;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.card-pdv input, 
+.card-pdv select {
+    padding: 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 15px;
+    outline: none;
+    color: #1a1a1a;
+    background: #ffffff;
+}
+
+.card-pdv input:focus, 
+.card-pdv select:focus {
+    border-color: #0A84FF;
+}
+
+.info-estoque {
+    font-size: 12px;
+    font-weight: 600;
+    color: #10b981;
+    margin-top: 8px;
+}
+
+/* CAIXA DE TROCO */
+.troco-box {
+    background-color: #FFF7ED;
+    border-left: 4px solid #FF7A00;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.troco-box label { color: #FF7A00; }
+
+.troco-box input {
+    border: 1px solid #FFBD7A;
+    background: #FFFFFF;
+    color: #FF7A00;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.troco-linha {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.troco-linha span {
+    font-size: 12px;
+    font-weight: 800;
+    color: #1a1a1a;
+    text-transform: uppercase;
+}
+
+.troco-linha strong {
+    font-size: 24px;
+    color: #FF4B4B;
+}
+
+/* PREÇO UNITÁRIO */
+.preco-unitario-box {
+    background-color: #F0F7FF;
+    border-left: 4px solid #0A84FF;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.preco-unitario-box span {
+    font-size: 11px;
+    font-weight: 800;
+    color: #0A84FF;
+}
+
+.preco-unitario-box h2 {
+    margin: 5px 0 0 0;
+    font-size: 28px;
+    color: #0A84FF;
+}
+
+/* RESUMO E TOTAL */
+.linha-resumo {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 30px;
+}
+
+.linha-resumo span { color: #8E94A8; font-size: 14px; }
+.linha-resumo strong { color: #1a1a1a; font-size: 16px; }
+
+.total-destaque {
+    border: 2px solid #0A84FF;
+    background-color: #F9FAFB;
+    border-radius: 10px;
+    padding: 35px 20px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.total-destaque span {
+    font-size: 11px;
+    font-weight: 800;
+    color: #1a1a1a;
+    text-transform: uppercase;
+}
+
+.total-destaque h1 {
+    margin: 15px 0 0 0;
+    font-size: 42px;
+    color: #131A33;
+}
+
+.btn-finalizar {
+    background-color: #FF7A00;
+    color: white;
+    width: 100%;
+    padding: 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.1s;
+}
+
+.btn-finalizar:hover { background-color: #e66e00; }
+.btn-finalizar:active { transform: scale(0.98); }
+
+/* MODO ESCURO DO PDV */
+.dark-mode .card-pdv {
+    background-color: #111827 !important;
+    border-color: #1F2937 !important;
+}
+
+.dark-mode .card-pdv input, 
+.dark-mode .card-pdv select {
+    background-color: #1F2937 !important;
+    border-color: #334155 !important;
+    color: #F8FAFC !important;
+}
+
+.dark-mode .card-pdv h3, 
+.dark-mode .card-pdv label, 
+.dark-mode .troco-linha span, 
+.dark-mode .linha-resumo strong, 
+.dark-mode .total-destaque span {
+    color: #F8FAFC !important; 
+}
+
+.dark-mode .preco-unitario-box {
+    background-color: rgba(10, 132, 255, 0.1) !important;
+    border-color: #0A84FF !important;
+}
+
+.dark-mode .troco-box {
+    background-color: rgba(255, 122, 0, 0.1) !important;
+    border-color: #FF7A00 !important;
+}
+
+.dark-mode .total-destaque { background-color: #020617 !important; }
+.dark-mode .total-destaque h1 { color: #f1f5f9 !important; }

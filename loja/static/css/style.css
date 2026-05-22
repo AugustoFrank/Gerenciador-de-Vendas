@@ -1,19 +1,20 @@
-@import url(/loja/static/css/layouts/admin/equipe/main.css);
-@import url(/loja/static/css/layouts/admin/equipe/grid-list.css);
-@import url(/loja/static/css/layouts/admin/equipe/modal.css);
-@import url(/loja/static/css/layouts/admin/equipe/editar-perfil.css);
-@import url(/loja/static/css/layouts/admin/geral/geral.css);
-@import url(/loja/static/css/layouts/usuario/usuario.css);
-@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Jersey+25&family=Montserrat:ital,wght@0,100..900;1,100..900&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Poppins:wght@100;400&family=Quicksand:wght@300..700&family=Reenie+Beanie&family=Roboto:ital,wght@0,100..9₀;1,1₀₀..9₀₀&display=swap');
+@import url('./layouts/admin/equipe/main.css');
+@import url('./layouts/admin/equipe/grid-list.css');
+@import url('./layouts/admin/equipe/modal.css');
+@import url('./layouts/admin/equipe/editar-perfil.css');
+@import url('./layouts/admin/geral/geral.css');
+@import url('./layouts/usuario/visao-geral.css');
+@import url('./layouts/usuario/nova-venda.css');
+@import url('./layouts/login/login.css');
+@import url('./layouts/usuario/estoque.css');
+@import url('./layouts/admin/estoque-admin/estoque-admin.css');
+@import url('./layouts/admin/comissoes/comissoes-admin.css');
 @import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Jersey+25&family=Montserrat:ital,wght@0,100..900;1,100..900&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Poppins:wght@100;400&family=Quicksand:wght@300..700&family=Reenie+Beanie&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-:root{
+/* ==========================================
+   VARIÁVEIS
+   ========================================== */
+:root {
     --blue-color: #131A33;
     --orange-color: #FF7A00;
     --white-color: #ffffff;
@@ -22,9 +23,504 @@
     --light-blue-color: #E0F2FE;
     --light-gray-color: #E5E7EB;
     --blue-bg-color: #1E294A;
-    --dark-blue-color: #61ACD3
+    --dark-blue-color: #61ACD3;
+    --bg-page: #F0F2F5;
+}
+
+/* ==========================================
+   BASE E ESTRUTURA
+   ========================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    background-color: var(--bg-page);
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    min-height: 100vh;
 }
+
+.container {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100vh;
+    overflow-y: auto;
+    background-color: var(--bg-page);
+}
+
+main {
+    flex: 1;
+    height: 100vh;
+    background-color: var(--bg-page);
+    overflow-y: auto;
+}
+
+/* ==========================================   
+   MENU LATERAL (PADRONIZADO COM NOVA VENDA)
+   ========================================== */
+.sidebar, 
+.aba-esquerda {
+    width: 260px;
+    height: 100vh;
+    background-color: #1E294A;
+    display: flex;
+    flex-direction: column;
+}
+
+.logo-container {
+    padding: 0;
+    margin-top: 30px;
+    margin-left: 70px;
+}
+
+.logo {
+    width: 120px;
+    display: block;
+}
+
+.menu-lateral, 
+.menu {
+    display: flex;
+    flex-direction: column;
+    margin-top: 40px;
+    margin-left: 16px;
+    margin-right: 16px;
+    width: 228px; /* Largura exata do nova-venda */
+    gap: 16px;
+}
+
+.menu-item, 
+.menu a {
+    font-size: 15px;
+    font-weight: 500;
+    color: #8E94A8;
+    text-decoration: none;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    height: 43px;
+    gap: 12px;
+    transition: 0.2s;
+}
+
+.menu-item:hover, 
+.menu a:hover {
+    color: #FFFFFF;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.menu-item.active, 
+.active-menu {
+    background-color: #27345C !important;
+    color: #FFFFFF !important;
+    border-left: 4px solid #0A84FF;
+}
+
+/* ==========================================
+   CABEÇALHO (PADRONIZADO COM NOVA VENDA)
+   ========================================== */
+header, 
+main header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 40px 48px 0 48px;
+    height: 60px;
+}
+
+.header-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.header-info h1 {
+    margin: 0;
+    font-size: 28px;
+    color: #1a1a1a;
+    font-weight: 700;
+}
+
+.header-info p, 
+.header-info span {
+    margin: 0;
+    font-size: 15px;
+    color: #4b5563;
+    font-weight: 400;
+}
+
+.header-actions {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.btn-dark-mode {
+    background: transparent;
+    color: #1a1a1a;
+    border: 1px solid #e5e7eb;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
+
+.dark-mode .btn-dark-mode {
+    background: transparent;
+    color: #e5e7eb;
+    border: 1px solid #2A365D;
+}
+
+.user-display, 
+.header-vendedor {
+    font-size: 14px;
+    color: #1a1a1a;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/* ==========================================
+   BOTÕES E TOGGLES GLOBAIS
+   ========================================== */
+.view-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background-color: #E5E7EB;
+    width: 90px;
+    height: 43px;
+    border-radius: 10px;
+}
+
+#btn-lista, 
+#btn-grid {
+    border: none;
+    background-color: transparent;
+    color: var(--gray-color);
+    width: 35px;
+    height: 32px;
+    border-radius: 10px;
+    transition: background-color 0.5s ease;
+}
+
+#btn-lista.active, 
+#btn-grid.active, 
+#btn-lista:active, 
+#btn-grid:active {
+    background-color: white;
+    color: rgb(0, 0, 0);
+}
+
+.btn-adc, 
+#btn-adc {
+    color: white;
+    background-color: var(--orange-color);
+    border: none;
+    padding: 10px 16px;
+    border-radius: 5px;
+    font-weight: 500;
+    height: 43px;
+}
+
+/* ==========================================
+   CARDS DE MÉTRICA GLOBAIS
+   ========================================== */
+.metrics-grid, 
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin: 32px 48px 30px 48px;
+}
+
+.metrics-grid-vendedores {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin: 32px 48px 30px 48px;
+}
+
+.metric-card, 
+.dash-card {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 0.95rem;
+    border: 1px solid #E5E7EB;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+}
+
+.metric-card h3,
+.metric-card span {
+    margin: 0;
+    color: #000000;
+}
+
+.dark-mode .metric-card h3,
+.dark-mode .metric-card span {
+    color: #FFFFFF;
+}
+
+.icon-box, 
+.icon-shape {
+    width: 55px;
+    height: 55px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 22px;
+}
+
+/* ==========================================
+   TABELAS GLOBAIS
+   ========================================== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    text-align: left;
+    font-size: 12px;
+    padding: 15px;
+    color: #86868B;
+    text-transform: uppercase;
+    border-bottom: 1px solid #E5E7EB;
+    background-color: #F9FAFB;
+}
+
+td {
+    padding: 18px 15px;
+    border-bottom: 1px solid #E5E7EB;
+    font-size: 14px;
+    color: #131A33;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    color: #86868B;
+}
+
+/* ==========================================
+   CORES GLOBAIS (USADAS EM VÁRIOS LUGARES)
+   ========================================== */
+.pc1 { background-color: #1E294A; color: #0f172a;}
+.pc2 { background-color: #7C3AED; color: #7C3AED; }
+.pc3 { background-color: #10B981; color: #10B981; }
+.pc4 { background-color: #FF7A00; color: #FF7A00; }
+.pc5 { background-color: #F43F5E; color: #F43F5E;}
+
+.dark-mode .pc1 { background-color: #1E294A; color: #0f172a;}
+.dark-mode .pc2 { background-color: #7C3AED; color: #7C3AED; }
+.dark-mode .pc3 { background-color: #10B981; color: #10B981; }
+.dark-mode .pc4 { background-color: #FF7A00; color: #FF7A00; }
+.dark-mode .pc5 { background-color: #F43F5E; color: #F43F5E;}
+
+.dark-mode .pc1,
+.dark-mode .pc2,
+.dark-mode .pc3,
+.dark-mode .pc4 {
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.63); /* Brilho sutil para destacar o campo */
+}
+
+/* ==========================================
+   MODO ESCURO GERAL
+   ========================================== */
+.dark-mode, 
+.dark-mode main, 
+.dark-mode .container {
+    background-color: #101931 !important; /* Azul noturno profundo */
+}
+
+.dark-mode .sidebar {
+    background-color: #111b3a !important; 
+}
+
+/* Cards e Containers: Mesma cor da Sidebar para unidade visual */
+.dark-mode .metric-card, 
+.dark-mode .dash-card, 
+.dark-mode .alerta-section, 
+.dark-mode .comissoes-container, 
+.dark-mode .estoque-container, 
+.dark-mode .inventario-container, 
+.dark-mode .card-pdv, 
+.dark-mode .user-card, 
+.dark-mode .modal-card, 
+.dark-mode .card-ranking, 
+.dark-mode .card-alertas,
+.dark-mode .view-list { 
+    background-color: #1E294A !important; 
+    border: 1px solid #2A365D !important; 
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* 1. Correção Visual do View-Toggle (Lista/Grid) */
+.dark-mode .view-toggle {
+    background-color: #141C31 !important; /* Fundo rebaixado */
+    border: 1px solid #2A365D !important;
+}
+
+.dark-mode #btn-lista, 
+.dark-mode #btn-grid {
+    color: #718096 !important; /* Ícone inativo discreto */
+}
+
+.dark-mode #btn-lista.active, 
+.dark-mode #btn-grid.active {
+    background-color: #1E294A !important; /* Botão ativo "salta" para a cor do card */
+    color: #FFFFFF !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* 2. Botões de Ação na Tabela (Ajeitados) */
+.dark-mode .btn-edit-table {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid #2A365D !important;
+    color: #A0ABC0 !important;
+}
+
+.btn-table-action {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 32px;
+    height: 32px
+}
+
+.btn-table-action > i {
+    color: var(--orange-color);
+    transition: color 0.3s ease;
+    font-size: 18px;
+}
+
+.btn-table-action:hover > i {
+    color: #9e4c00;
+    transition: color 0.3s ease;
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+    font-size: 18px;
+}
+
+.dark-mode .btn-table-action {
+    background-color: rgba(255, 0, 0, 0.05);
+    border: 1px solid #2A365D;
+    color: #A0ABC0;
+    transition: 0.3s;
+    width: 32px;
+    height: 32px
+}
+
+.dark-mode .btn-table-action:hover,
+.dark-mode .btn-edit-table:hover {
+    background-color: #FF7A00 !important; /* Laranja Willy Bolsas no hover */
+    color: #FFFFFF !important;
+    border-color: #FF7A00 !important;
+}
+
+/* 3. Tipografia e Inputs */
+.dark-mode h1, .dark-mode h2, .dark-mode h3, .dark-mode strong {
+    color: #F8FAFC !important;
+}
+
+.dark-mode p, .dark-mode label {
+    color: #A0ABC0 !important;
+}
+
+.dark-mode .search-box,
+.dark-mode .inpt-grid,
+.dark-mode .input-field > input {
+    border: none;
+    background-color: #141C31 !important;
+    border: 1px solid #2A365D !important;
+    color: #F8FAFC !important;
+}
+
+.dark-mode .search-box input::placeholder {
+    color: #6B7A90 !important;
+}
+
+.dark-mode #search-produto {
+    color: #fefeff !important;
+}
+
+/* Tabelas e Inventário */
+.dark-mode th {
+    background-color: #1e294a !important;
+    color: #8E94A8 !important;
+    border-bottom: 2px solid #2A365D !important;
+}
+
+.dark-mode td {
+    border-bottom: 1px solid #2A365D !important;
+    background-color: #1e294a !important;
+    color: #E2E8F0 !important;
+}
+
+.dark-mode tr {
+    transition: background-color 0.3s ease;
+}
+
+.dark-mode .badge-count-tipos {
+    background-color: #141C31 !important;
+    color: #A0ABC0 !important;
+    border: 1px solid #2A365D !important;
+}
+
+/* ==========================================
+   RESPONSIVIDADE E MENU HAMBURGUER (MOBILE)
+   ========================================== */
+
+/* Botão Mobile Invisível no Desktop */
+.btn-menu-mobile {
+    display: none;
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    color: #1a1a1a;
+    cursor: pointer;
+    padding: 5px;
+    transition: 0.3s;
+}
+
+.dark-mode .btn-menu-mobile {
+    color: #F8FAFC;
+}
+
+/* Fundo escuro quando o menu abre no celular */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 998;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* RESPONSIVIDADE ESPECÍFICA PARA RELATÓRIOS DE FATURAMENTO */
+

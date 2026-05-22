@@ -2,29 +2,63 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from django.db.models import Sum, Count
-# Create your models here.
+from PIL import Image
+import random
+from decimal import Decimal, ROUND_HALF_UP
 
-class Produto (models.Model):
-
-    referencia = models.CharField("Codigo/sku", max_length=5, unique=True)
+class Produto(models.Model):
+    referencia = models.CharField("Codigo/sku", max_length=5, unique=True, null=True, blank=True)
     nome = models.CharField("Nome da Mercadoria", max_length=200)
     estoque = models.IntegerField("Estoque Atual", default=0)
 
+    # Campos de Custo e Margens
     valor_compra = models.DecimalField("Valor de Compra", max_digits=10, decimal_places=2)
     perc_imposto = models.DecimalField("Percentual de Imposto (%)", max_digits=5, decimal_places=2, default=0.00)
     perc_varejo = models.DecimalField("Percentual de Margem de Lucro para Varejo (%)", max_digits=5, decimal_places=2, default=0.00)
     perc_atacado = models.DecimalField("Percentual de Margem de Lucro para Atacado (%)", max_digits=5, decimal_places=2, default=0.00)
 
-    valor_venda_varejo = models.DecimalField(max_digits=10, decimal_places=2, editable=False, null=True)
-    valor_venda_atacado = models.DecimalField(max_digits=10, decimal_places=2, editable=False, null=True)
+    # Preços calculados automaticamente
+    valor_venda_varejo = models.DecimalField("Preço de Varejo", max_digits=10, decimal_places=2, editable=False, null=True)
+    valor_venda_atacado = models.DecimalField("Preço de Atacado", max_digits=10, decimal_places=2, editable=False, null=True)
 
-    def clean(self):
+    class Meta:
+        verbose_name = "Produto"
+        verbose_name_plural = "Produtos"
+
+    def save(self, *args, **kwargs):
+        # 1. Validação de segurança
         if self.estoque < 0:
             raise ValidationError('O estoque não pode ser negativo!')
 
-    def save(self, *args, **kwargs):
-        self.full_clean() # Força a validação antes de salvar
+        # 2. Geração automática de SKU (Referência)
+        if not self.referencia:
+            while True:
+                codigo = str(random.randint(0, 99999)).zfill(5)
+                if not Produto.objects.filter(referencia=codigo).exists():
+                    self.referencia = codigo
+                    break
+
+        # 3. Cálculo matemático preciso das margens
+        compra = Decimal(str(self.valor_compra))
+        imposto = compra * (Decimal(str(self.perc_imposto)) / Decimal('100'))
+        
+        # Cálculo Varejo
+        margem_varejo = compra * (Decimal(str(self.perc_varejo)) / Decimal('100'))
+        self.valor_venda_varejo = (compra + imposto + margem_varejo).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+        
+        # Cálculo Atacado
+        margem_atacado = compra * (Decimal(str(self.perc_atacado)) / Decimal('100'))
+        self.valor_venda_atacado = (compra + imposto + margem_atacado).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+
+        self.full_clean() 
         super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.nome} (Ref: {self.referencia})"
+
+# ==========================================
+# ESTOQUE POR VENDEDOR
+# ==========================================
 
 class EstoqueVendedor(models.Model):
     vendedor = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Vendedor")
@@ -37,8 +71,12 @@ class EstoqueVendedor(models.Model):
         verbose_name_plural = "Estoques dos Vendedores"
 
     def __str__(self):
-        return f"{self.vendedor.username} tem {self.quantidade_atual}x {self.produto.nome}"
-    
+        return f"{self.vendedor.username}: {self.quantidade_atual}x {self.produto.nome}"
+
+# ==========================================
+# MODELO DE VENDA
+# ==========================================
+
 class Venda(models.Model):
     FORMA_PAGAMENTO_CHOICES = [
         ('dinheiro', 'Dinheiro'),
@@ -53,45 +91,64 @@ class Venda(models.Model):
         ('dinheiro_pix', 'Dinheiro + Pix'),
     ]
 
+    BANDEIRAS_CHOICES = [
+    ('visa', 'Visa'),
+    ('master', 'Mastercard'),
+    ('hiper', 'Hipercard'),
+    ('elo', 'Elo'),
+    ('outra', 'Outra'),
+    ]
+    bandeira_cartao = models.CharField("Bandeira do Cartão", max_length=20, choices=BANDEIRAS_CHOICES, null=True, blank=True)
+
     vendedor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name="Vendedor")
-    produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
+    produto = models.ForeignKey(Produto, on_delete=models.CASCADE, verbose_name="Produto")
     quantidade_vendida = models.PositiveIntegerField("Quantidade Vendida")
     tipo_venda = models.CharField("Tipo de Venda", max_length=20, choices=[('varejo', 'Varejo'), ('atacado', 'Atacado')])
     forma_pagamento = models.CharField("Forma de Pagamento", max_length=50, choices=FORMA_PAGAMENTO_CHOICES, default='dinheiro')
     data_venda = models.DateTimeField("Data da Venda", auto_now_add=True)
-    preco_total = models.DecimalField("Preço Total", max_digits=10, decimal_places=2, editable=False)
+    
+    # Campos Financeiros
+    preco_total = models.DecimalField("Preço Total da Venda", max_digits=10, decimal_places=2, editable=False)
+    comissao_aplicada = models.DecimalField("Comissão Aplicada (%)", max_digits=5, decimal_places=2, default=0.00)
+    valor_comissao = models.DecimalField("Valor da Comissão (R$)", max_digits=10, decimal_places=2, default=0.00)
 
-    comissao_aplicada = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
-    valor_comissao = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    class Meta:
+        verbose_name = "Venda"
+        verbose_name_plural = "Vendas"
 
     def save(self, *args, **kwargs):
         venda_nova = self.pk is None 
 
         if venda_nova:
-            try:
-                estoque_do_cara = EstoqueVendedor.objects.get(vendedor=self.vendedor, produto=self.produto)
-            except EstoqueVendedor.DoesNotExist:
-                raise ValidationError(f"O vendedor {self.vendedor.username} não tem esse produto no estoque dele!")
-
-            if estoque_do_cara.quantidade_atual < self.quantidade_vendida:
-                raise ValidationError(f"Estoque insuficiente! Você só tem {estoque_do_cara.quantidade_atual} unidades no seu estoque pessoal.")
-
+            # Seleciona o preço unitário correto
             if self.tipo_venda == 'varejo':
                 unitario = self.produto.valor_venda_varejo
             else:
                 unitario = self.produto.valor_venda_atacado
+            
+            # Calcula o total bruto
             self.preco_total = unitario * self.quantidade_vendida
 
+            # Puxa a comissão do perfil do vendedor
             if self.vendedor and hasattr(self.vendedor, 'perfil'):
                 self.comissao_aplicada = self.vendedor.perfil.comissao
             
-            percentual_decimal = self.comissao_aplicada / 100
-            self.valor_comissao = self.quantidade_vendida * percentual_decimal
+            # Calcula o valor líquido da comissão
+            percentual_decimal = Decimal(str(self.comissao_aplicada)) / Decimal('100')
+            self.valor_comissao = (self.preco_total * percentual_decimal).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
 
-            estoque_do_cara.quantidade_atual -= self.quantidade_vendida
-            estoque_do_cara.save()
+            # Baixa automática no estoque central
+            if self.produto.estoque < self.quantidade_vendida:
+                raise ValidationError(f"Estoque insuficiente! O saldo atual de {self.produto.nome} é de {self.produto.estoque} unidades.")
+            
+            self.produto.estoque -= self.quantidade_vendida
+            self.produto.save() 
 
         super().save(*args, **kwargs)
+
+# ==========================================
+# PERFIL DO COLABORADOR
+# ==========================================
 
 class Perfil(models.Model):
     CARGO_CHOICES = [
@@ -101,30 +158,53 @@ class Perfil(models.Model):
     usuario = models.OneToOneField(User, on_delete=models.CASCADE, related_name="perfil", null=True)
     cargo = models.CharField("Cargo", max_length=20, choices=CARGO_CHOICES, default='vendedor')
     comissao = models.DecimalField("Percentual de Comissão (%)", max_digits=5, decimal_places=2, default=0.00)
+    
+    # Informações Pessoais
+    endereco = models.CharField("Endereço", max_length=255, blank=True, null=True)
+    telefone = models.CharField("Telefone", max_length=20, blank=True, null=True)
+    data_nascimento = models.DateField("Data de Nascimento", blank=True, null=True)
+    
+    # Customização e Sistema
+    cor_banner = models.CharField("Cor do Banner (Hex)", max_length=10, default='#1E294A', null=True, blank=True)
+    foto = models.ImageField("Foto de Perfil", upload_to='avatares/', blank=True, null=True)
+    matricula = models.CharField("ID de Acesso (Matrícula)", max_length=5, unique=True, null=True, blank=True)
+
+    class Meta:
+        verbose_name = "Perfil de Usuário"
+        verbose_name_plural = "Perfis de Usuários"
+
+    def save(self, *args, **kwargs):
+        # Geração automática da matrícula
+        if not self.matricula:
+            while True:
+                codigo = str(random.randint(0, 99999)).zfill(5)
+                if not Perfil.objects.filter(matricula=codigo).exists():
+                    self.matricula = codigo
+                    break
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.usuario.username} - {self.cargo}"
+        return f"{self.usuario.username} - {self.cargo} (ID: {self.matricula})"
+    
 
+class HistoricoPreco(models.Model):
+    produto = models.ForeignKey(Produto, on_delete=models.CASCADE, related_name='historicos')
+    data_alteracao = models.DateTimeField(auto_now_add=True)
+    
+    # Valores no momento da alteração
+    valor_compra = models.DecimalField(max_digits=10, decimal_places=2)
+    perc_imposto = models.DecimalField(max_digits=5, decimal_places=2)
+    perc_varejo = models.DecimalField(max_digits=5, decimal_places=2)
+    perc_atacado = models.DecimalField(max_digits=5, decimal_places=2)
+    
+    # Saldo que entrou e saldo final
+    quantidade_adicionada = models.IntegerField()
+    estoque_final = models.IntegerField()
 
-def visao_geral(request):
-    hoje = timezone.now().date()
-    vendas_hoje = Venda.objects.filter(data_venda__date=hoje)
+    class Meta:
+        verbose_name = "Histórico de Preço e Estoque"
+        verbose_name_plural = "Históricos de Preços e Estoques"
+        ordering = ['-data_alteracao']
 
-    # Ranking de Vendedores (Quem faturou mais hoje)
-    ranking_vendedores = Venda.objects.filter(data_venda__date=hoje)\
-        .values('vendedor__username')\
-        .annotate(total_vendas=Sum('preco_total'))\
-        .order_by('-total_vendas')[:5]
-
-    # Produto mais vendido hoje
-    produto_destaque = ItemVenda.objects.filter(venda__data_venda__date=hoje)\
-        .values('produto__nome')\
-        .annotate(total_qtd=Sum('quantidade'))\
-        .order_by('-total_qtd').first()
-
-    context = {
-        # ... seus dados anteriores ...
-        'ranking': ranking_vendedores,
-        'produto_destaque': produto_destaque,
-    }
-    return render(request, 'loja/admin/visao_geral.html', context)
+    def __str__(self):
+        return f"{self.produto.nome} - {self.data_alteracao.strftime('%d/%m/%Y')}"
