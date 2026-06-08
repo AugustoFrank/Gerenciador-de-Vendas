@@ -1,9 +1,13 @@
-/* Layout de Abas */
+/* ============================================================
+   RELATÓRIO DE FATURAMENTO — Willy Bolsas
+   ============================================================ */
+
+/* ── Tabs ──────────────────────────────────────────────────── */
 .tabs-relatorios {
     display: flex;
     gap: 12px;
     margin-bottom: 25px;
-    border-bottom: 1px solid rgba(0,0,0,0.08);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
     padding-bottom: 12px;
 }
 
@@ -20,18 +24,61 @@
     background: none;
 }
 
-.tab-item:hover { background: rgba(0,0,0,0.03); }
-
-.tab-item.active {
-    background-color: #FF7A00; /* Laranja Willy */
-    color: white !important;
+.tab-item:hover {
+    background: rgba(0, 0, 0, 0.03);
 }
 
-/* Cores dos Ícones de Pagamento */
-.pix-color { background-color: #32BCAD; color: white; }
-.money-color { background-color: #10B981; color: white; }
-.card-color { background-color: #3B82F6; color: white; }
+.tab-item.active {
+    background-color: #FF7A00;
+    color: white;
+}
 
+/* ── Layout header ─────────────────────────────────────────── */
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* ── Ícones do menu lateral ────────────────────────────────── */
+.menu-icon {
+    width: 24px;
+    text-align: center;
+}
+
+/* ── Ícones de pagamento ───────────────────────────────────── */
+.pix-color {
+    background-color: #32BCAD;
+    color: white;
+}
+
+.money-color {
+    background-color: #10B981;
+    color: white;
+}
+
+.card-color {
+    background-color: #3B82F6;
+    color: white;
+}
+
+.pc2 {
+    background-color: #6366F1;
+    color: white;
+}
+
+.pc3 {
+    background-color: #EF4444;
+    color: white;
+}
+
+/* ── Cards de faturamento ──────────────────────────────────── */
 .faturamento-cards {
     grid-template-columns: repeat(4, 1fr) !important;
     margin: 20px 0 30px 0 !important;
@@ -45,6 +92,7 @@
     animation: GridFadeIn 0.3s ease-in-out;
 }
 
+/* ── Filtros de data ───────────────────────────────────────── */
 .report-tabs {
     display: flex;
     justify-content: space-between;
@@ -59,11 +107,29 @@
     gap: 12px;
 }
 
+.form-datas {
+    display: flex;
+    gap: 10px;
+}
+
+#date-picker,
+#date-picker-end {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    border: 1px solid #E5E7EB;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+}
+
+/* ── Botões de exportação ──────────────────────────────────── */
 .btn-exportar {
     display: flex;
     align-items: center;
     gap: 8px;
-    background-color: #ef4444; /* Vermelho elegante padrão para PDF, ou use a cor padrão do seu sistema */
+    background-color: #ef4444;
     color: #ffffff;
     border: none;
     padding: 8px 16px;
@@ -76,7 +142,7 @@
 }
 
 .btn-exportar:hover {
-    background-color: #dc2626; /* Tom ligeiramente mais escuro no hover */
+    background-color: #dc2626;
 }
 
 .btn-exportar:active {
@@ -87,17 +153,15 @@
     font-size: 16px;
 }
 
-#date-picker, #date-picker-end {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px 12px;
-    border: 1px solid #E5E7EB;
-    border-radius: 6px;
-    font-size: 14px;
-    outline: none;
+.btn-exportar-csv {
+    background-color: #10B981;
 }
 
+.btn-exportar-csv:hover {
+    background-color: #059669;
+}
+
+/* ── Seções / animações ────────────────────────────────────── */
 .report-section {
     display: none;
     animation: fadeIn 0.3s ease-in-out;
@@ -108,18 +172,58 @@
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-/* =========================================
-   NOVO DESIGN DA TABELA (WILLY BOLSAS)
-   ========================================= */
+@keyframes GridFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
+/* ── Gráficos ──────────────────────────────────────────────── */
+.graficos-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 30px;
+}
+
+.grafico-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+}
+
+.grafico-titulo {
+    font-size: 13px;
+    font-weight: 700;
+    color: #64748B;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ── Tabelas ───────────────────────────────────────────────── */
 .table-card {
     margin-bottom: 40px;
 }
-
 
 .table-card table th:first-child,
 .table-card table td:first-child {
@@ -155,7 +259,6 @@
     vertical-align: middle;
 }
 
-/* Efeito Hover na Linha */
 .willy-table tbody tr {
     transition: background-color 0.2s ease;
 }
@@ -164,13 +267,29 @@
     background-color: #F8FAFC;
 }
 
-/* Utilitários de Texto da Tabela */
-.willy-table .txt-center { text-align: center; }
-.willy-table .txt-right { text-align: right; }
+.willy-table .txt-center {
+    text-align: center;
+}
 
-.text-highlight { font-weight: 600; color: #0F172A; }
-.text-success { color: #10B981; font-weight: 600; }
-.text-muted { color: #94A3B8; font-size: 13px; }
+.willy-table .txt-right {
+    text-align: right;
+}
+
+/* ── Utilitários de texto ──────────────────────────────────── */
+.text-highlight {
+    font-weight: 600;
+    color: #0F172A;
+}
+
+.text-success {
+    color: #10B981;
+    font-weight: 600;
+}
+
+.text-muted {
+    color: #94A3B8;
+    font-size: 13px;
+}
 
 .empty-state {
     text-align: center;
@@ -179,21 +298,59 @@
     font-style: italic;
 }
 
-/* =========================================
+.vendedor-excluido {
+    color: #EF4444;
+}
+
+/* ── Botão cancelar venda ──────────────────────────────────── */
+.btn-cancelar-venda {
+    padding: 6px 14px;
+    background: transparent;
+    border: 1px solid #EF4444;
+    color: #EF4444;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    white-space: nowrap;
+}
+
+.btn-cancelar-venda:hover {
+    background-color: #EF4444;
+    color: #ffffff;
+}
+
+/* ============================================================
    DARK MODE
-   ========================================= */
-.dark-mode .tabs-relatorios { border-color: rgba(255,255,255,0.1); }
-.dark-mode .tab-item:hover { background: rgba(255,255,255,0.05); }
-.dark-mode #date-picker, .dark-mode #date-picker-end {
+   ============================================================ */
+.dark-mode .tabs-relatorios {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .tab-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.dark-mode #date-picker,
+.dark-mode #date-picker-end {
     background-color: #1E293B;
     border-color: #334155;
     color: #F8FAFC;
 }
 
-/* Dark Mode - Tabela */
+.dark-mode .grafico-card {
+    background: #1E293B;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.dark-mode .grafico-titulo {
+    color: #94A3B8;
+}
+
 .dark-mode .table-card {
     background: #1E293B;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 }
 
 .dark-mode .willy-table thead {
@@ -201,27 +358,26 @@
     border-bottom-color: #334155;
 }
 
-.dark-mode .willy-table th { color: #94A3B8; }
+.dark-mode .willy-table th {
+    color: #94A3B8;
+}
 
 .dark-mode .willy-table td {
     border-bottom-color: #334155;
     color: #E2E8F0;
 }
 
-.dark-mode .willy-table tbody tr:hover { background-color: #0F172A; }
-
-.dark-mode .text-highlight { color: #F8FAFC; }
-
-
-/* =========================================
-   RESPONSIVIDADE
-   ========================================= */
-
-@keyframes GridFadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+.dark-mode .willy-table tbody tr:hover {
+    background-color: #0F172A;
 }
 
+.dark-mode .text-highlight {
+    color: #F8FAFC;
+}
+
+/* ============================================================
+   RESPONSIVIDADE
+   ============================================================ */
 @media (max-width: 1320px) {
     .metrics-grid {
         grid-template-columns: repeat(2, 1fr) !important;
@@ -229,17 +385,9 @@
 }
 
 @media (max-width: 1139px) {
-
-    /* .metric-card {
-        padding: 16px;
-        font-size: 0.75rem;
-    } */
-
-
     .metric-data h2 {
         font-size: 1.2rem;
     }
-
 
     .btn-menu-mobile {
         display: block;
@@ -258,10 +406,9 @@
         z-index: 999;
         transform: translateX(-100%);
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 4px 0 15px rgba(0,0,0,0.2);
+        box-shadow: 4px 0 15px rgba(0, 0, 0, 0.2);
     }
 }
-
 
 @media (max-width: 878px) {
     .metric-card {
@@ -271,29 +418,23 @@
 
     .metrics-grid {
         grid-template-columns: repeat(2, 1fr) !important;
-        /* animation: GridFadeIn 0.3s ease-in-out; */
     }
 
-
-    
+    .graficos-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
-/* --- AJUSTES ESPECÍFICOS PARA TABLETS (755px) --- */
-
 @media (max-width: 755px) {
-
     .header-left span {
         display: none;
     }
 
-    /* Container principal */
     .report-tabs {
         flex-direction: column;
-        /* align-items: stretch; */
         gap: 16px;
     }
 
-    /* Abas */
     .tabs-relatorios {
         width: 100%;
         justify-content: space-between;
@@ -307,12 +448,10 @@
         padding: 12px;
     }
 
-    /* Datas */
     .date-faturamento {
         width: 100%;
         display: flex;
         gap: 10px;
-        /* margin-top: 5px; */
         margin-bottom: 5px;
     }
 
@@ -327,19 +466,16 @@
 }
 
 @media (max-width: 680px) {
-
-    /* Container principal */
     .report-tabs {
         gap: 14px;
     }
 
-    /* Datas */
     .date-faturamento {
         gap: 8px;
-        margin-bottom:5px;
+        margin-bottom: 5px;
     }
 
-    .date-faturamento form {
+    .form-datas {
         gap: 8px;
     }
 
@@ -349,7 +485,6 @@
         font-size: 13px;
     }
 
-    /* Cards */
     .metric-card {
         padding: 14px;
     }
@@ -358,17 +493,11 @@
         font-size: 1.2rem;
     }
 
-    /* .metric-data span {
-        font-size: 0.75rem;
-    } */
-
-    /* Grid continua em 2 colunas */
     .metrics-grid,
     .metrics-vendedores {
         gap: 14px;
     }
 
-    /* Tabela */
     .table-card {
         overflow-x: auto;
     }
@@ -378,11 +507,9 @@
         padding: 14px 18px;
         font-size: 13px;
     }
-
 }
 
 @media (max-width: 635px) {
-
     .metric-card {
         padding: 14px;
     }
@@ -403,11 +530,6 @@
     .metric-card h2 {
         font-size: 1rem;
     }
-
-    /* .tab-item {
-        padding: 10px 12px;
-        font-size: 12px;
-    } */
 }
 
 @media (max-width: 480px) {
@@ -451,7 +573,6 @@
 }
 
 @media (max-width: 450px) {
-
     .dashboard-content {
         padding: 14px;
     }
@@ -482,7 +603,7 @@
         font-size: 12px;
     }
 
-    .date-faturamento form {
+    .form-datas {
         flex-direction: column;
         width: 100%;
     }
@@ -518,13 +639,9 @@
     .table-card table td {
         padding: 12px 14px;
     }
-
 }
 
-/* 420 */
-
 @media (max-width: 420px) {
-
     .dashboard-content {
         padding: 12px;
     }
@@ -544,11 +661,9 @@
     .metric-data span {
         font-size: 0.6rem;
     }
-
 }
 
 @media (max-width: 400px) {
-
     .dashboard-content {
         padding: 12px;
     }
@@ -591,11 +706,9 @@
     .metric-data span {
         font-size: 0.5rem;
     }
-
 }
 
 @media (max-width: 360px) {
-
     .dashboard-content {
         padding: 10px;
     }
@@ -635,7 +748,6 @@
 }
 
 @media (max-width: 330px) {
-
     .dashboard-content {
         padding: 8px;
     }
