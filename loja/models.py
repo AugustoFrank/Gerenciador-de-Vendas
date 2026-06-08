@@ -16,6 +16,7 @@ class Produto(models.Model):
     perc_imposto = models.DecimalField("Percentual de Imposto (%)", max_digits=5, decimal_places=2, default=0.00)
     perc_varejo = models.DecimalField("Percentual de Margem de Lucro para Varejo (%)", max_digits=5, decimal_places=2, default=0.00)
     perc_atacado = models.DecimalField("Percentual de Margem de Lucro para Atacado (%)", max_digits=5, decimal_places=2, default=0.00)
+    em_promocao = models.BooleanField("Em Promoção", default=False)
 
     # Preços calculados automaticamente
     valor_venda_varejo = models.DecimalField("Preço de Varejo", max_digits=10, decimal_places=2, editable=False, null=True)
@@ -90,61 +91,87 @@ class Venda(models.Model):
         ('debito_dinheiro', 'Débito + Dinheiro'),
         ('dinheiro_pix', 'Dinheiro + Pix'),
     ]
-
     BANDEIRAS_CHOICES = [
-    ('visa', 'Visa'),
-    ('master', 'Mastercard'),
-    ('hiper', 'Hipercard'),
-    ('elo', 'Elo'),
-    ('outra', 'Outra'),
+        ('visa', 'Visa'),
+        ('master', 'Mastercard'),
+        ('hiper', 'Hipercard'),
+        ('elo', 'Elo'),
+        ('outra', 'Outra'),
     ]
-    bandeira_cartao = models.CharField("Bandeira do Cartão", max_length=20, choices=BANDEIRAS_CHOICES, null=True, blank=True)
-
-    vendedor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name="Vendedor")
-    produto = models.ForeignKey(Produto, on_delete=models.CASCADE, verbose_name="Produto")
+ 
+    bandeira_cartao    = models.CharField("Bandeira do Cartão", max_length=20, choices=BANDEIRAS_CHOICES, null=True, blank=True)
+    vendedor           = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name="Vendedor")
+    produto            = models.ForeignKey(Produto, on_delete=models.CASCADE, verbose_name="Produto")
     quantidade_vendida = models.PositiveIntegerField("Quantidade Vendida")
-    tipo_venda = models.CharField("Tipo de Venda", max_length=20, choices=[('varejo', 'Varejo'), ('atacado', 'Atacado')])
-    forma_pagamento = models.CharField("Forma de Pagamento", max_length=50, choices=FORMA_PAGAMENTO_CHOICES, default='dinheiro')
-    data_venda = models.DateTimeField("Data da Venda", auto_now_add=True)
-    
-    # Campos Financeiros
-    preco_total = models.DecimalField("Preço Total da Venda", max_digits=10, decimal_places=2, editable=False)
-    comissao_aplicada = models.DecimalField("Comissão Aplicada (%)", max_digits=5, decimal_places=2, default=0.00)
-    valor_comissao = models.DecimalField("Valor da Comissão (R$)", max_digits=10, decimal_places=2, default=0.00)
-
+    tipo_venda         = models.CharField("Tipo de Venda", max_length=20, choices=[('varejo', 'Varejo'), ('atacado', 'Atacado')])
+    forma_pagamento    = models.CharField("Forma de Pagamento", max_length=50, choices=FORMA_PAGAMENTO_CHOICES, default='dinheiro')
+    data_venda         = models.DateTimeField("Data da Venda", auto_now_add=True)
+ 
+    # Financeiro
+    preco_total        = models.DecimalField("Preço Total da Venda",   max_digits=10, decimal_places=2, editable=False)
+    comissao_aplicada  = models.DecimalField("Comissão Aplicada (%)",  max_digits=5,  decimal_places=2, default=0.00)
+    valor_comissao     = models.DecimalField("Valor da Comissão (R$)", max_digits=10, decimal_places=2, default=0.00)
+ 
+    # Desconto
+    em_promocao        = models.BooleanField("Em Promoção", default=False)
+    cancelada          = models.BooleanField("Cancelada", default=False)
+    desconto_aplicado  = models.DecimalField("Desconto Aplicado (%)", max_digits=5, decimal_places=2, default=0.00)
+ 
+    # Frações por forma de pagamento (para pagamentos compostos)
+    valor_credito      = models.DecimalField("Valor no Crédito",  max_digits=10, decimal_places=2, default=0.00)
+    valor_debito       = models.DecimalField("Valor no Débito",   max_digits=10, decimal_places=2, default=0.00)
+    valor_pix          = models.DecimalField("Valor no Pix",      max_digits=10, decimal_places=2, default=0.00)
+    valor_dinheiro     = models.DecimalField("Valor no Dinheiro", max_digits=10, decimal_places=2, default=0.00)
+ 
     class Meta:
         verbose_name = "Venda"
         verbose_name_plural = "Vendas"
-
+ 
     def save(self, *args, **kwargs):
-        venda_nova = self.pk is None 
-
+        venda_nova = self.pk is None
         if venda_nova:
-            # Seleciona o preço unitário correto
             if self.tipo_venda == 'varejo':
                 unitario = self.produto.valor_venda_varejo
             else:
                 unitario = self.produto.valor_venda_atacado
-            
-            # Calcula o total bruto
+ 
             self.preco_total = unitario * self.quantidade_vendida
-
-            # Puxa a comissão do perfil do vendedor
+ 
+            # Desconto 10% para pagamento individual sem promoção
+            FORMAS_COM_DESCONTO = ['dinheiro', 'pix', 'debito']
+            if not self.em_promocao and self.forma_pagamento in FORMAS_COM_DESCONTO:
+                self.desconto_aplicado = Decimal('10.00')
+                self.preco_total = (self.preco_total * Decimal('0.90')).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+            else:
+                self.desconto_aplicado = Decimal('0.00')
+ 
+            # Distribuição por forma de pagamento
+            # Para formas simples, o total vai inteiro para a forma correspondente
+            # Para formas compostas, os valores já vêm preenchidos pela view
+            if self.forma_pagamento == 'credito':
+                self.valor_credito = self.preco_total
+            elif self.forma_pagamento == 'debito':
+                self.valor_debito = self.preco_total
+            elif self.forma_pagamento == 'pix':
+                self.valor_pix = self.preco_total
+            elif self.forma_pagamento == 'dinheiro':
+                self.valor_dinheiro = self.preco_total
+            # Para compostos, os valores já chegam preenchidos da view
+ 
             if self.vendedor and hasattr(self.vendedor, 'perfil'):
                 self.comissao_aplicada = self.vendedor.perfil.comissao
-            
-            # Calcula o valor líquido da comissão
+ 
             percentual_decimal = Decimal(str(self.comissao_aplicada)) / Decimal('100')
             self.valor_comissao = (self.preco_total * percentual_decimal).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
-
-            # Baixa automática no estoque central
+ 
             if self.produto.estoque < self.quantidade_vendida:
                 raise ValidationError(f"Estoque insuficiente! O saldo atual de {self.produto.nome} é de {self.produto.estoque} unidades.")
-            
+ 
             self.produto.estoque -= self.quantidade_vendida
-            self.produto.save() 
-
+            self.produto.save()
+ 
         super().save(*args, **kwargs)
+
 
 # ==========================================
 # PERFIL DO COLABORADOR
@@ -166,7 +193,7 @@ class Perfil(models.Model):
     
     # Customização e Sistema
     cor_banner = models.CharField("Cor do Banner (Hex)", max_length=10, default='#1E294A', null=True, blank=True)
-    foto = models.ImageField("Foto de Perfil", upload_to='avatares/', blank=True, null=True)
+    foto = models.ImageField("Foto de Perfil", upload_to='avatares/', blank=True, null=True, max_length=255)
     matricula = models.CharField("ID de Acesso (Matrícula)", max_length=5, unique=True, null=True, blank=True)
 
     class Meta:
@@ -208,3 +235,4 @@ class HistoricoPreco(models.Model):
 
     def __str__(self):
         return f"{self.produto.nome} - {self.data_alteracao.strftime('%d/%m/%Y')}"
+    
