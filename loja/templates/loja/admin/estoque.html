@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Estoque Central | Willy Bolsas</title>
     <link rel="stylesheet" href="{% static './css/style.css' %}">
-    <link rel="stylesheet" href="{% static 'estoque-admin/estoque-admin.css' %}">
+    <link rel="stylesheet" href="{% static 'css/layouts/admin/estoque-admin/estoque-admin.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body id="page-estoque">
@@ -15,7 +15,7 @@
     <div class="container">
         <aside class="sidebar">
             <div class="logo-container">
-                <img src="{% static 'img/logo willy.png' %}" alt="Willy Bolsas" class="logo">
+                <img src="{% static 'img/logowilly.png' %}" alt="Willy Bolsas" class="logo">
             </div>
             <nav class="menu-lateral">
                 <a href="{% url 'visao_geral_admin' %}" class="menu-item {% if request.resolver_match.url_name == 'visao_geral_admin' %}active{% endif %}">
@@ -27,11 +27,31 @@
                 <a href="{% url 'admin_equipe' %}" class="menu-item {% if request.resolver_match.url_name == 'admin_equipe' %}active{% endif %}">
                     <i class="fas fa-users" style="width: 24px; text-align: center;"></i> Equipe
                 </a>
-                <a href="{% url 'relatorio_faturamento' %}" class="menu-item"><i class="fas fa-file-invoice-dollar"  style="width: 24px; text-align: center;"></i> Relatórios</a>
+                <a href="{% url 'relatorio_faturamento' %}" class="menu-item"><i class="fas fa-file-invoice-dollar" style="width: 24px; text-align: center;"></i> Relatórios</a>
             </nav>
+            <form method="post" action="{% url 'logout' %}" class="sidebar-footer">
+                {% csrf_token %}
+                <button type="submit" class="btn-logout">
+                    <div class="btn-logout-sign"><i class="fas fa-sign-out-alt"></i></div>
+                    <div class="btn-logout-text">Sair</div>
+                </button>
+            </form>
         </aside>
 
         <main>
+            {% if messages %}
+            <div style="padding: 20px 20px 0 20px;">
+                {% for message in messages %}
+                    <div style="padding: 15px; border-radius: 8px; margin-bottom: 10px; font-weight: bold;
+                                {% if message.tags == 'error' %}background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;
+                                {% else %}background: #d4edda; color: #155724; border: 1px solid #c3e6cb;{% endif %}">
+                        <i class="fas {% if message.tags == 'error' %}fa-exclamation-triangle{% else %}fa-check-circle{% endif %}"></i> 
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
             <header>
                 <div class="header-left" style="display: flex; align-items: center; gap: 15px;">
                     <button id="menu-toggle" class="btn-menu-mobile">
@@ -43,7 +63,7 @@
                     </div>
                 </div>
                 <div class="header-actions">
-                    <button id="btn-adc" class="btn-adc"><i class="fas fa-plus"></i> Adicionar Produto</button>
+                    <button id="btn-adc" class="btn-adc"><i class="fas fa-plus"></i> <span class="adc-produto">Adicionar Produto</span></button>
                     <button id="dark-mode-toggle" class="btn-dark-mode"><i class="fas fa-sun"></i></button>
                 </div>
             </header>
@@ -60,8 +80,7 @@
                                 <p style="margin: 0; font-size: 13px; color: #666;">Saldo total e margens atuais</p>
                             </div>
                         </div>
-                        
-                        <div style="display: flex; align-items: center; gap: 15px;">
+                        <div class="inventario-info-right">
                             <div class="search-box">
                                 <i class="fas fa-search"></i>
                                 <input type="text" id="search-produto" placeholder="Buscar por SKU ou Nome...">
@@ -69,7 +88,24 @@
                             <span class="badge-count-tipos">{{ produtos_loja.count }} Itens Cadastrados</span>
                         </div>
                     </div>
-                    
+
+                    <div class="filtros-rapidos">
+                        <span class="filtros-rapidos-label"><i class="fas fa-filter"></i> Filtrar:</span>
+                        <button class="btn-filtro-rapido ativo" id="filtro-todos">
+                            <i class="fas fa-list"></i> Todos
+                        </button>
+                        <button class="btn-filtro-rapido" id="filtro-promocao">
+                            <i class="fas fa-tag"></i> Em Promoção
+                        </button>
+                        <button class="btn-filtro-rapido" id="filtro-baixo">
+                            <i class="fas fa-exclamation-triangle"></i> Estoque Baixo
+                        </button>
+                        <button class="btn-filtro-rapido" id="filtro-zerado">
+                            <i class="fas fa-times-circle"></i> Sem Estoque
+                        </button>
+                        <span class="filtro-contagem" id="filtro-contagem"></span>
+                    </div>
+
                     <div class="table-responsive">
                         <table>
                             <thead>
@@ -77,22 +113,22 @@
                                     <th>SKU</th>
                                     <th>PRODUTO</th>
                                     <th style="cursor: pointer;" onclick="ordenarTabela('estoque')">
-                                        SALDO EM ESTOQUE
-                                        <i class="fas fa-sort" id="icon-estoque"></i>
+                                        SALDO EM ESTOQUE <i class="fas fa-sort" id="icon-estoque"></i>
                                     </th>
                                     <th>PREÇO VAREJO</th>
                                     <th>PREÇO ATACADO</th>
+                                    <th>PROMOÇÃO</th>
                                     <th>AÇÕES</th>
                                 </tr>
                             </thead>
                             <tbody id="tabela-produtos-corpo">
                                 {% for produto in produtos_loja %}
-                                <tr class="produto-item" 
+                                <tr class="produto-item"
                                     data-compra="{{ produto.valor_compra|stringformat:'.2f' }}"
                                     data-imposto="{{ produto.perc_imposto|stringformat:'.2f' }}"
                                     data-varejo="{{ produto.perc_varejo|stringformat:'.2f' }}"
-                                    data-atacado="{{ produto.perc_atacado|stringformat:'.2f' }}">
-                                    
+                                    data-atacado="{{ produto.perc_atacado|stringformat:'.2f' }}"
+                                    data-promocao="{{ produto.em_promocao|yesno:'true,false' }}">
                                     <td><strong>#{{ produto.referencia }}</strong></td>
                                     <td class="produto-nome">{{ produto.nome }}</td>
                                     <td>
@@ -100,16 +136,23 @@
                                             {{ produto.estoque }} un
                                         </span>
                                     </td>
-                                    <td>R$ {{ produto.valor_venda_atacado|floatformat:"2g" }}</td>
                                     <td>R$ {{ produto.valor_venda_varejo|floatformat:"2g" }}</td>
+                                    <td>R$ {{ produto.valor_venda_atacado|floatformat:"2g" }}</td>
                                     <td>
-                                        <button class="btn-edit-table" title="Repor Estoque / Mudar Preço">
-                                            <i class="fas fa-sync-alt"></i> Repor
+                                        {% if produto.em_promocao %}
+                                            <span class="badge-promocao-tabela"><i class="fas fa-tag"></i> Sim</span>
+                                        {% else %}
+                                            <span class="badge-sem-promocao">—</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <button class="btn-edit-table" title="Editar Produto">
+                                            <i class="fas fa-pen"></i> Editar
                                         </button>
                                     </td>
                                 </tr>
                                 {% empty %}
-                                <tr><td colspan="6" class="empty-msg">Nenhum produto cadastrado no sistema.</td></tr>
+                                <tr><td colspan="7" class="empty-msg">Nenhum produto cadastrado no sistema.</td></tr>
                                 {% endfor %}
                             </tbody>
                         </table>
@@ -118,19 +161,17 @@
             </div>
         </main>
 
+        <!-- MODAL: ADICIONAR NOVO PRODUTO -->
         <div id="modalAdicionar" class="modal-estoque hidden">
             <div class="modal-content card-pdv">
-
                 <div class="modal-header">
                     <h3><i class="fas fa-cart-plus"></i> Entrada de Mercadoria</h3>
                     <div class="badge-saldo-modal">
                         Saldo em Loja: <span id="valor-saldo-atual" style="color: #80b283;">0</span> un
                     </div>
                 </div>
-            
                 <form action="{% url 'adicionar_estoque_admin' %}" method="POST">
                     {% csrf_token %}
-
                     <div class="grid-identificacao">
                         <div class="input-group">
                             <label>SKU/REF</label>
@@ -141,13 +182,11 @@
                             <input type="text" name="nome" id="modal-nome" required>
                         </div>
                     </div>
-                
                     <div class="container-qtd-entrada">
                         <label>QUANTIDADE A ADICIONAR AO ESTOQUE</label>
                         <input type="number" name="quantidade" min="0" value="0" required class="input-destaque">
                         <small>(Deixe 0 se quiser apenas atualizar preços/margens)</small>
                     </div>
-                
                     <div class="grid-financeiro">
                         <div class="input-group">
                             <label>CUSTO UNITÁRIO (R$)</label>
@@ -159,14 +198,69 @@
                         </div>
                         <div class="input-group">
                             <label>MARGEM ATACADO (%)</label>
-                            <input type="text" name="perc_varejo" id="modal-varejo">
+                            <input type="text" name="perc_atacado" id="modal-atacado">
                         </div>
                         <div class="input-group">
                             <label>MARGEM VAREJO (%)</label>
-                            <input type="text" name="perc_atacado" id="modal-atacado">
+                            <input type="text" name="perc_varejo" id="modal-varejo">
                         </div>
                     </div>
-                
+                    <div class="promocao-toggle-box">
+                        <label class="promocao-toggle-label" for="modal-adicionar-promocao">
+                            <i class="fas fa-tag"></i>
+                            <span>Produto em Promoção</span>
+                            <small>Quando ativado, o desconto automático de 10% não se aplica a este item no terminal de vendas.</small>
+                        </label>
+                        <label class="switch-toggle">
+                            <input type="checkbox" name="em_promocao" id="modal-adicionar-promocao" value="true">
+                            <span class="switch-slider"></span>
+                        </label>
+                    </div>
+                    <div id="preview-precificacao" style="display:none; background:#f0f4ff; border:1px solid #c7d4f0; border-radius:10px; padding:16px; margin-top:12px;">
+                        <p style="font-size:11px; font-weight:700; color:#5a6a9a; letter-spacing:.06em; text-transform:uppercase; margin-bottom:12px;">
+                            <i class="fas fa-calculator"></i> Preview de precificação
+                        </p>
+                        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:12px;">
+                            <div style="background:#fff; border:1px solid #dde5f7; border-radius:8px; padding:10px 12px;">
+                                <p style="font-size:10px; color:#8e9ab8; margin-bottom:4px;">Custo + imposto</p>
+                                <p style="font-size:18px; font-weight:600; color:#1E294A;" id="prev-base">R$ —</p>
+                            </div>
+                            <div style="background:#fff; border:1px solid #b7e5cc; border-radius:8px; padding:10px 12px;">
+                                <p style="font-size:10px; color:#8e9ab8; margin-bottom:4px;">Preço varejo</p>
+                                <p style="font-size:18px; font-weight:600; color:#1a7f4b;" id="prev-varejo">R$ —</p>
+                            </div>
+                            <div style="background:#fff; border:1px solid #b5d4f4; border-radius:8px; padding:10px 12px;">
+                                <p style="font-size:10px; color:#8e9ab8; margin-bottom:4px;">Preço atacado</p>
+                                <p style="font-size:18px; font-weight:600; color:#185fa5;" id="prev-atacado">R$ —</p>
+                            </div>
+                        </div>
+                        <div style="background:#fff; border:1px solid #dde5f7; border-radius:8px; overflow:hidden;">
+                            <div style="display:flex; justify-content:space-between; padding:8px 14px; border-bottom:1px solid #eef1f8; font-size:13px;">
+                                <span style="color:#6b7a9e;">Custo unitário</span>
+                                <span style="font-weight:600; color:#1E294A;" id="prev-d-custo">—</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; padding:8px 14px; border-bottom:1px solid #eef1f8; font-size:13px;">
+                                <span style="color:#6b7a9e;">Imposto <span id="prev-pill-imp" style="font-size:10px; background:#eef1f8; color:#5a6a9a; padding:1px 7px; border-radius:20px; margin-left:4px;"></span></span>
+                                <span style="font-weight:600; color:#1E294A;" id="prev-d-imp">—</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; padding:8px 14px; border-bottom:1px solid #eef1f8; font-size:13px;">
+                                <span style="color:#6b7a9e;">Margem varejo <span id="prev-pill-v" style="font-size:10px; background:#e8f7ee; color:#1a7f4b; padding:1px 7px; border-radius:20px; margin-left:4px;"></span></span>
+                                <span style="font-weight:600; color:#1a7f4b;" id="prev-d-mv">—</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; padding:8px 14px; border-bottom:1px solid #eef1f8; font-size:13px;">
+                                <span style="color:#6b7a9e;">Margem atacado <span id="prev-pill-a" style="font-size:10px; background:#e6f1fb; color:#185fa5; padding:1px 7px; border-radius:20px; margin-left:4px;"></span></span>
+                                <span style="font-weight:600; color:#185fa5;" id="prev-d-ma">—</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; padding:9px 14px; border-bottom:1px solid #eef1f8; font-size:13px; background:#f6fff9;">
+                                <span style="font-weight:600; color:#1E294A;">Preço final varejo</span>
+                                <span style="font-weight:700; font-size:15px; color:#1a7f4b;" id="prev-total-v">—</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; padding:9px 14px; font-size:13px; background:#f0f7ff;">
+                                <span style="font-weight:600; color:#1E294A;">Preço final atacado</span>
+                                <span style="font-weight:700; font-size:15px; color:#185fa5;" id="prev-total-a">—</span>
+                            </div>
+                        </div>
+                    </div>
                     <div class="modal-footer-estoque">
                         <button type="button" id="btn-cancelar-modal" class="btn-cancelar">CANCELAR</button>
                         <button type="submit" class="btn-confirmar">CONFIRMAR ENTRADA</button>
@@ -174,8 +268,117 @@
                 </form>
             </div>
         </div>
+
+        <!-- MODAL: EDITAR PRODUTO EXISTENTE -->
+        <div id="modalEditar" class="modal-estoque hidden">
+            <div class="modal-content card-pdv">
+                <div class="modal-header">
+                    <h3><i class="fas fa-pen"></i> Editar Produto</h3>
+                    <div class="badge-saldo-modal">
+                        Saldo atual: <span id="editar-saldo-atual" style="color: #80b283;">0</span> un
+                    </div>
+                </div>
+                <form action="{% url 'adicionar_estoque_admin' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="acao" value="editar">
+                    <div class="grid-identificacao">
+                        <div class="input-group">
+                            <label>SKU/REF</label>
+                            <input type="text" name="sku" id="editar-sku" class="input-readonly" readonly>
+                        </div>
+                        <div class="input-group">
+                            <label>PRODUTO</label>
+                            <input type="text" name="nome" id="editar-nome" required>
+                        </div>
+                    </div>
+                    <div class="container-qtd-entrada">
+                        <label>QUANTIDADE A ADICIONAR AO ESTOQUE</label>
+                        <input type="number" name="quantidade" min="0" value="0" required class="input-destaque">
+                        <small>(Deixe 0 se quiser apenas atualizar preços/margens)</small>
+                    </div>
+                    <div class="grid-financeiro">
+                        <div class="input-group">
+                            <label>CUSTO UNITÁRIO (R$)</label>
+                            <input type="text" name="valor_compra" id="editar-compra" required>
+                        </div>
+                        <div class="input-group">
+                            <label>IMPOSTO (%)</label>
+                            <input type="text" name="perc_imposto" id="editar-imposto">
+                        </div>
+                        <div class="input-group">
+                            <label>MARGEM ATACADO (%)</label>
+                            <input type="text" name="perc_atacado" id="editar-atacado">
+                        </div>
+                        <div class="input-group">
+                            <label>MARGEM VAREJO (%)</label>
+                            <input type="text" name="perc_varejo" id="editar-varejo">
+                        </div>
+                    </div>
+                    <div class="promocao-toggle-box">
+                        <label class="promocao-toggle-label" for="editar-promocao">
+                            <i class="fas fa-tag"></i>
+                            <span>Produto em Promoção</span>
+                            <small>Quando ativado, o desconto automático de 10% não se aplica a este item no terminal de vendas.</small>
+                        </label>
+                        <label class="switch-toggle">
+                            <input type="checkbox" name="em_promocao" id="editar-promocao" value="true">
+                            <span class="switch-slider"></span>
+                        </label>
+                    </div>
+                    <div id="preview-precificacao-editar" style="display:none; background:#f0f4ff; border:1px solid #c7d4f0; border-radius:10px; padding:16px; margin-top:12px;">
+                        <p style="font-size:11px; font-weight:700; color:#5a6a9a; letter-spacing:.06em; text-transform:uppercase; margin-bottom:12px;">
+                            <i class="fas fa-calculator"></i> Preview de precificação
+                        </p>
+                        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:12px;">
+                            <div style="background:#fff; border:1px solid #dde5f7; border-radius:8px; padding:10px 12px;">
+                                <p style="font-size:10px; color:#8e9ab8; margin-bottom:4px;">Custo + imposto</p>
+                                <p style="font-size:18px; font-weight:600; color:#1E294A;" id="ep-base">R$ —</p>
+                            </div>
+                            <div style="background:#fff; border:1px solid #b7e5cc; border-radius:8px; padding:10px 12px;">
+                                <p style="font-size:10px; color:#8e9ab8; margin-bottom:4px;">Preço varejo</p>
+                                <p style="font-size:18px; font-weight:600; color:#1a7f4b;" id="ep-varejo">R$ —</p>
+                            </div>
+                            <div style="background:#fff; border:1px solid #b5d4f4; border-radius:8px; padding:10px 12px;">
+                                <p style="font-size:10px; color:#8e9ab8; margin-bottom:4px;">Preço atacado</p>
+                                <p style="font-size:18px; font-weight:600; color:#185fa5;" id="ep-atacado">R$ —</p>
+                            </div>
+                        </div>
+                        <div style="background:#fff; border:1px solid #dde5f7; border-radius:8px; overflow:hidden;">
+                            <div style="display:flex; justify-content:space-between; padding:8px 14px; border-bottom:1px solid #eef1f8; font-size:13px;">
+                                <span style="color:#6b7a9e;">Custo unitário</span>
+                                <span style="font-weight:600; color:#1E294A;" id="ep-d-custo">—</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; padding:8px 14px; border-bottom:1px solid #eef1f8; font-size:13px;">
+                                <span style="color:#6b7a9e;">Imposto <span id="ep-pill-imp" style="font-size:10px; background:#eef1f8; color:#5a6a9a; padding:1px 7px; border-radius:20px; margin-left:4px;"></span></span>
+                                <span style="font-weight:600; color:#1E294A;" id="ep-d-imp">—</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; padding:8px 14px; border-bottom:1px solid #eef1f8; font-size:13px;">
+                                <span style="color:#6b7a9e;">Margem varejo <span id="ep-pill-v" style="font-size:10px; background:#e8f7ee; color:#1a7f4b; padding:1px 7px; border-radius:20px; margin-left:4px;"></span></span>
+                                <span style="font-weight:600; color:#1a7f4b;" id="ep-d-mv">—</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; padding:8px 14px; border-bottom:1px solid #eef1f8; font-size:13px;">
+                                <span style="color:#6b7a9e;">Margem atacado <span id="ep-pill-a" style="font-size:10px; background:#e6f1fb; color:#185fa5; padding:1px 7px; border-radius:20px; margin-left:4px;"></span></span>
+                                <span style="font-weight:600; color:#185fa5;" id="ep-d-ma">—</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; padding:9px 14px; border-bottom:1px solid #eef1f8; font-size:13px; background:#f6fff9;">
+                                <span style="font-weight:600; color:#1E294A;">Preço final varejo</span>
+                                <span style="font-weight:700; font-size:15px; color:#1a7f4b;" id="ep-total-v">—</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; padding:9px 14px; font-size:13px; background:#f0f7ff;">
+                                <span style="font-weight:600; color:#1E294A;">Preço final atacado</span>
+                                <span style="font-weight:700; font-size:15px; color:#185fa5;" id="ep-total-a">—</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer-estoque">
+                        <button type="button" id="btn-cancelar-editar" class="btn-cancelar">CANCELAR</button>
+                        <button type="submit" class="btn-confirmar">SALVAR ALTERAÇÕES</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
     </div>
     <script src="{% static 'js/scripts/admin/estoque/estoque-admin.js' %}" defer></script>
-    <!-- <script src="{% static 'js/script.js' %}" type="module" defer></script> -->
 </body>
 </html>
