@@ -1,3 +1,4 @@
+import os
 from decimal import Decimal
 import random
 from datetime import datetime, time, timedelta
@@ -6,6 +7,8 @@ from django.contrib.auth import update_session_auth_hash, authenticate, login as
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.http import JsonResponse
+import json
+from django.db.models.functions import TruncDate
 from django.db.models import Sum, Q, Avg, Count, F
 from django.db import transaction
 from django.utils import timezone
@@ -33,6 +36,8 @@ def custom_login(request):
             
             if user is not None:
                 auth_login(request, user)
+                from django.middleware.csrf import rotate_token
+                rotate_token(request)
                 return redirect('redirecionamento_login')
             else:
                 messages.error(request, 'ID ou Senha incorretos.')
@@ -44,6 +49,9 @@ def custom_login(request):
 def custom_logout(request):
     auth_logout(request)
     return redirect('login')
+
+
+
 
 @login_required
 def redirecionamento_login(request):
@@ -58,10 +66,10 @@ def visao_geral(request):
     inicio_dia = make_aware(datetime.combine(hoje, time.min))
     fim_dia = make_aware(datetime.combine(hoje, time.max))
 
-    vendas_usuario = Venda.objects.filter(data_venda__range=(inicio_dia, fim_dia), vendedor=request.user)
+    vendas_usuario = Venda.objects.filter(data_venda__range=(inicio_dia, fim_dia), vendedor=request.user, cancelada=False)
     alertas = Produto.objects.filter(estoque__lt=10)
     
-    ranking_vendedores = Venda.objects.filter(data_venda__range=(inicio_dia, fim_dia)).values(
+    ranking_vendedores = Venda.objects.filter(data_venda__range=(inicio_dia, fim_dia), cancelada=False).values(
         'vendedor__first_name', 
         'vendedor__username', 
         'vendedor__perfil__foto'
@@ -93,7 +101,7 @@ def estoque(request):
 
 @login_required
 def comissoes(request):
-    vendas = Venda.objects.filter(vendedor=request.user).order_by('-data_venda')
+    vendas = Venda.objects.filter(vendedor=request.user, cancelada=False).order_by('-data_venda')
     context = {
         'vendas': vendas,
         'total_comissoes': vendas.aggregate(Sum('valor_comissao'))['valor_comissao__sum'] or 0,
@@ -116,7 +124,7 @@ def visao_geral_admin(request):
         fim_dia = make_aware(datetime.combine(datetime.strptime(data_fim_str, '%Y-%m-%d'), time.max))
         periodo_label = f"{inicio_dia.strftime('%d/%m')} a {fim_dia.strftime('%d/%m')}"
 
-    vendas_periodo = Venda.objects.filter(data_venda__range=(inicio_dia, fim_dia))
+    vendas_periodo = Venda.objects.filter(data_venda__range=(inicio_dia, fim_dia), cancelada=False)
 
     # Ranking de Produtos (Agrupado por nome conforme solicitado)
     ranking_produtos = vendas_periodo.values(
@@ -156,6 +164,11 @@ def admin_equipe(request):
 
 @user_passes_test(eh_admin)
 def admin_estoque(request):
+    # FORÇA A LIMPEZA DAS MENSAGENS ANTIGAS
+    storage = messages.get_messages(request)
+    for _ in storage: pass 
+    storage.used = True
+
     produtos_loja = Produto.objects.all().order_by('nome')
     vendedores = User.objects.filter(perfil__cargo='vendedor').select_related('perfil')
     return render(request, 'loja/admin/estoque.html', {'produtos_loja': produtos_loja, 'vendedores': vendedores})
@@ -168,24 +181,34 @@ def adicionar_estoque_admin(request):
         quantidade_entrada = int(request.POST.get('quantidade') or 0)
         
         def clean_decimal(key):
-            val = str(request.POST.get(key, '0')).replace(',', '.')
-            return Decimal(val if val.strip() else '0')
+            val = str(request.POST.get(key, '0') or '0').replace(',', '.').strip()
+            return Decimal(val if val else '0')
 
-        # Recupera o produto para garantir que temos o saldo anterior
-        produto = get_object_or_404(Produto, referencia=sku)
+        # Busca ou cria já com os valores do formulário
+        produto, criado = Produto.objects.get_or_create(
+            referencia=sku,
+            defaults={
+                'nome': request.POST.get('nome', ''),
+                'valor_compra': clean_decimal('valor_compra'),
+                'perc_imposto': clean_decimal('perc_imposto'),
+                'perc_varejo': clean_decimal('perc_varejo'),
+                'perc_atacado': clean_decimal('perc_atacado'),
+                'em_promocao': request.POST.get('em_promocao') in ('true', 'on'),
+            }
+        )
 
-        # Atualiza os campos (se o admin não mudou no modal, aqui ele salva o que já estava)
-        produto.nome = request.POST.get('nome')
-        produto.valor_compra = clean_decimal('valor_compra')
-        produto.perc_imposto = clean_decimal('perc_imposto')
-        produto.perc_varejo = clean_decimal('perc_varejo')
-        produto.perc_atacado = clean_decimal('perc_atacado')
-        
-        # Lógica 4: Soma a nova entrada ao estoque central
+        # Se já existia, atualiza os campos
+        if not criado:
+            produto.nome = request.POST.get('nome', produto.nome)
+            produto.valor_compra = clean_decimal('valor_compra')
+            produto.perc_imposto = clean_decimal('perc_imposto')
+            produto.perc_varejo = clean_decimal('perc_varejo')
+            produto.perc_atacado = clean_decimal('perc_atacado')
+        produto.em_promocao = request.POST.get('em_promocao') in ('true', 'on')
+
         produto.estoque += quantidade_entrada
-        produto.save() 
+        produto.save()
 
-        # Salva o Snapshot no Histórico para conferência futura (01/05 vs 02/05)
         HistoricoPreco.objects.create(
             produto=produto,
             valor_compra=produto.valor_compra,
@@ -195,14 +218,13 @@ def adicionar_estoque_admin(request):
             quantidade_adicionada=quantidade_entrada,
             estoque_final=produto.estoque
         )
-
         messages.success(request, f'Estoque e Histórico de {produto.nome} atualizados!')
     
     return redirect('admin_estoque')
 
 @user_passes_test(eh_admin)
 def relatorio_admin(request):
-    vendas = Venda.objects.all().order_by('-data_venda')
+    vendas = Venda.objects.filter(cancelada=False).order_by('-data_venda')
     
     data_inicio_str = request.GET.get('data_inicio')
     data_fim_str = request.GET.get('data_fim')
@@ -219,7 +241,7 @@ def relatorio_admin(request):
         'ticket_medio': vendas.aggregate(Avg('preco_total'))['preco_total__avg'] or 0,
         'comissoes': vendas,
     }
-    return render(request, 'loja/admin/relatorio-admin.html', context)
+    return render(request, 'loja/admin/relatorios/relatorioFaturamento.html', context)
 
 @user_passes_test(eh_admin)
 def add_colaborador(request):
@@ -237,7 +259,12 @@ def add_colaborador(request):
         comissao_str = str(request.POST.get('comissao', '0')).replace(',', '.')
         if not comissao_str.strip(): comissao_str = '0'
 
+        # LÓGICA CORRIGIDA: Renomear foto para não exceder limites
         foto_enviada = request.FILES.get('foto_perfil')
+        if foto_enviada:
+            extensao = os.path.splitext(foto_enviada.name)[1]
+            foto_enviada.name = f"{username_id}{extensao}"
+
         endereco_enviado = request.POST.get('endereco')
         telefone_enviado = request.POST.get('telefone')
         data_nasc_enviada = request.POST.get('data_nascimento')
@@ -276,8 +303,18 @@ def editar_colaborador(request):
             if not comissao_str.strip(): comissao_str = '0'
             perfil.comissao = Decimal(comissao_str)
 
+            # LÓGICA CORRIGIDA: Renomear foto na edição também
             if request.FILES.get('foto_perfil'):
-                perfil.foto = request.FILES.get('foto_perfil')
+                foto_enviada = request.FILES.get('foto_perfil')
+                
+                # Pegamos apenas a extensão (ex: .jpg ou .png)
+                extensao = os.path.splitext(foto_enviada.name)[1]
+                
+                # Definimos um nome fixo e curto baseado no username
+                # Isso impede que o Django tente criar nomes gigantescos
+                foto_enviada.name = f"{username_id}{extensao}"
+                
+                perfil.foto = foto_enviada
                 
             cor_enviada = request.POST.get('cor_banner_edit')
             if cor_enviada:
@@ -318,7 +355,8 @@ def consulta_estoque_venda(request):
             'estoque': p.estoque, 
             'preco_varejo': str(p.valor_venda_varejo), 
             'preco_atacado': str(p.valor_venda_atacado),
-            'nome': p.nome
+            'nome': p.nome,
+            'em_promocao': p.em_promocao
         })
     except Produto.DoesNotExist:
         return JsonResponse({'success': False})
@@ -337,29 +375,92 @@ def finalizar_venda(request):
     if request.method == 'POST':
         referencia = request.POST.get('referencia')
         quantidade = int(request.POST.get('quantidade') or 0)
-        tipo = request.POST.get('tipo_venda')  
+        tipo = request.POST.get('tipo_venda')
         pagamento = request.POST.get('forma_pagamento')
+        bandeira = request.POST.get('bandeira_cartao') or None
 
         try:
             produto = Produto.objects.get(referencia=referencia)
-            
+
             Venda.objects.create(
                 vendedor=request.user,
                 produto=produto,
                 quantidade_vendida=quantidade,
                 tipo_venda=tipo,
-                forma_pagamento=pagamento
+                forma_pagamento=pagamento,
+                bandeira_cartao=bandeira
             )
-            
+
             messages.success(request, f'Venda de {produto.nome} finalizada com sucesso!')
         except Produto.DoesNotExist:
             messages.error(request, 'Produto não encontrado.')
-        except ValidationError as e: # 🟢 RECUPERADO DO CÓDIGO ANTIGO: Tratamento perfeito para erro de saldo
+        except ValidationError as e:
             messages.error(request, str(e))
-        except Exception as e: # MANTIDO DO CÓDIGO NOVO: Garante que o sistema não "quebre" por outros erros
+        except Exception as e:
             messages.error(request, str(e))
-            
+
     return redirect('nova_venda')
+
+@login_required
+@transaction.atomic
+def finalizar_carrinho(request):
+    if request.method == 'POST':
+        import json
+        try:
+            payload = json.loads(request.body)
+            itens = payload.get('itens', [])
+            if not itens:
+                return JsonResponse({'sucesso': False, 'erro': 'Carrinho vazio.'})
+ 
+            vendas_criadas = []
+            for item in itens:
+                referencia    = item.get('referencia')
+                quantidade    = int(item.get('quantidade', 1))
+                tipo          = item.get('tipo_venda', 'varejo')
+                pagamento     = item.get('forma_pagamento', 'dinheiro')
+                bandeira      = item.get('bandeira_cartao') or None
+                em_promocao   = bool(item.get('em_promocao', False))
+ 
+                # Valores fracionados para pagamento composto
+                v_credito  = Decimal(str(item.get('valor_credito',  0) or 0))
+                v_debito   = Decimal(str(item.get('valor_debito',   0) or 0))
+                v_pix      = Decimal(str(item.get('valor_pix',      0) or 0))
+                v_dinheiro = Decimal(str(item.get('valor_dinheiro', 0) or 0))
+ 
+                produto = Produto.objects.get(referencia=referencia)
+ 
+                venda = Venda(
+                    vendedor=request.user,
+                    produto=produto,
+                    quantidade_vendida=quantidade,
+                    tipo_venda=tipo,
+                    forma_pagamento=pagamento,
+                    bandeira_cartao=bandeira,
+                    em_promocao=em_promocao,
+                    valor_credito=v_credito,
+                    valor_debito=v_debito,
+                    valor_pix=v_pix,
+                    valor_dinheiro=v_dinheiro,
+                )
+                venda.save()
+                vendas_criadas.append({
+                    'nome': produto.nome,
+                    'quantidade': quantidade,
+                    'preco_total': float(venda.preco_total),
+                    'forma_pagamento': venda.get_forma_pagamento_display(),
+                    'desconto': float(venda.desconto_aplicado),
+                })
+ 
+            return JsonResponse({'sucesso': True, 'vendas': vendas_criadas})
+ 
+        except Produto.DoesNotExist as e:
+            return JsonResponse({'sucesso': False, 'erro': f'Produto não encontrado: {str(e)}'})
+        except ValidationError as e:
+            return JsonResponse({'sucesso': False, 'erro': str(e)})
+        except Exception as e:
+            return JsonResponse({'sucesso': False, 'erro': str(e)})
+ 
+    return JsonResponse({'sucesso': False, 'erro': 'Método não permitido.'})
 
 def excluir_colaboradores(request):
     if request.method == 'POST':
@@ -388,7 +489,7 @@ def relatorio_vendedores(request):
         fim_dia = make_aware(datetime.combine(datetime.strptime(data_fim_str, '%Y-%m-%d'), time.max))
         periodo_label = f"{inicio_dia.strftime('%d/%m')} a {fim_dia.strftime('%d/%m')}"
 
-    vendas_queryset = Venda.objects.filter(data_venda__range=(inicio_dia, fim_dia))
+    vendas_queryset = Venda.objects.filter(data_venda__range=(inicio_dia, fim_dia), cancelada=False)
 
     # Tabela: Agrupamento por Data e Vendedor
     dados_vendedores = vendas_queryset.values(
@@ -419,84 +520,101 @@ def relatorio_vendedores(request):
     return render(request, 'loja/admin/relatorios/relatorioVendedores.html', context)
 
 
+@login_required
 @user_passes_test(eh_admin)
 def relatorio_faturamento(request):
     """View Unificada que carrega todos os dados do dashboard de uma vez"""
     data_inicio_str = request.GET.get('data_inicio')
-    data_fim_str = request.GET.get('data_fim')
-
-    # 1. Configuração de Datas
-    hoje = timezone.now().date()
+    data_fim_str    = request.GET.get('data_fim')
+ 
+    hoje       = timezone.now().date()
     inicio_dia = make_aware(datetime.combine(hoje, time.min))
-    fim_dia = make_aware(datetime.combine(hoje, time.max))
+    fim_dia    = make_aware(datetime.combine(hoje, time.max))
     periodo_label = "Hoje"
-
+ 
     if data_inicio_str and data_fim_str:
-        inicio_dia = make_aware(datetime.strptime(data_inicio_str, '%Y-%m-%d'))
-        fim_dia = make_aware(datetime.combine(datetime.strptime(data_fim_str, '%Y-%m-%d'), time.max))
+        inicio_dia    = make_aware(datetime.strptime(data_inicio_str, '%Y-%m-%d'))
+        fim_dia       = make_aware(datetime.combine(datetime.strptime(data_fim_str, '%Y-%m-%d'), time.max))
         periodo_label = f"{inicio_dia.strftime('%d/%m')} a {fim_dia.strftime('%d/%m')}"
+ 
+    vendas_queryset = Venda.objects.filter(
+        data_venda__range=(inicio_dia, fim_dia),
+        cancelada=False
+    ).select_related('vendedor', 'produto')
+ 
+    # ── Faturamento ──────────────────────────────────────────
+    faturamento_por_dia_qs = (
+        vendas_queryset
+        .annotate(data=TruncDate('data_venda'))
+        .values('data')
+        .annotate(total=Sum('preco_total'))
+        .order_by('data')
+    )
+    faturamento_por_dia = json.dumps([
+        {'data': str(d['data']), 'total': float(d['total'] or 0)}
+        for d in faturamento_por_dia_qs
+    ])
 
-    # Queryset Base para otimizar a performance
-    vendas_queryset = Venda.objects.filter(data_venda__range=(inicio_dia, fim_dia)).select_related('vendedor', 'produto')
-
-    # ==========================================
-    # DADOS PARA: ABA FATURAMENTO
-    # ==========================================
     mercadorias = vendas_queryset.values('produto__nome').annotate(
         total_venda=Sum('preco_total'),
         qtd=Sum('quantidade_vendida')
     ).order_by('-total_venda')
-
+ 
     total_faturado = vendas_queryset.aggregate(Sum('preco_total'))['preco_total__sum'] or 0
-    total_pix = vendas_queryset.filter(forma_pagamento='pix').aggregate(Sum('preco_total'))['preco_total__sum'] or 0
-    total_dinheiro = vendas_queryset.filter(forma_pagamento='dinheiro').aggregate(Sum('preco_total'))['preco_total__sum'] or 0
-    total_debito = vendas_queryset.filter(forma_pagamento='debito').aggregate(Sum('preco_total'))['preco_total__sum'] or 0
-    total_credito = vendas_queryset.filter(forma_pagamento='credito').aggregate(Sum('preco_total'))['preco_total__sum'] or 0
-
-    # ==========================================
-    # DADOS PARA: ABA VENDEDORES
-    # ==========================================
+ 
+    agg = vendas_queryset.aggregate(
+        _pix      = Sum('valor_pix'),
+        _dinheiro = Sum('valor_dinheiro'),
+        _debito   = Sum('valor_debito'),
+        _credito  = Sum('valor_credito'),
+    )
+    total_pix      = float(agg['_pix']      or 0)
+    total_dinheiro = float(agg['_dinheiro'] or 0)
+    total_debito   = float(agg['_debito']   or 0)
+    total_credito  = float(agg['_credito']  or 0)
+ 
+    # ── Vendedores ───────────────────────────────────────────
     dados_vendedores = vendas_queryset.values(
         'data_venda__date', 'vendedor__first_name', 'vendedor__username'
     ).annotate(
         total_vendas=Sum('preco_total'),
         total_comissao=Sum('valor_comissao')
     ).order_by('-data_venda__date')
-
+ 
     total_comissoes = vendas_queryset.aggregate(Sum('valor_comissao'))['valor_comissao__sum'] or 0
-    total_imposto = vendas_queryset.annotate(
+    total_imposto   = vendas_queryset.annotate(
         imposto_item=F('preco_total') * F('produto__perc_imposto') / 100
     ).aggregate(Sum('imposto_item'))['imposto_item__sum'] or 0
-
-    # ==========================================
-    # DADOS PARA: ABA COMISSÕES
-    # ==========================================
-    # Aqui usamos o nome 'comissoes' para bater com o seu {% for comissao in comissoes %}
+ 
+    # ── Comissões ────────────────────────────────────────────
     comissoes_lista = vendas_queryset.order_by('-data_venda')
-    ticket_medio = vendas_queryset.aggregate(Avg('preco_total'))['preco_total__avg'] or 0
-
+    ticket_medio    = vendas_queryset.aggregate(Avg('preco_total'))['preco_total__avg'] or 0
+ 
     context = {
-        # Gerais
-        'periodo_label': periodo_label,
-        'data_inicio_str': data_inicio_str,
-        'data_fim_str': data_fim_str,
-        'total_faturado': total_faturado,
-        
-        # Faturamento
-        'mercadorias': mercadorias,
-        'total_pix': total_pix,
-        'total_dinheiro': total_dinheiro,
-        'total_debito': total_debito,
-        'total_credito': total_credito,
-
-        # Vendedores
+        'periodo_label':    periodo_label,
+        'data_inicio_str':  data_inicio_str,
+        'data_fim_str':     data_fim_str,
+        'total_faturado':   total_faturado,
+        'faturamento_por_dia': faturamento_por_dia,
+        'dados_graficos_json': __import__('json').dumps({'faturamento_por_dia': __import__('json').loads(faturamento_por_dia), 'pagamentos': {'pix': round(float(total_pix),2), 'dinheiro': round(float(total_dinheiro),2), 'debito': round(float(total_debito),2), 'credito': round(float(total_credito),2)}}, ensure_ascii=False),
+        'mercadorias':      mercadorias,
+        'total_pix':        total_pix,
+        'total_dinheiro':   total_dinheiro,
+        'total_debito':     total_debito,
+        'total_credito':    total_credito,
         'dados_vendedores': dados_vendedores,
-        'total_comissoes': total_comissoes,
-        'total_imposto': total_imposto,
-
-        # Comissões
-        'comissoes': comissoes_lista,
-        'ticket_medio': ticket_medio,
-        'total_vendas': total_faturado, # Usado no card de comissões
+        'total_comissoes':  total_comissoes,
+        'total_imposto':    total_imposto,
+        'comissoes':        comissoes_lista,
+        'ticket_medio':     ticket_medio,
     }
     return render(request, 'loja/admin/relatorios/relatorioFaturamento.html', context)
+
+
+@user_passes_test(eh_admin)
+def cancelar_venda(request, venda_id):
+    if request.method == 'POST':
+        venda = get_object_or_404(Venda, id=venda_id)
+        venda.cancelada = True
+        venda.save()
+    return redirect(request.META.get('HTTP_REFERER', 'relatorio_faturamento'))
