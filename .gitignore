@@ -11,4 +11,5 @@ media/
 .env
 
 .DS_Store
-Thumbs.db
+Thumbs.dbstaticfiles/
+nohup.out

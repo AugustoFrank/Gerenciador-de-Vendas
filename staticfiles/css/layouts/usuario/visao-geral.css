@@ -1,0 +1,121 @@
+/* ==========================================
+   VISÃO GERAL USUÁRIO
+   ========================================== */
+.content-body {
+    margin: 32px 48px 48px 48px;
+}
+
+.filter-bar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 24px;
+}
+
+.form-filtro {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.inpt-date {
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1px solid #E5E7EB;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    outline: none;
+    background: #ffffff;
+    color: #1a1a1a;
+    height: 43px;
+}
+
+.inpt-date:focus {
+    border-color: #0A84FF;
+}
+
+.btn-search {
+    background-color: #1E294A;
+    color: #FFFFFF;
+    border: none;
+    padding: 0 20px;
+    height: 43px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.blue {
+    background-color: #EBF5FF;
+    color: #0A84FF;
+}
+
+.green {
+    background-color: #ECFDF5;
+    color: #10B981;
+}
+
+.dash-data h3 {
+    margin: 0;
+    font-size: 12px;
+    color: #86868B;
+    text-transform: uppercase;
+}
+
+.dash-data .val {
+    margin: 5px 0 0 0;
+    font-size: 28px;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+.alerta-section {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid #E5E7EB;
+}
+
+.sec-header {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1a1a;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #F3F4F6;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sku-id {
+    color: #86868B;
+    font-weight: 600;
+}
+
+.critical {
+    color: #F43F5E;
+    font-weight: 700;
+}
+
+.btn-action {
+    background-color: #EBF5FF;
+    color: #0A84FF;
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.dark-mode .blue { 
+    background-color: rgba(10, 132, 255, 0.15) !important; 
+    color: #3b82f6 !important;
+}
+
+.dark-mode .green { 
+    background-color: rgba(16, 185, 129, 0.15) !important; 
+    color: #10b981 !important;
+}

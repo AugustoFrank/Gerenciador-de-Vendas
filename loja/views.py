@@ -588,6 +588,7 @@ def relatorio_faturamento(request):
  
     # ── Comissões ────────────────────────────────────────────
     comissoes_lista = vendas_queryset.order_by('-data_venda')
+    vendas_detalhadas = vendas_queryset.order_by('-data_venda')
     ticket_medio    = vendas_queryset.aggregate(Avg('preco_total'))['preco_total__avg'] or 0
  
     context = {
@@ -598,6 +599,7 @@ def relatorio_faturamento(request):
         'faturamento_por_dia': faturamento_por_dia,
         'dados_graficos_json': __import__('json').dumps({'faturamento_por_dia': __import__('json').loads(faturamento_por_dia), 'pagamentos': {'pix': round(float(total_pix),2), 'dinheiro': round(float(total_dinheiro),2), 'debito': round(float(total_debito),2), 'credito': round(float(total_credito),2)}}, ensure_ascii=False),
         'mercadorias':      mercadorias,
+        'vendas_detalhadas': vendas_detalhadas,
         'total_pix':        total_pix,
         'total_dinheiro':   total_dinheiro,
         'total_debito':     total_debito,

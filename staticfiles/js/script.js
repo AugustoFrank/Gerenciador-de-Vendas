@@ -1,0 +1,6 @@
+import './scripts/admin/equipe/adminPerfil.js'
+import './scripts/admin/equipe/cor.js'
+import './scripts/admin/equipe/modal.js'
+import './scripts/admin/equipe/toggle.js'
+import './scripts/admin/equipe/editarPerfil.js'
+import './scripts/admin/equipe/telefone.js'

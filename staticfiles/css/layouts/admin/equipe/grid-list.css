@@ -1,0 +1,188 @@
+/* ==========================================
+   LISTA E GRID
+   ========================================== */
+.view-section {
+    margin: 24px 48px 0 48px;
+}
+
+.grid-container {
+    display: grid;
+    /* Define que as colunas terão no máximo 280px ou 300px (tamanho do card) */
+    grid-template-columns: repeat(auto-fill, minmax(293px, 1fr)); 
+    /* Define a distância exata de 24px entre um card e outro */
+    gap: 24px; 
+    /* Alinha o grid à esquerda para eles não ficarem sambando na tela */
+    justify-content: start; 
+    padding: 20px;
+}
+
+.user-card {
+    background-color: var(--white);
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    height: 329px;
+    width: 283px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    border: 1px solid #EDEDF2;
+}
+
+.user-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.card-banner {
+    height: 110px;
+    width: 100%;
+}
+
+.card-avatar {
+    width: 100px;
+    height: 100px;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    object-position: center;
+    flex-shrink: 0;
+    background-color: #ffff;
+    border-radius: 50%;
+    border: 5px solid var(--white);
+    margin: -50px auto 0;
+    z-index: 2;
+    display: block;
+}
+
+.card-content {
+    padding: 10px 20px;
+    text-align: center;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card-content h3 {
+    font-size: 1.1rem;
+    color: var(--text-main);
+    font-weight: 700;
+    margin-bottom: 2px;
+    line-height: 1.2;
+}
+
+.userid {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+}
+
+.badge {
+    padding: 4px 12px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    /* display: inline-block; */
+    /* margin: 5px auto; */
+    background-color: #d5e9fd;
+    color: #1E40AF;
+    width: 100%;
+    /* border: 1px solid #1E40AF; */
+    font-weight: 700;
+}
+
+
+.badge-orange {
+    background-color: #ffdcc3;
+    font-size: 0.75rem;
+    color: var(--orange-color);
+    /* border: 1px solid var(--orange-color); */
+    padding: 4px 12px;
+    border-radius: 8px;
+    display: inline-block;
+    margin: 5px auto;
+    font-weight: 700;
+}
+
+
+/* .dark-mode .badge-orange {
+    
+} */
+.card-metrics {
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--gray-bg);
+    padding: 10px 15px;
+    border-radius: 12px;
+    margin-bottom: 5px;
+}
+
+.metric {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.metric span {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.metric strong {
+    font-size: 0.85rem;
+    color: var(--text-main);
+}
+
+.btn-card-action {
+    width: 100%;
+    border: none;
+    background-color: transparent;
+    border-top: 1px solid #F2F2F7;
+    padding: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: 0.2s;
+}
+
+.btn-card-action:hover {
+    background-color: rgba(143, 143, 143, 0.336);
+    color: var(--text-main);
+    border: none;
+}
+
+.dark-mode .btn-card-action {
+    border-color: #2A365D;
+    color: #A0ABC0;
+}
+
+.dark-mode .btn-card-action:hover {
+    background-color: #425077;
+    color: #FFFFFF;
+    border: none;
+}
+
+.dark-mode .user-card {
+    background-color: var(--bg-card-dark);
+    color: #FFFFFF;
+}
+
+
+.dark-mode .badge {
+    background-color: #1E40AF;
+    color: #d5e9fd;
+}
+
+.dark-mode .badge-orange {
+    background-color: #f7b17f;
+    color: #a85418;
+}
+
+.dark-mode #search-equipe {
+    border: none;
+    color: white;
+}
+

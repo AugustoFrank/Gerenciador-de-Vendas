@@ -12,7 +12,6 @@
 </head>
 <body>
     <div id="sidebar-overlay" class="sidebar-overlay"></div>
-
     <script id="dados-graficos" type="application/json">{{ dados_graficos_json|safe }}</script>
 
     <div class="container">
@@ -44,7 +43,7 @@
                     </button>
                     <div class="header-info">
                         <h1 id="main-title">Faturamento Detalhado</h1>
-                        <span id="main-subtitle">Análise de entradas e saída de mercadoria (hoje).</span>
+                        <span id="main-subtitle">Análise de entradas e saída de mercadoria.</span>
                     </div>
                 </div>
                 <div class="header-actions">
@@ -66,13 +65,13 @@
                 <div class="report-tabs">
                     <div class="tabs-relatorios">
                         <button onclick="mudarTela('faturamento')" id="tab-faturamento" class="tab-item active">Faturamento</button>
-                        <button onclick="mudarTela('graficos')"    id="tab-graficos"    class="tab-item">Gráficos</button>
                         <button onclick="mudarTela('vendedores')"  id="tab-vendedores"  class="tab-item">Vendedores</button>
                     </div>
                     <div class="date-faturamento">
                         <form method="GET" id="form-relatorio" class="form-datas">
-                            <input type="date" name="data_inicio" id="date-picker"     value="{{ data_inicio_str|default:'' }}" auto-submit>
-                            <input type="date" name="data_fim"    id="date-picker-end" value="{{ data_fim_str|default:'' }}"    auto-submit>
+                            <input type="hidden" name="aba" id="input-aba-ativa" value="faturamento">
+                            <input type="date" name="data_inicio" id="date-picker"     value="{{ data_inicio_str|default:'' }}">
+                            <input type="date" name="data_fim"    id="date-picker-end" value="{{ data_fim_str|default:'' }}">
                         </form>
                     </div>
                 </div>
@@ -117,38 +116,12 @@
                             </div>
                         </div>
                     </div>
-                    <div class="table-card">
-                        <table class="willy-table">
-                            <thead>
-                                <tr>
-                                    <th>Mercadoria</th>
-                                    <th class="txt-center">Qtd</th>
-                                    <th class="txt-right">Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for m in mercadorias %}
-                                <tr>
-                                    <td class="text-highlight">{{ m.produto__nome }}</td>
-                                    <td class="txt-center">{{ m.qtd }} un.</td>
-                                    <td class="txt-right">R$ {{ m.total_venda|floatformat:"2g" }}</td>
-                                </tr>
-                                {% empty %}
-                                <tr>
-                                    <td colspan="3" class="empty-state">Nenhuma mercadoria vendida no período.</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
 
-                <!-- Aba: Gráficos -->
-                <section id="sec-graficos" class="report-section">
+                    <!-- Gráficos dentro da aba Faturamento -->
                     <div class="graficos-grid">
                         <div class="grafico-card">
                             <h3 class="grafico-titulo">
-                                <i class="fas fa-chart-bar"></i> Faturamento por Dia
+                                <i class="fas fa-chart-line"></i> Faturamento por Dia
                             </h3>
                             <canvas id="grafico-barras"></canvas>
                         </div>
@@ -158,6 +131,50 @@
                             </h3>
                             <canvas id="grafico-pizza"></canvas>
                         </div>
+                    </div>
+
+                    <!-- Tabela detalhada de vendas -->
+                    <div class="table-card">
+                        <table class="willy-table" id="tabela-faturamento">
+                            <thead>
+                                <tr>
+                                    <th>Mercadoria</th>
+                                    <th>Vendedor</th>
+                                    <th>Data - Hora</th>
+                                    <th>Pagamento</th>
+                                    <th class="txt-center">Qtd</th>
+                                    <th class="txt-right">Total</th>
+                                    <th class="txt-center">Ação</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for v in vendas_detalhadas %}
+                                <tr>
+                                    <td class="text-highlight">{{ v.produto.nome }}</td>
+                                    <td>
+                                        {% if v.vendedor %}
+                                            {{ v.vendedor.first_name|default:v.vendedor.username }}
+                                        {% else %}
+                                            <span class="vendedor-excluido">Excluído</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ v.data_venda|date:"d/m/Y" }} - {{ v.data_venda|time:"H:i" }}</td>
+                                    <td>{{ v.get_forma_pagamento_display }}</td>
+                                    <td class="txt-center">{{ v.quantidade_vendida }} un.</td>
+                                    <td class="txt-right">R$ {{ v.preco_total|floatformat:"2g" }}</td>
+                                    <td class="txt-center">
+                                        <button class="btn-cancelar-venda" data-id="{{ v.id }}" type="button">
+                                            <i class="fas fa-times"></i> Cancelar
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="7" class="empty-state">Nenhuma venda no período.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
                 </section>
 
@@ -224,7 +241,6 @@
                         </table>
                     </div>
                 </section>
-
             </div>
         </main>
     </div>

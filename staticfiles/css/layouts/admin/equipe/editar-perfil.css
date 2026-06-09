@@ -1,0 +1,178 @@
+/* ==========================================
+   MODAL EDITAR PERFIL
+   ========================================== */
+.card-edit-size {
+    width: 650px;
+    height: auto;
+}
+
+.modal-header-edit {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #E5E5EA;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.modal-header-edit h2 {
+    text-transform: uppercase;
+    font-size: 20px;
+    margin: 0;
+    color: #131A33;
+}
+
+.btn-close-x {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #86868B;
+    transition: 0.3s;
+}
+
+.btn-close-x:hover {
+    color: #F43F5E;
+}
+
+.avatar-edit-section {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.avatar-wrapper {
+    margin: 0 auto;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 2px solid #1E294A;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+}
+
+.avatar-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.overlay-icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    opacity: 0;
+    transition: 0.3s;
+}
+
+.avatar-wrapper:hover .overlay-icon {
+    opacity: 1;
+}
+
+.edit-photo-label {
+    display: block;
+    margin-top: 10px;
+    font-weight: 600;
+    color: #86868B;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 13px;
+}
+
+.edit-profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    width: 100%;
+}
+
+.coluna-esq, 
+.coluna-dir {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.full-width-input {
+    width: 100% !important;
+    box-sizing: border-box;
+}
+
+.simple-color-picker {
+    display: flex;
+    gap: 12px;
+    margin-top: 5px;
+}
+
+.modal-footer-edit {
+    display: flex;
+    justify-content: center;
+    margin-top: 35px;
+    border-top: none;
+}
+
+.btn-save-edit {
+    padding: 12px 50px;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background-color: var(--orange-color);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.color-ball {
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.color-ball:hover {
+    transform: scale(1.1);
+}
+
+.color-radio input {
+    display: none;
+}
+
+.color-radio input:checked + .color-ball {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 2px #FFFFFF inset, 0 0 0 2px #1E294A;
+}
+
+.dark-mode .color-radio input:checked + .color-ball {
+    box-shadow: 0 0 0 2px #FFFFFF inset, 0 0 0 2px #FFFFFF;
+    
+}
+
+.card-checkbox {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 10;
+    transform: scale(1.3);
+    cursor: pointer;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.btn-cancelar.hidden {
+    display: none !important;
+}
+

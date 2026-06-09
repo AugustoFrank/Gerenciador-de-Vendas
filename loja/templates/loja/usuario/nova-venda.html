@@ -9,11 +9,12 @@
     <link rel="stylesheet" href="{% static 'css/layouts/usuario/nova-venda.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body id="page-terminal-vendas">  
+<body id="page-terminal-vendas">
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
     <div class="container">
         <aside class="sidebar">
             <div class="logo-container">
-                 <img src="{% static 'img/logo willy.png' %}" alt="Willy Bolsas" class="logo">
+                <img src="{% static 'img/logowilly.png' %}" alt="Willy Bolsas" class="logo">
             </div>
             <nav class="menu-lateral">
                 <a href="{% url 'visao_geral' %}" class="menu-item"><i class="fas fa-chart-line"></i> Visão Geral</a>
@@ -21,54 +22,142 @@
                 <a href="{% url 'estoque_vendedor' %}" class="menu-item"><i class="fas fa-boxes"></i> Meu Estoque</a>
                 <a href="{% url 'comissoes_vendedor' %}" class="menu-item"><i class="fas fa-percentage"></i> Minhas Comissões</a>
             </nav>
+            <form method="post" action="{% url 'logout' %}" class="sidebar-footer">
+                {% csrf_token %}
+                <button type="submit" class="btn-logout">
+                    <div class="btn-logout-sign"><i class="fas fa-sign-out-alt"></i></div>
+                    <div class="btn-logout-text">Sair</div>
+                </button>
+            </form>
         </aside>
 
-        <main>
+        <main data-vendedor="{{ request.user.first_name|default:request.user.username }}">
             <header>
-                <div class="header-info">
-                    <h1>Terminal de Vendas</h1>
-                    <p>Registre a saída de produtos rapidamente.</p>
+                <div class="header-left">
+                    <button id="menu-toggle" class="btn-menu-mobile">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="header-info">
+                        <h1>Terminal de Vendas</h1>
+                        <p>Registre a saída de produtos rapidamente.</p>
+                    </div>
                 </div>
                 <div class="header-vendedor">
                     <button id="dark-mode-toggle" class="btn-dark-mode">
                         <i class="fas fa-sun"></i>
                     </button>
-                    <div class="user-display" style="display: flex; align-items: center; gap: 8px;">
-                        <i class="fas fa-user-circle"></i> Vendedor: <strong>{{ user.username|default:"Anselmo Silva" }}</strong>
+                    <div class="user-display">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Vendedor: <strong>{{ user.first_name|default:user.username }}</strong></span>
                     </div>
                 </div>
             </header>
 
-            <form id="form-venda" action="{% url 'finalizar_venda' %}" method="POST">
-                {% csrf_token %}
-                <div class="pdv-grid">
-                    <div class="pdv-formulario">
-                        <section class="card-pdv">
-                            <h3>Lançar Mercadoria</h3>
-                            
-                            <div class="input-group full">
-                                <input type="text" id="input-referencia" name="referencia" list="produtos-sugestao" placeholder="Nome ou SKU..." autocomplete="off">
-                                <datalist id="produtos-sugestao"></datalist>
-                            </div>
+            <div class="pdv-grid">
 
-                            <div class="row-inputs">
-                                <div class="input-group half">
-                                    <label>TIPO DE VENDA</label>
-                                    <select id="tipo-venda" name="tipo_venda">
-                                        <option value="varejo">Varejo</option>
-                                        <option value="atacado">Atacado</option>
-                                    </select>
-                                </div>
-                                <div class="input-group half">
-                                    <label>QUANTIDADE</label>
-                                    <input type="number" id="quantidade" name="quantidade" value="1" min="1">
-                                    <span class="info-estoque" id="estoque-disponivel">-- em estoque</span>
+                <div class="pdv-esquerda">
+
+                    <!-- CARD CLIENTE -->
+                    <section class="card-pdv card-cliente">
+                        <h3><i class="fas fa-user"></i> Cliente</h3>
+                        <input type="text" id="input-cliente" placeholder="Nome do cliente (opcional)..." autocomplete="off">
+                    </section>
+
+                    <!-- CARD LANÇAR MERCADORIA -->
+                    <section class="card-pdv card-lancamento">
+                        <h3>Lançar Mercadoria</h3>
+
+                        <div class="input-group full">
+                            <input type="text" id="input-referencia" list="produtos-sugestao" placeholder="Nome ou SKU..." autocomplete="off">
+                            <datalist id="produtos-sugestao"></datalist>
+                        </div>
+
+                        <div class="row-inputs">
+                            <div class="input-group half">
+                                <label>QUANTIDADE</label>
+                                <input type="number" id="quantidade" value="1" min="1">
+                                <span class="info-estoque" id="estoque-disponivel">-- em estoque</span>
+                            </div>
+                            <div class="input-group half">
+                                <label>PREÇO UNITÁRIO</label>
+                                <div class="preco-unitario-box">
+                                    <h2 id="preco-unitario">R$ 0,00</h2>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="input-group full">
+                        <button type="button" class="btn-adicionar" id="btn-adicionar">
+                            <i class="fas fa-plus"></i> ADICIONAR AO CARRINHO
+                        </button>
+                    </section>
+
+                </div>
+
+                <div class="pdv-direita">
+
+                    <!-- CARD CARRINHO -->
+                    <section class="card-pdv card-carrinho">
+                        <div class="carrinho-header">
+                            <h3><i class="fas fa-shopping-basket"></i> Carrinho <span class="badge-qtd-itens" id="badge-qtd">0</span></h3>
+                        </div>
+
+                        <div id="lista-carrinho" class="lista-carrinho">
+                            <p class="carrinho-vazio">Nenhum item adicionado.</p>
+                        </div>
+
+                        <div class="carrinho-rodape" id="carrinho-rodape" style="display:none;">
+                            <div class="rodape-col">
+                                <span class="rodape-label">Σ UNIT. ATACADO</span>
+                                <strong class="rodape-valor" id="total-atacado-unitario">R$ 0,00</strong>
+                            </div>
+                            <div class="rodape-col">
+                                <span class="rodape-label">Σ UNIT. VAREJO</span>
+                                <strong class="rodape-valor" id="total-varejo-unitario">R$ 0,00</strong>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- CARD RESUMO FINAL -->
+                    <section class="card-pdv card-resumo">
+                        <h3>Resumo Final</h3>
+                        <div class="linha-resumo">
+                            <span>Subtotal:</span>
+                            <strong id="subtotal-exibicao">R$ 0,00</strong>
+                        </div>
+                        <div class="total-destaque">
+                            <span>VALOR TOTAL A PAGAR</span>
+                            <h1 id="total-venda">R$ 0,00</h1>
+                        </div>
+                        <button type="button" class="btn-finalizar" id="btn-finalizar">
+                            FINALIZAR COMPRA (F2)
+                        </button>
+                    </section>
+
+                </div>
+            </div>
+
+            <!-- OVERLAY DE CHECKOUT -->
+            <div id="overlay-checkout" class="overlay-checkout hidden">
+                <div class="checkout-modal">
+                    <div class="checkout-header">
+                        <h3><i class="fas fa-cash-register"></i> Finalizar Compra</h3>
+                        <button type="button" id="btn-fechar-checkout" class="btn-fechar-checkout">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+
+                    <div class="checkout-body">
+                        <div class="checkout-tipo-row">
+                            <div class="input-group">
+                                <label>TIPO DE VENDA</label>
+                                <select id="checkout-tipo">
+                                    <option value="varejo">Varejo</option>
+                                    <option value="atacado">Atacado</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
                                 <label>FORMA DE PAGAMENTO</label>
-                                <select id="forma-pagamento" name="forma_pagamento">
+                                <select id="checkout-pagamento">
                                     <option value="credito">Crédito</option>
                                     <option value="debito">Débito</option>
                                     <option value="pix">Pix</option>
@@ -80,47 +169,108 @@
                                     <option value="debito_dinheiro">Débito + Dinheiro</option>
                                     <option value="dinheiro_pix">Dinheiro + Pix</option>
                                 </select>
-                                <select id="forma-pagamento-credito" name="bandeira_cartao">
-                                    <option value="mastercard">💳 Mastercard</option>
-                                    <option value="visa">💳 Visa</option>
-                                    <option value="amex">💳 American Express</option>
-                                    <option value="elo">💳 Elo</option>
-                                    <option value="hipercard">💳 Hipercard</option>
-                                </select>
                             </div>
+                        </div>
 
-                            <div class="troco-box" id="box-troco" style="display: none;">
-                                <label>VALOR EM DINHEIRO RECEBIDO (R$)</label>
-                                <input type="number" id="valor-recebido" placeholder="0,00" min="0" step="0.01">
-                                <div class="troco-linha">
-                                    <span>TROCO A DEVOLVER:</span>
-                                    <strong id="valor-troco">R$ 0,00</strong>
-                                </div>
-                            </div>
+                        <div id="checkout-bandeira-box" class="input-group" style="display:none;">
+                            <label>BANDEIRA DO CARTÃO</label>
+                            <select id="checkout-bandeira">
+                                <option value="mastercard">💳 Mastercard</option>
+                                <option value="visa">💳 Visa</option>
+                                <option value="amex">💳 American Express</option>
+                                <option value="elo">💳 Elo</option>
+                                <option value="hipercard">💳 Hipercard</option>
+                            </select>
+                        </div>
 
-                            <div class="preco-unitario-box">
-                                <span>PREÇO UNITÁRIO</span>
-                                <h2 id="preco-unitario">R$ 0,00</h2>
+                        <div id="checkout-compostos" class="checkout-compostos hidden">
+                            <div class="input-group">
+                                <label id="label-valor-1">VALOR CRÉDITO (R$)</label>
+                                <input type="number" id="checkout-valor-1" placeholder="0,00" min="0" step="0.01">
                             </div>
-                        </section>
+                            <div class="input-group">
+                                <label id="label-valor-2">VALOR PIX (R$)</label>
+                                <input type="number" id="checkout-valor-2" placeholder="0,00" min="0" step="0.01">
+                            </div>
+                        </div>
+
+                        <div id="checkout-troco-box" class="troco-box" style="display:none;">
+                            <label>VALOR RECEBIDO (R$)</label>
+                            <input type="number" id="checkout-recebido" placeholder="0,00" min="0" step="0.01">
+                            <div class="troco-linha">
+                                <span>TROCO:</span>
+                                <strong id="checkout-troco">R$ 0,00</strong>
+                            </div>
+                        </div>
+
+                        <div class="checkout-total-box">
+                            <div class="checkout-linha-resumo">
+                                <span>SUBTOTAL</span>
+                                <strong id="checkout-subtotal">R$ 0,00</strong>
+                            </div>
+                            <div class="checkout-linha-resumo desconto-linha" id="checkout-linha-desconto" style="display:none;">
+                                <span>DESCONTO (10%)</span>
+                                <strong id="checkout-desconto" style="color:#10B981;">- R$ 0,00</strong>
+                            </div>
+                            <div class="checkout-linha-resumo total-linha">
+                                <span>TOTAL A PAGAR</span>
+                                <h2 id="checkout-total">R$ 0,00</h2>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="pdv-resumo">
-                        <section class="card-pdv">
-                            <h3>Resumo Final</h3>
-                            <div class="linha-resumo">
-                                <span>Subtotal:</span>
-                                <strong id="subtotal-exibicao">R$ 0,00</strong>
-                            </div>
-                            <div class="total-destaque">
-                                <span>VALOR TOTAL A PAGAR</span>
-                                <h1 id="total-venda">R$ 0,00</h1>
-                            </div>
-                            <button type="button" class="btn-finalizar" onclick="finalizarVenda()">FINALIZAR VENDA (F2)</button>
-                        </section>
+                    <div class="checkout-footer">
+                        <button type="button" id="btn-cancelar-checkout" class="btn-cancelar-checkout">CANCELAR</button>
+                        <button type="button" id="btn-confirmar-checkout" class="btn-confirmar-checkout">CONFIRMAR VENDA</button>
                     </div>
                 </div>
-            </form>
+            </div>
+
+            <!-- Cupom Fiscal -->
+            <div id="overlay-cupom" class="overlay-cupom hidden">
+                <div class="cupom-modal">
+                    <div class="cupom-header">
+                        <h2>WILLY BOLSAS</h2>
+                        <p>Cupom de Venda</p>
+                        <span id="cupom-datetime"></span>
+                    </div>
+                    <div class="cupom-vendedor">
+                        <span>Vendedor: <strong id="cupom-vendedor-nome"></strong></span>
+                    </div>
+                    <div class="cupom-divider">--------------------------------</div>
+                    <div class="cupom-itens" id="cupom-itens"></div>
+                    <div class="cupom-divider">--------------------------------</div>
+                    <div class="cupom-resumo">
+                        <div class="cupom-linha">
+                            <span>Subtotal</span>
+                            <span id="cupom-subtotal"></span>
+                        </div>
+                        <div class="cupom-linha desconto" id="cupom-linha-desconto">
+                            <span>Desconto (10%)</span>
+                            <span id="cupom-desconto"></span>
+                        </div>
+                        <div class="cupom-linha total">
+                            <span>TOTAL</span>
+                            <span id="cupom-total"></span>
+                        </div>
+                        <div class="cupom-linha">
+                            <span>Pagamento</span>
+                            <span id="cupom-pagamento"></span>
+                        </div>
+                    </div>
+                    <div class="cupom-divider">--------------------------------</div>
+                    <p class="cupom-obrigado">Obrigado pela preferência!</p>
+                    <div class="cupom-acoes">
+                        <button type="button" id="btn-imprimir-cupom" class="btn-imprimir">
+                            <i class="fas fa-print"></i> Imprimir
+                        </button>
+                        <button type="button" id="btn-fechar-cupom" class="btn-fechar-cupom">
+                            Fechar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
         </main>
     </div>
     <script src="{% static 'js/scripts/usuario/nova-venda.js' %}" defer></script>
