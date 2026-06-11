@@ -6,10 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Visão Geral | Willy Bolsas</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'css/layouts/usuario/visao-geral.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/layouts/usuario/visao-geral.css' %}">
     </head>
 <body id="page-visao-geral">
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
     <div class="container">
         
                 <aside class="sidebar">
@@ -53,9 +54,12 @@
 
         <main>
             <header>
-                <div class="header-info">
-                    <h1>Visão Geral</h1>
-                    <span>Acompanhe o desempenho das suas vendas em tempo real.</span>
+                <div class="header-left">
+                    <button id="menu-toggle" class="btn-menu-mobile"><i class="fas fa-bars"></i></button>
+                    <div class="header-info">
+                        <h1>Visão Geral</h1>
+                        <span>Acompanhe o desempenho das suas vendas em tempo real.</span>
+                    </div>
                 </div>
                 <div class="header-actions">
                     <button id="dark-mode-toggle" class="btn-dark-mode">

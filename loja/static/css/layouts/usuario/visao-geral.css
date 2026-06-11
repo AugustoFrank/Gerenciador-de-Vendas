@@ -140,3 +140,256 @@
 .dark-mode .alerta-section .sku-id {
     color: #94A3B8;
 }
+/* ==========================================
+   RESPONSIVIDADE
+   ========================================== */
+@media (max-width: 1139px) {
+    .btn-menu-mobile {
+        display: block !important;
+    }
+
+    .sidebar-overlay.active {
+        display: block;
+        opacity: 1;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        z-index: 999;
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 4px 0 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+    }
+}
+
+@media (max-width: 878px) {
+    .content-body {
+        margin: 16px 24px 48px 24px;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    .dash-card {
+        padding: 14px;
+        gap: 14px;
+    }
+
+    .dash-data .val {
+        font-size: 22px;
+    }
+
+    .dash-data h3 {
+        font-size: 11px;
+    }
+
+    .icon-shape {
+        width: 46px;
+        height: 46px;
+        font-size: 18px;
+    }
+
+    .inpt-date {
+        font-size: 13px;
+        padding: 8px 10px;
+        height: 40px;
+    }
+
+    .btn-search {
+        height: 40px;
+        padding: 0 14px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 755px) {
+    .header-info span {
+        display: none;
+    }
+
+    .header-info h1 {
+        font-size: 1.5rem;
+    }
+
+    .content-body {
+        margin: 16px 16px 48px 16px;
+    }
+
+    .dash-card {
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .dash-data .val {
+        font-size: 20px;
+    }
+
+    .icon-shape {
+        width: 42px;
+        height: 42px;
+        font-size: 17px;
+    }
+
+    .inpt-date {
+        font-size: 13px;
+        padding: 7px 9px;
+        height: 38px;
+    }
+
+    .btn-search {
+        height: 38px;
+        padding: 0 12px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 635px) {
+    .dash-card {
+        padding: 11px;
+        gap: 10px;
+    }
+
+    .dash-data .val {
+        font-size: 18px;
+    }
+
+    .dash-data h3 {
+        font-size: 10px;
+    }
+
+    .icon-shape {
+        width: 38px;
+        height: 38px;
+        font-size: 15px;
+    }
+
+    .alerta-section {
+        padding: 16px;
+    }
+
+    .sec-header {
+        font-size: 14px;
+    }
+
+    .inpt-date {
+        font-size: 12px;
+        padding: 6px 8px;
+        height: 36px;
+    }
+
+    .btn-search {
+        height: 36px;
+        padding: 0 10px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .content-body {
+        margin: 12px 12px 40px 12px;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .dash-card {
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .dash-data .val {
+        font-size: 16px;
+    }
+
+    .dash-data h3 {
+        font-size: 10px;
+    }
+
+    .icon-shape {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+
+    .alerta-section {
+        overflow-x: auto;
+        padding: 14px;
+    }
+
+    .alerta-section table {
+        min-width: 420px;
+    }
+
+    .inpt-date {
+        font-size: 12px;
+        padding: 6px 8px;
+        height: 34px;
+    }
+
+    .btn-search {
+        height: 34px;
+        padding: 0 10px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 400px) {
+    .header-info h1 {
+        font-size: 1.1rem;
+    }
+
+    .dash-card {
+        padding: 9px;
+    }
+
+    .dash-data .val {
+        font-size: 14px;
+    }
+
+    .dash-data h3 {
+        font-size: 9px;
+    }
+
+    .icon-shape {
+        width: 32px;
+        height: 32px;
+        font-size: 13px;
+    }
+}
+
+#page-visao-geral header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 40px 48px 0 48px;
+    height: 60px;
+}
+
+#page-visao-geral .header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+#page-visao-geral .content-body {
+    margin-top: 30px;
+}
+
+@media (max-width: 480px) {
+    .dash-data .val {
+        font-size: 20px;
+    }
+
+    .dash-data h3 {
+        font-size: 12px;
+    }
+}

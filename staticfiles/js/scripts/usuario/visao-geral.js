@@ -69,3 +69,24 @@ if (btnFinalizar) {
 }
 
 console.log('🚀 JS COMPLETO: Carregado e protegido contra erros!');
+
+// ==========================================
+// 3. MENU HAMBÚRGUER
+// ==========================================
+const menuToggle = document.getElementById('menu-toggle');
+const sidebar = document.querySelector('.sidebar');
+const overlay = document.getElementById('sidebar-overlay');
+
+if (menuToggle && sidebar && overlay) {
+    menuToggle.addEventListener('click', () => {
+        sidebar.classList.add('active');
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    });
+
+    overlay.addEventListener('click', () => {
+        sidebar.classList.remove('active');
+        overlay.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    });
+}
