@@ -119,3 +119,24 @@
     background-color: rgba(16, 185, 129, 0.15) !important; 
     color: #10b981 !important;
 }
+.dark-mode .alerta-section {
+    background: #1E293B;
+    border-color: #334155;
+}
+
+.dark-mode .sec-header {
+    color: #F8FAFC;
+    border-color: #334155;
+}
+
+.dark-mode .alerta-section table td {
+    color: #CBD5E1;
+}
+
+.dark-mode .alerta-section .prod-name strong {
+    color: #F8FAFC;
+}
+
+.dark-mode .alerta-section .sku-id {
+    color: #94A3B8;
+}

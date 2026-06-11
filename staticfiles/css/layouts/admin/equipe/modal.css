@@ -222,3 +222,45 @@
 .input-field {
     gap: 8px;
 }
+
+.form-row.row-nivel-comissao {
+    align-items: stretch;
+}
+
+.form-row.row-nivel-comissao .input-field,
+.form-row.row-nivel-comissao .field-comissao {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 8px;
+}
+
+.form-row.row-nivel-comissao .label-grid {
+    margin-top: 0;
+}
+
+.form-row.row-nivel-comissao .inpt-grid {
+    height: 42px;
+    box-sizing: border-box;
+}
+
+.form-row.row-nivel-comissao select.inpt-grid,
+.form-row.row-nivel-comissao input.inpt-grid {
+    height: 45px;
+    box-sizing: border-box;
+    padding: 0 10px;
+}
+
+.form-row.row-nivel-comissao {
+    align-items: center;
+}
+
+.form-row.row-nivel-comissao select.inpt-grid {
+    height: 42px !important;
+    box-sizing: border-box !important;
+    padding: 0 10px !important;
+}
+
+.form-row.row-nivel-comissao .field-comissao .label-grid {
+    margin-top: 14px;
+}

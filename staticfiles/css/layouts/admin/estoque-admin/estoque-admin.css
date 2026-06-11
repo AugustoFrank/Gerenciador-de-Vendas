@@ -976,3 +976,27 @@ body.dark-mode #modalAdicionar .btn-cancelar {
         flex-direction: column;
     }
 }
+.dark-mode .btn-filtro-rapido.ativo-amarelo {
+    background: #f59e0b;
+    color: #fff;
+    border-color: #f59e0b;
+}
+
+.dark-mode .btn-filtro-rapido.ativo-vermelho {
+    background: #EF4444;
+    color: #fff;
+    border-color: #EF4444;
+}
+
+.inventario-info-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.modal-estoque .modal-content {
+    max-height: 90vh;
+    overflow-y: auto;
+    width: 90%;
+    max-width: 600px;
+}
