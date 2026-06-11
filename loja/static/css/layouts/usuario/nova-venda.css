@@ -1093,3 +1093,145 @@
         border-radius: 12px;
     }
 }
+@media (max-width: 1139px) {
+    .btn-menu-mobile {
+        display: block !important;
+    }
+
+    .sidebar-overlay.active {
+        display: block;
+        opacity: 1;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        z-index: 999;
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 4px 0 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+    }
+}
+
+@media (max-width: 878px) {
+    .card-pdv h3 {
+        font-size: 13px;
+    }
+
+    .preco-unitario-box h2 {
+        font-size: 18px;
+    }
+
+    .total-destaque h1 {
+        font-size: 32px;
+    }
+
+    .btn-finalizar {
+        font-size: 13px;
+        padding: 14px;
+    }
+}
+
+@media (max-width: 635px) {
+    .card-pdv {
+        padding: 18px;
+    }
+
+    .card-pdv h3 {
+        font-size: 12px;
+    }
+
+    .preco-unitario-box h2 {
+        font-size: 16px;
+    }
+
+    .total-destaque h1 {
+        font-size: 28px;
+    }
+
+    .total-destaque span {
+        font-size: 9px;
+    }
+
+    .btn-finalizar {
+        font-size: 12px;
+        padding: 13px;
+    }
+
+    .btn-adicionar {
+        font-size: 12px;
+        padding: 11px;
+    }
+
+    #page-terminal-vendas .header-info h1 {
+        font-size: 1.4rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .card-pdv {
+        padding: 14px;
+    }
+
+    .card-pdv h3 {
+        font-size: 11px;
+    }
+
+    .preco-unitario-box h2 {
+        font-size: 15px;
+    }
+
+    .total-destaque h1 {
+        font-size: 24px;
+    }
+
+    #page-terminal-vendas .header-info h1 {
+        font-size: 1.2rem;
+    }
+
+    .btn-finalizar {
+        font-size: 12px;
+        padding: 12px;
+    }
+}
+
+@media (max-width: 755px) {
+    #page-terminal-vendas .header-info p {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .item-carrinho {
+        flex-direction: row !important;
+        align-items: center;
+    }
+
+    .item-precos {
+        width: auto !important;
+        gap: 4px;
+    }
+
+    .preco-col {
+        min-width: 56px;
+        padding: 4px 6px;
+    }
+
+    .preco-col span {
+        font-size: 8px;
+    }
+
+    .preco-col strong {
+        font-size: 11px;
+    }
+}
+
+#page-terminal-vendas header {
+    margin-top: 40px;
+}

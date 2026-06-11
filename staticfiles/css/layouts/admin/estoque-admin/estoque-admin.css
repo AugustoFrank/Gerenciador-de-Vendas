@@ -1000,3 +1000,245 @@ body.dark-mode #modalAdicionar .btn-cancelar {
     width: 90%;
     max-width: 600px;
 }
+
+/* ==========================================
+   RESPONSIVIDADE
+   ========================================== */
+@media (max-width: 1139px) {
+    .btn-menu-mobile {
+        display: block !important;
+    }
+
+    .sidebar-overlay.active {
+        display: block;
+        opacity: 1;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        z-index: 999;
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 4px 0 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+    }
+}
+
+@media (max-width: 878px) {
+    .dashboard-content {
+        margin: 16px 24px 0 24px;
+    }
+
+    .header-info h1 {
+        font-size: 1.5rem;
+    }
+
+    .adc-produto {
+        display: none;
+    }
+
+    .btn-adc {
+        padding: 0 12px;
+        width: 40px;
+    }
+}
+
+@media (max-width: 755px) {
+    .header-info span {
+        display: none;
+    }
+
+    .header-info h1 {
+        font-size: 1.4rem;
+    }
+
+    .dashboard-content {
+        margin: 16px 16px 0 16px;
+    }
+
+    .filtros-rapidos {
+        gap: 6px;
+    }
+
+    .btn-filtro-rapido {
+        font-size: 12px;
+        padding: 7px 10px;
+    }
+}
+
+@media (max-width: 635px) {
+    .header-info h1 {
+        font-size: 1.2rem;
+    }
+
+    .inventario-container {
+        padding: 16px;
+    }
+
+    .search-box input {
+        font-size: 13px;
+    }
+
+    .btn-filtro-rapido span {
+        display: none;
+    }
+
+    .btn-filtro-rapido {
+        padding: 7px 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-content {
+        margin: 12px 12px 0 12px;
+    }
+
+    .header-info h1 {
+        font-size: 1.1rem;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .table-responsive table {
+        min-width: 600px;
+    }
+
+    .inventario-container {
+        padding: 14px;
+    }
+
+    .filtros-rapidos {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 400px) {
+    .header-info h1 {
+        font-size: 1rem;
+    }
+
+    .dashboard-content {
+        margin: 10px 10px 0 10px;
+    }
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.table-responsive table {
+    min-width: 700px;
+}
+
+@media (max-width: 635px) {
+    .filtros-rapidos {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 4px;
+    }
+
+    .btn-filtro-rapido span {
+        display: inline !important;
+    }
+
+    .badge-count-tipos,
+    .filtro-contagem {
+        white-space: nowrap;
+    }
+
+    .inventario-info-right {
+        flex-wrap: nowrap;
+    }
+
+    .badge-count-tipos {
+        white-space: nowrap;
+        font-size: 11px;
+        padding: 4px 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .inventario-info-right {
+        flex-shrink: 0;
+    }
+
+    .badge-count-tipos {
+        font-size: 10px;
+        padding: 4px 8px;
+        white-space: nowrap;
+    }
+
+    .search-box {
+        flex: 1;
+        min-width: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .badge-count-tipos {
+        font-size: 9px !important;
+        padding: 3px 6px !important;
+        line-height: 1.3;
+        text-align: center;
+        white-space: normal !important;
+        max-width: 70px;
+    }
+}
+
+.inventario-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.inventario-info-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.icon-warehouse-orange {
+    background: #FFF3E0;
+    color: #FF7A00;
+    padding: 10px;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+    .inventario-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .inventario-info-right {
+        width: 100%;
+    }
+
+    .search-box {
+        flex: 1;
+    }
+
+    .badge-count-tipos {
+        font-size: 11px !important;
+        padding: 4px 10px !important;
+        white-space: nowrap !important;
+    }
+}
+
+.badge-count-tipos {
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    padding: 4px 12px !important;
+}

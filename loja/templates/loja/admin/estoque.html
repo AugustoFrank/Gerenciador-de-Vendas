@@ -79,24 +79,24 @@
 
             <div class="dashboard-content">
                 <div class="inventario-container fade-in">
-                    <div class="inventario-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px;">
-                        <div class="inventario-info-left" style="display: flex; align-items: center; gap: 10px;">
-                            <div class="icon-warehouse-orange" style="background: #FFF3E0; color: #FF7A00; padding: 10px; border-radius: 8px;">
-                                <i class="fas fa-warehouse fa-lg"></i>
-                            </div>
-                            <div>
-                                <h3 style="margin: 0;">Inventário Geral</h3>
-                                <p style="margin: 0; font-size: 13px; color: #666;">Saldo total e margens atuais</p>
-                            </div>
-                        </div>
-                        <div class="inventario-info-right">
-                            <div class="search-box">
-                                <i class="fas fa-search"></i>
-                                <input type="text" id="search-produto" placeholder="Buscar por SKU ou Nome...">
-                            </div>
-                            <span class="badge-count-tipos">{{ produtos_loja.count }} Itens Cadastrados</span>
-                        </div>
-                    </div>
+                    <div class="inventario-header">
+    <div class="inventario-info-left">
+        <div class="icon-warehouse-orange">
+            <i class="fas fa-warehouse fa-lg"></i>
+        </div>
+        <div>
+            <h3 style="margin: 0;">Inventário Geral</h3>
+            <p style="margin: 0; font-size: 13px; color: #666;">Saldo total e margens atuais</p>
+        </div>
+    </div>
+    <div class="inventario-info-right">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="search-produto" placeholder="Buscar por SKU ou Nome...">
+        </div>
+        <span class="badge-count-tipos">{{ produtos_loja.count }}</span>
+    </div>
+</div>
 
                     <div class="filtros-rapidos">
                         <button class="btn-filtro-rapido ativo" id="filtro-todos">
