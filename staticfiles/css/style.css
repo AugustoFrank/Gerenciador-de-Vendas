@@ -696,3 +696,14 @@ td {
 .dark-mode .btn-search:hover {
     background-color: #334270;
 }
+@media (max-width: 1139px) {
+    .sidebar {
+        overflow-y: auto;
+    }
+}
+
+@media (max-width: 1139px) {
+    .sidebar-footer {
+        margin-top: 24px;
+    }
+}
