@@ -40,6 +40,23 @@ table .btn-card-action:hover {
     border-color: var(--orange-color, #ff8c00);
 }
 
+.form-row .inpt-grid {
+    height: 42px;
+    box-sizing: border-box;
+}
+
+.field-comissao {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.field-comissao .label-grid {
+    margin-bottom: 8px;
+}
+
+
+
 .header-actions .search-box {
     display: flex;
     align-items: center;

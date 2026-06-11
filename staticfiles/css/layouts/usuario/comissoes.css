@@ -59,3 +59,27 @@
 .dark-mode .valor-ganho { 
     color: #34d399 !important; 
 }
+
+.dark-mode .filtros-data input {
+    background-color: #1E294A;
+    border-color: #2A365D;
+    color: #F8FAFC;
+    color-scheme: dark;
+}
+ 
+.dark-mode .filtros-data input:focus {
+    border-color: #0A84FF;
+}
+ 
+.dark-mode .filtros-data span {
+    color: #94A3B8;
+}
+ 
+.dark-mode .comissoes-container {
+    background-color: #1E294A;
+    border-color: #2A365D;
+}
+ 
+.dark-mode .comissoes-header h3 {
+    color: #F8FAFC;
+}

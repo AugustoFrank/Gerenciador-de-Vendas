@@ -108,6 +108,7 @@
     display: flex;
     flex-direction: column;
     flex: 1;
+    gap: 8px;
 }
 
 .label-grid {
@@ -201,4 +202,23 @@
 .color-radio:checked {
     border-color: #1E294A;
     box-shadow: 0 0 0 2px #FFFFFF inset;
+}
+
+.input-field {
+    gap: 8px;
+}
+
+.field-comissao {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 8px;
+}
+
+.field-comissao .label-grid {
+    margin-top: 2px;
+}
+
+.input-field {
+    gap: 8px;
 }

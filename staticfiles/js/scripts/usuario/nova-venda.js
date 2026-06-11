@@ -45,8 +45,7 @@ inputBusca.addEventListener('change', async function () {
         const res  = await fetch(`/consulta-estoque/?referencia=${sku}`);
         const data = await res.json();
 
-        // Remove badge anterior
-        document.getElementById('badge-promo-lancamento')?.remove();
+        const badgePromo = document.getElementById('badge-promo-lancamento');
 
         if (data.success) {
             produtoAtual = {
@@ -61,19 +60,13 @@ inputBusca.addEventListener('change', async function () {
             estoqueDisplay.style.color = data.estoque > 0 ? '#10B981' : '#EF4444';
             precoDisplay.innerText     = brl(produtoAtual.preco_varejo);
 
-            // ── NOVO: badge promoção no card de lançamento ──
-            if (data.em_promocao) {
-                const badge     = document.createElement('span');
-                badge.id        = 'badge-promo-lancamento';
-                badge.className = 'badge-promo-carrinho';
-                badge.innerHTML = '<i class="fas fa-tag"></i> Promoção';
-                precoDisplay.closest('.preco-unitario-box').insertAdjacentElement('afterend', badge);
-            }
+            badgePromo.style.display = data.em_promocao ? 'inline-flex' : 'none';
         } else {
             produtoAtual               = null;
             estoqueDisplay.innerText   = 'Produto não encontrado';
             estoqueDisplay.style.color = '#EF4444';
             precoDisplay.innerText     = 'R$ 0,00';
+            badgePromo.style.display   = 'none';
         }
     } catch (e) {
         console.error(e);
@@ -105,7 +98,7 @@ document.getElementById('btn-adicionar').addEventListener('click', () => {
     produtoAtual             = null;
     estoqueDisplay.innerText = '-- em estoque';
     precoDisplay.innerText   = 'R$ 0,00';
-    document.getElementById('badge-promo-lancamento')?.remove();
+    document.getElementById('badge-promo-lancamento').style.display = 'none';
 
     renderizarCarrinho();
 });
@@ -123,7 +116,6 @@ function renderizarCarrinho() {
         return;
     }
 
-    // Prévia: soma apenas o valor UNITÁRIO de cada produto distinto (ignora quantidade)
     let somaVarejoUnitario  = 0;
     let somaAtacadoUnitario = 0;
     let somaTotal           = 0;
@@ -199,7 +191,7 @@ document.getElementById('checkout-valor-1').addEventListener('input', function (
         document.getElementById('checkout-total').innerText
             .replace('R$ ', '').replace(',', '.')
     ) || 0;
-    const v1 = parseFloat(this.value) || 0;
+    const v1    = parseFloat(this.value) || 0;
     const resto = Math.max(0, total - v1);
     document.getElementById('checkout-valor-2').value = resto.toFixed(2);
 });
@@ -209,13 +201,13 @@ document.getElementById('checkout-valor-2').addEventListener('input', function (
         document.getElementById('checkout-total').innerText
             .replace('R$ ', '').replace(',', '.')
     ) || 0;
-    const v2 = parseFloat(this.value) || 0;
+    const v2    = parseFloat(this.value) || 0;
     const resto = Math.max(0, total - v2);
     document.getElementById('checkout-valor-1').value = resto.toFixed(2);
 });
 
 function elegívelDesconto(pag) {
-    const partes = pag.split('_');
+    const partes     = pag.split('_');
     const temCredito = partes.includes('credito');
     const temDescontavel = partes.some(p => ['debito', 'pix', 'dinheiro'].includes(p));
     return !temCredito && temDescontavel;
@@ -242,7 +234,6 @@ function atualizarCheckout() {
         compostos.classList.add('hidden');
     }
 
-    // ── CORRIGIDO: calcula subtotal, desconto e total separados ──
     let subtotal = 0;
     let desconto = 0;
 
@@ -258,7 +249,6 @@ function atualizarCheckout() {
 
     const total = subtotal - desconto;
 
-    // Atualiza linhas de subtotal/desconto/total no modal
     const elSubtotal  = document.getElementById('checkout-subtotal');
     const elDesconto  = document.getElementById('checkout-desconto');
     const elLinhaDesc = document.getElementById('checkout-linha-desconto');
@@ -305,8 +295,7 @@ document.getElementById('btn-confirmar-checkout').addEventListener('click', asyn
     const bandeira  = document.getElementById('checkout-bandeira').value;
     const cliente   = document.getElementById('input-cliente').value.trim();
 
-    const FORMAS_DESCONTO = ['debito', 'pix', 'dinheiro'];
-    const COMPOSTOS       = ['credito_pix', 'credito_dinheiro', 'credito_debito', 'debito_pix', 'debito_dinheiro', 'dinheiro_pix'];
+    const COMPOSTOS = ['credito_pix', 'credito_dinheiro', 'credito_debito', 'debito_pix', 'debito_dinheiro', 'dinheiro_pix'];
 
     const valor1 = parseFloat(document.getElementById('checkout-valor-1').value) || 0;
     const valor2 = parseFloat(document.getElementById('checkout-valor-2').value) || 0;
@@ -379,7 +368,6 @@ document.getElementById('btn-confirmar-checkout').addEventListener('click', asyn
         if (data.sucesso) {
             fecharCheckout();
 
-            // ── Monta cupom ───────────────────────────────────────
             const agora = new Date();
             document.getElementById('cupom-datetime').innerText =
                 agora.toLocaleDateString('pt-BR') + ' às ' + agora.toLocaleTimeString('pt-BR');

@@ -12,17 +12,44 @@
 <body id="page-visao-geral">
     <div class="container">
         
-        <aside class="sidebar">
-    <div class="logo-container">
-        <img src="{% static 'img/logo willy.png' %}" alt="Willy Bolsas" class="logo">
-    </div>
-    <nav class="menu-lateral">
-        <a href="{% url 'visao_geral' %}" class="menu-item active"><i class="fas fa-chart-line"></i> Visão Geral</a>
-        <a href="{% url 'nova_venda' %}" class="menu-item"><i class="fas fa-shopping-cart"></i> Nova Venda</a>
-        <a href="{% url 'estoque_vendedor' %}" class="menu-item"><i class="fas fa-boxes"></i> Meu Estoque</a>
-        <a href="{% url 'comissoes_vendedor' %}" class="menu-item"><i class="fas fa-percentage"></i> Minhas Comissões</a>
-    </nav>
-</aside>
+                <aside class="sidebar">
+            <div class="logo-container">
+                <img src="{% static 'img/logo willy.png' %}" alt="Willy Bolsas" class="logo">
+            </div>
+        
+            <nav class="menu-lateral">
+                <a href="{% url 'visao_geral' %}" class="menu-item {% if request.resolver_match.url_name == 'visao_geral' %}active{% endif %}">
+                    <i class="fas fa-chart-line" style="width:24px;text-align:center;"></i> Visão Geral
+                </a>
+                <a href="{% url 'nova_venda' %}" class="menu-item {% if request.resolver_match.url_name == 'nova_venda' %}active{% endif %}">
+                    <i class="fas fa-shopping-cart" style="width:24px;text-align:center;"></i> Nova Venda
+                </a>
+                <a href="{% url 'estoque_vendedor' %}" class="menu-item {% if request.resolver_match.url_name == 'estoque_vendedor' %}active{% endif %}">
+                    <i class="fas fa-boxes" style="width:24px;text-align:center;"></i> Meu Estoque
+                </a>
+                <a href="{% url 'comissoes_vendedor' %}" class="menu-item {% if request.resolver_match.url_name == 'comissoes_vendedor' %}active{% endif %}">
+                    <i class="fas fa-percentage" style="width:24px;text-align:center;"></i> Minhas Comissões
+                </a>
+            </nav>
+        
+            <div class="sidebar-comissoes">
+                <span class="sidebar-comissoes-label">Minhas Comissões</span>
+                <strong class="sidebar-comissoes-valor">R$ {{ saldo_comissoes|default:"0,00" }}</strong>
+            </div>
+        
+            <div class="sidebar-user">
+                <i class="fas fa-user-circle"></i>
+                <span>{{ user.first_name|default:user.username }}</span>
+            </div>
+        
+            <form method="post" action="{% url 'logout' %}" class="sidebar-footer">
+                {% csrf_token %}
+                <button type="submit" class="btn-logout">
+                    <div class="btn-logout-sign"><i class="fas fa-sign-out-alt"></i></div>
+                    <div class="btn-logout-text">Sair</div>
+                </button>
+            </form>
+        </aside>
 
         <main>
             <header>
@@ -34,10 +61,6 @@
                     <button id="dark-mode-toggle" class="btn-dark-mode">
                         <i class="fas fa-sun"></i>
                     </button>
-                    <div class="user-display">
-                        <i class="fas fa-user-circle"></i> 
-                        Vendedor: <strong>{{ user.username|default:"Anselmo Silva" }}</strong>
-                    </div>
                 </div>
             </header>
 

@@ -15,24 +15,38 @@
     <script id="dados-graficos" type="application/json">{{ dados_graficos_json|safe }}</script>
 
     <div class="container">
-        <aside class="sidebar">
+                <aside class="sidebar">
             <div class="logo-container">
                 <img src="{% static 'img/logo willy.png' %}" alt="Willy Bolsas" class="logo">
             </div>
+        
             <nav class="menu-lateral">
-                <a href="{% url 'visao_geral_admin' %}" class="menu-item">
-                    <i class="fas fa-chart-pie menu-icon"></i> Visão Geral
+                <a href="{% url 'visao_geral_admin' %}" class="menu-item {% if request.resolver_match.url_name == 'visao_geral_admin' %}active{% endif %}">
+                    <i class="fas fa-chart-pie" style="width:24px;text-align:center;"></i> Visão Geral
                 </a>
-                <a href="{% url 'admin_estoque' %}" class="menu-item">
-                    <i class="fas fa-boxes menu-icon"></i> Estoque Central
+                <a href="{% url 'admin_estoque' %}" class="menu-item {% if request.resolver_match.url_name == 'admin_estoque' %}active{% endif %}">
+                    <i class="fas fa-boxes" style="width:24px;text-align:center;"></i> Estoque Central
                 </a>
-                <a href="{% url 'admin_equipe' %}" class="menu-item">
-                    <i class="fas fa-users menu-icon"></i> Equipe
+                <a href="{% url 'admin_equipe' %}" class="menu-item {% if request.resolver_match.url_name == 'admin_equipe' %}active{% endif %}">
+                    <i class="fas fa-users" style="width:24px;text-align:center;"></i> Equipe
                 </a>
-                <a href="{% url 'relatorio_faturamento' %}" class="menu-item active">
-                    <i class="fas fa-file-invoice-dollar menu-icon"></i> Relatórios
+                <a href="{% url 'relatorio_faturamento' %}" class="menu-item {% if request.resolver_match.url_name == 'relatorio_faturamento' %}active{% endif %}">
+                    <i class="fas fa-file-invoice-dollar" style="width:24px;text-align:center;"></i> Relatórios
                 </a>
             </nav>
+        
+            <div class="sidebar-user">
+                <i class="fas fa-user-shield"></i>
+                <span>{{ user.first_name|default:user.username }}</span>
+            </div>
+        
+            <form method="post" action="{% url 'logout' %}" class="sidebar-footer">
+                {% csrf_token %}
+                <button type="submit" class="btn-logout">
+                    <div class="btn-logout-sign"><i class="fas fa-sign-out-alt"></i></div>
+                    <div class="btn-logout-text">Sair</div>
+                </button>
+            </form>
         </aside>
 
         <main>

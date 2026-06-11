@@ -17,18 +17,34 @@
             <div class="logo-container">
                 <img src="{% static 'img/logo willy.png' %}" alt="Willy Bolsas" class="logo">
             </div>
+        
             <nav class="menu-lateral">
                 <a href="{% url 'visao_geral_admin' %}" class="menu-item {% if request.resolver_match.url_name == 'visao_geral_admin' %}active{% endif %}">
-                    <i class="fas fa-chart-pie" style="width: 24px; text-align: center;"></i> Visão Geral
-                </a>                
-                <a href="{% url 'admin_estoque' %}" class="menu-item {% if request.resolver_match.url_name == 'admin_estoque' %}active{% endif %}">
-                    <i class="fas fa-boxes" style="width: 24px; text-align: center;"></i> Estoque Central
-                </a>                
-                <a href="{% url 'admin_equipe' %}" class="menu-item {% if request.resolver_match.url_name == 'admin_equipe' %}active{% endif %}">
-                    <i class="fas fa-users" style="width: 24px; text-align: center;"></i> Equipe
+                    <i class="fas fa-chart-pie" style="width:24px;text-align:center;"></i> Visão Geral
                 </a>
-                <a href="{% url 'relatorio_faturamento' %}" class="menu-item "><i class="fas fa-file-invoice-dollar"  style="width: 24px; text-align: center;"></i> Relatórios</a>          
+                <a href="{% url 'admin_estoque' %}" class="menu-item {% if request.resolver_match.url_name == 'admin_estoque' %}active{% endif %}">
+                    <i class="fas fa-boxes" style="width:24px;text-align:center;"></i> Estoque Central
+                </a>
+                <a href="{% url 'admin_equipe' %}" class="menu-item {% if request.resolver_match.url_name == 'admin_equipe' %}active{% endif %}">
+                    <i class="fas fa-users" style="width:24px;text-align:center;"></i> Equipe
+                </a>
+                <a href="{% url 'relatorio_faturamento' %}" class="menu-item {% if request.resolver_match.url_name == 'relatorio_faturamento' %}active{% endif %}">
+                    <i class="fas fa-file-invoice-dollar" style="width:24px;text-align:center;"></i> Relatórios
+                </a>
             </nav>
+        
+            <div class="sidebar-user">
+                <i class="fas fa-user-shield"></i>
+                <span>{{ user.first_name|default:user.username }}</span>
+            </div>
+        
+            <form method="post" action="{% url 'logout' %}" class="sidebar-footer">
+                {% csrf_token %}
+                <button type="submit" class="btn-logout">
+                    <div class="btn-logout-sign"><i class="fas fa-sign-out-alt"></i></div>
+                    <div class="btn-logout-text">Sair</div>
+                </button>
+            </form>
         </aside>
 
         <main>
@@ -99,8 +115,10 @@
                                 <td>{{ perfil.get_cargo_display }}</td>
                                 <td>{{ perfil.comissao }}%</td>
                                 <td>
-                                    <button type="button" class="btn-table-action" onclick="abrirModalEditar('{{ perfil.matricula }}', '{{ perfil.usuario.first_name|default:perfil.usuario.username }}', '{{ perfil.endereco|default:'' }}', '{{ perfil.telefone|default:'' }}', '{{ perfil.data_nascimento|date:'Y-m-d' }}', '{{ perfil.cargo }}', '{{ perfil.comissao }}', '{{ perfil.cor_banner }}', '{% if perfil.foto %}{{ perfil.foto.url }}{% else %}{% endif %}')">
-                                        <i class="fa-solid fa-pen"></i>
+                                    <button type="button" class="btn-table-action"
+                                        onclick="abrirModalEditar('{{ perfil.matricula }}', '{{ perfil.usuario.first_name|default:perfil.usuario.username }}', '{{ perfil.endereco|default:'' }}', '{{ perfil.telefone|default:'' }}', '{{ perfil.data_nascimento|date:'Y-m-d' }}', '{{ perfil.cargo }}', '{{ perfil.comissao }}', '{{ perfil.cor_banner }}', '{% if perfil.foto %}{{ perfil.foto.url }}{% else %}{% endif %}')">
+                                        
+                                        <span class="btn-edit-text">Editar</span>
                                     </button>
                                 </td>
                             </tr>
@@ -186,7 +204,7 @@
                                         <input type="text" name="telefone" class="inpt-grid" placeholder="(00) 00000-0000">
                                     </div>
                                 </div>
-                                <div class="form-row">
+                                <div class="form-row" style="align-items: flex-start; margin-bottom: 20px;">
                                     <div class="input-field">
                                         <label class="label-grid">NÍVEL DE ACESSO</label>
                                         <select name="nivel" class="inpt-grid">

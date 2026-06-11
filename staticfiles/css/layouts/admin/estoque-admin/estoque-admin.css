@@ -855,3 +855,124 @@ body.dark-mode #modalAdicionar .btn-cancelar {
     background-color: #141C31;
     border: 1px solid #27345C;
 }
+
+.btn-table-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #F0F2F5;
+    border: 1px solid #e2e8f0;
+    padding: 7px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1E294A;
+    white-space: nowrap;
+}
+ 
+.btn-table-action .btn-edit-text {
+    display: inline;
+}
+ 
+.btn-table-action:hover {
+    background: #e2e8f0;
+    border-color: #cbd5e1;
+}
+ 
+.dark-mode .btn-table-action {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: #2A365D;
+    color: #A0ABC0;
+}
+ 
+.dark-mode .btn-table-action:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #F8FAFC;
+}
+ 
+/* ==========================================
+   CORREÇÃO: ÚLTIMA LINHA DO MODAL (NÍVEL + COMISSÃO)
+   ========================================== */
+.form-row {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+}
+ 
+.input-field {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+ 
+.field-comissao {
+    flex: 1;
+}
+ 
+.label-grid {
+    font-size: 11px;
+    font-weight: 700;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+ 
+.inpt-grid {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    color: #1a1a1a;
+    background: #fff;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+ 
+.inpt-grid:focus {
+    border-color: #0A84FF;
+}
+ 
+/* ==========================================
+   DARK MODE — MODAL EQUIPE
+   ========================================== */
+.dark-mode .inpt-grid {
+    background: #0F172A;
+    border-color: #334155;
+    color: #F8FAFC;
+}
+ 
+.dark-mode .label-grid {
+    color: #94A3B8;
+}
+ 
+.dark-mode .modal-card {
+    background: #1E293B;
+}
+ 
+.dark-mode .btn-cancel {
+    background: #334155;
+    color: #94A3B8;
+    border-color: #334155;
+}
+ 
+/* ==========================================
+   RESPONSIVIDADE: BOTÃO EDITAR
+   ========================================== */
+@media (max-width: 768px) {
+    .btn-table-action .btn-edit-text {
+        display: none;
+    }
+ 
+    .btn-table-action {
+        padding: 7px 10px;
+    }
+ 
+    .form-row {
+        flex-direction: column;
+    }
+}

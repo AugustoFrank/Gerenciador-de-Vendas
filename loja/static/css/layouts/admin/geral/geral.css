@@ -65,3 +65,46 @@
     margin-bottom: 10px; 
 }
 
+.dark-mode .card-ranking h3,
+.dark-mode .card-alertas h3 {
+    color: #F8FAFC;
+}
+ 
+.dark-mode .alerta-item {
+    background-color: #7922226e;
+    border: 2px solid rgba(220, 38, 38, 0.562);
+}
+ 
+.dark-mode .alerta-item span {
+    color: #FCA5A5;
+}
+ 
+.dark-mode .text-danger {
+    color: #FCA5A5;
+}
+ 
+.dark-mode .estoque-ok {
+    color: #34D399;
+}
+ 
+.dark-mode .card-ranking td strong {
+    color: #FB923C;
+}
+ 
+.dark-mode table th {
+    color: #94A3B8;
+    border-color: #2A365D;
+}
+ 
+.dark-mode table td {
+    color: #CBD5E1;
+    border-color: #2A365D;
+}
+ 
+.dark-mode table thead tr {
+    background-color: #141C31;
+}
+ 
+.dark-mode table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+}
