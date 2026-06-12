@@ -3,6 +3,7 @@ from decimal import Decimal
 import random
 from datetime import datetime, time, timedelta
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.http import require_POST
 from django.contrib.auth import update_session_auth_hash, authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -164,14 +165,25 @@ def admin_equipe(request):
 
 @user_passes_test(eh_admin)
 def admin_estoque(request):
-    # FORÇA A LIMPEZA DAS MENSAGENS ANTIGAS
     storage = messages.get_messages(request)
-    for _ in storage: pass 
+    for _ in storage: pass
     storage.used = True
-
-    produtos_loja = Produto.objects.all().order_by('nome')
+    filtro = request.GET.get('filtro', '')
+    if filtro == 'excluidos':
+        produtos_loja = Produto.objects.filter(excluido=True).order_by('nome')
+    else:
+        produtos_loja = Produto.objects.filter(excluido=False).order_by('nome')
     vendedores = User.objects.filter(perfil__cargo='vendedor').select_related('perfil')
     return render(request, 'loja/admin/estoque.html', {'produtos_loja': produtos_loja, 'vendedores': vendedores})
+
+@user_passes_test(eh_admin)
+@require_POST
+def excluir_produtos(request):
+    import json
+    data = json.loads(request.body)
+    ids = data.get('ids', [])
+    Produto.objects.filter(referencia__in=ids).update(excluido=True)
+    return JsonResponse({'sucesso': True})
 
 @user_passes_test(eh_admin)
 @transaction.atomic
@@ -620,3 +632,48 @@ def cancelar_venda(request, venda_id):
         venda.cancelada = True
         venda.save()
     return redirect(request.META.get('HTTP_REFERER', 'relatorio_faturamento'))
+
+@login_required
+@user_passes_test(eh_admin)
+def lixeira(request):
+    produtos_excluidos = Produto.objects.filter(excluido=True).order_by('nome')
+    vendas_canceladas = Venda.objects.filter(cancelada=True).select_related('produto', 'vendedor').order_by('-data_venda')
+    vendedores_excluidos = User.objects.filter(is_active=False, perfil__cargo='vendedor').select_related('perfil').order_by('first_name')
+    return render(request, 'loja/admin/lixeira.html', {
+        'produtos_excluidos': produtos_excluidos,
+        'vendas_canceladas': vendas_canceladas,
+        'vendedores_excluidos': vendedores_excluidos,
+    })
+
+@login_required
+@user_passes_test(eh_admin)
+@require_POST
+def restaurar_produto(request):
+    data = json.loads(request.body)
+    ids = data.get('ids', [])
+    Produto.objects.filter(referencia__in=ids).update(excluido=False)
+    return JsonResponse({'sucesso': True})
+
+@login_required
+@user_passes_test(eh_admin)
+@require_POST
+def restaurar_vendedor(request):
+    data = json.loads(request.body)
+    ids = data.get('ids', [])
+    User.objects.filter(username__in=ids).update(is_active=True)
+    return JsonResponse({'sucesso': True})
+
+@login_required
+@user_passes_test(eh_admin)
+@require_POST
+def restaurar_venda(request):
+    data = json.loads(request.body)
+    ids = data.get('ids', [])
+    vendas = Venda.objects.filter(id__in=ids, cancelada=True).select_related('produto')
+    for venda in vendas:
+        venda.cancelada = False
+        venda.save()
+        if venda.produto:
+            venda.produto.estoque += venda.quantidade_vendida
+            venda.produto.save()
+    return JsonResponse({'sucesso': True})

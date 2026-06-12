@@ -17,6 +17,7 @@ class Produto(models.Model):
     perc_varejo = models.DecimalField("Percentual de Margem de Lucro para Varejo (%)", max_digits=5, decimal_places=2, default=0.00)
     perc_atacado = models.DecimalField("Percentual de Margem de Lucro para Atacado (%)", max_digits=5, decimal_places=2, default=0.00)
     em_promocao = models.BooleanField("Em Promoção", default=False)
+    excluido = models.BooleanField("Excluído", default=False)
 
     # Preços calculados automaticamente
     valor_venda_varejo = models.DecimalField("Preço de Varejo", max_digits=10, decimal_places=2, editable=False, null=True)

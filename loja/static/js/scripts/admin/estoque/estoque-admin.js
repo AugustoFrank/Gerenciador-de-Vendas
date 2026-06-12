@@ -274,12 +274,15 @@ function calcularPreviewEditar() {
 (function () {
     const LIMIAR_ESTOQUE_BAIXO = 10;
 
-    const btnTodos    = document.getElementById('filtro-todos');
-    const btnPromo    = document.getElementById('filtro-promocao');
-    const btnBaixo    = document.getElementById('filtro-baixo');
-    const btnZerado   = document.getElementById('filtro-zerado');
-    const contagem    = document.getElementById('filtro-contagem');
-    const searchInput = document.getElementById('search-produto');
+    const btnTodos      = document.getElementById('filtro-todos');
+    const btnPromo      = document.getElementById('filtro-promocao');
+    const btnBaixo      = document.getElementById('filtro-baixo');
+    const btnZerado     = document.getElementById('filtro-zerado');
+    const btnExcluidos  = document.getElementById('filtro-excluidos');
+    const contagem      = document.getElementById('filtro-contagem');
+    const searchInput   = document.getElementById('search-produto');
+    const checkTodos    = document.getElementById('check-todos');
+    const btnExcluir    = document.getElementById('btn-excluir');
 
     if (!btnTodos) return;
 
@@ -293,41 +296,45 @@ function calcularPreviewEditar() {
         });
     }
 
-    btnTodos.addEventListener('click',  () => ativarFiltro('todos',    btnTodos));
-    btnPromo.addEventListener('click',  () => ativarFiltro('promocao', btnPromo));
-    btnBaixo.addEventListener('click',  () => ativarFiltro('baixo',    btnBaixo));
-    btnZerado.addEventListener('click', () => ativarFiltro('zerado',   btnZerado));
+    const todosOsBotoes = [btnTodos, btnPromo, btnBaixo, btnZerado, btnExcluidos].filter(Boolean);
+
+    btnTodos.addEventListener('click',     () => ativarFiltro('todos',      btnTodos));
+    btnPromo.addEventListener('click',     () => ativarFiltro('promocao',   btnPromo));
+    btnBaixo.addEventListener('click',     () => ativarFiltro('baixo',      btnBaixo));
+    btnZerado.addEventListener('click',    () => ativarFiltro('zerado',     btnZerado));
+    btnExcluidos?.addEventListener('click',() => ativarFiltro('excluidos',  btnExcluidos));
 
     function ativarFiltro(filtro, btn) {
         filtroAtivo = filtro;
-
-        [btnTodos, btnPromo, btnBaixo, btnZerado].forEach(b => {
+        todosOsBotoes.forEach(b => {
             b.classList.remove('ativo', 'ativo-amarelo', 'ativo-vermelho');
         });
-
-        if (filtro === 'todos')    btn.classList.add('ativo');
-        if (filtro === 'promocao') btn.classList.add('ativo-amarelo');
-        if (filtro === 'baixo')    btn.classList.add('ativo-amarelo');
-        if (filtro === 'zerado')   btn.classList.add('ativo-vermelho');
-
+        if (filtro === 'todos')     btn.classList.add('ativo');
+        if (filtro === 'promocao')  btn.classList.add('ativo-amarelo');
+        if (filtro === 'baixo')     btn.classList.add('ativo-amarelo');
+        if (filtro === 'zerado')    btn.classList.add('ativo-vermelho');
+        if (filtro === 'excluidos') btn.classList.add('ativo-vermelho');
         aplicarFiltros();
     }
 
     function aplicarFiltros() {
-        const linhas  = document.querySelectorAll('#tabela-produtos-corpo tr.produto-item');
-        let visiveis  = 0;
+        const linhas = document.querySelectorAll('#tabela-produtos-corpo tr.produto-item');
+        let visiveis = 0;
 
         linhas.forEach(linha => {
             const texto    = linha.innerText.toLowerCase();
-            const estoque  = parseInt(linha.querySelector('td:nth-child(3)')?.innerText || '0');
+            const estoque  = parseInt(linha.querySelector('td:nth-child(4)')?.innerText || '0');
             const promocao = linha.getAttribute('data-promocao') === 'true';
+            const excluido = linha.getAttribute('data-excluido') === 'true';
 
             const passaBusca = !termoBusca || texto.includes(termoBusca);
 
             let passaFiltro = true;
-            if (filtroAtivo === 'promocao') passaFiltro = promocao;
-            if (filtroAtivo === 'baixo')    passaFiltro = estoque > 0 && estoque < LIMIAR_ESTOQUE_BAIXO;
-            if (filtroAtivo === 'zerado')   passaFiltro = estoque <= 0;
+            if (filtroAtivo === 'todos')     passaFiltro = !excluido;
+            if (filtroAtivo === 'promocao')  passaFiltro = promocao && !excluido;
+            if (filtroAtivo === 'baixo')     passaFiltro = estoque > 0 && estoque < LIMIAR_ESTOQUE_BAIXO && !excluido;
+            if (filtroAtivo === 'zerado')    passaFiltro = estoque <= 0 && !excluido;
+            if (filtroAtivo === 'excluidos') passaFiltro = excluido;
 
             const visivel = passaBusca && passaFiltro;
             linha.style.display = visivel ? '' : 'none';
@@ -340,4 +347,63 @@ function calcularPreviewEditar() {
     }
 
     aplicarFiltros();
+
+    // ── Checkboxes e Exclusão ─────────────────────────────────────
+    function getSelecionados() {
+        return [...document.querySelectorAll('.check-produto:checked')].map(c => c.value);
+    }
+
+    function atualizarBtnExcluir() {
+        if (btnExcluir) {
+            btnExcluir.style.display = getSelecionados().length > 0 ? 'inline-flex' : 'none';
+        }
+    }
+
+    checkTodos?.addEventListener('change', function () {
+        document.querySelectorAll('#tabela-produtos-corpo tr.produto-item:not([style*="display: none"]) .check-produto').forEach(c => {
+            c.checked = this.checked;
+        });
+        atualizarBtnExcluir();
+    });
+
+    document.addEventListener('change', function (e) {
+        if (e.target.classList.contains('check-produto')) {
+            atualizarBtnExcluir();
+            const visiveis = document.querySelectorAll('#tabela-produtos-corpo tr.produto-item:not([style*="display: none"]) .check-produto');
+            const marcados = document.querySelectorAll('#tabela-produtos-corpo tr.produto-item:not([style*="display: none"]) .check-produto:checked');
+            if (checkTodos) checkTodos.checked = visiveis.length === marcados.length && visiveis.length > 0;
+        }
+    });
+
+    btnExcluir?.addEventListener('click', async function () {
+        const ids = getSelecionados();
+        if (ids.length === 0) return;
+        if (!confirm(`Excluir ${ids.length} produto(s)? Eles sairão do estoque mas permanecerão no histórico.`)) return;
+
+        const csrf = document.cookie.match(/csrftoken=([^;]+)/)?.[1] || '';
+        try {
+            const res = await fetch('/admin/excluir-produtos/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrf },
+                body: JSON.stringify({ ids }),
+            });
+            const data = await res.json();
+            if (data.sucesso) {
+                ids.forEach(id => {
+                    const checkbox = document.querySelector(`.check-produto[value="${id}"]`);
+                    const linha = checkbox?.closest('tr');
+                    if (linha) {
+                        linha.setAttribute('data-excluido', 'true');
+                        checkbox.checked = false;
+                    }
+                });
+                btnExcluir.style.display = 'none';
+                if (checkTodos) checkTodos.checked = false;
+                aplicarFiltros();
+            }
+        } catch (e) {
+            console.error(e);
+            alert('Erro ao excluir produtos.');
+        }
+    });
 })();

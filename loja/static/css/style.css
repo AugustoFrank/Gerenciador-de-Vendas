@@ -436,7 +436,7 @@ td {
 .dark-mode td {
     border-bottom: 1px solid #2A365D !important;
     background-color: #1e294a !important;
-    color: #E2E8F0 !important;
+    color: #e2f0e4 !important;
 }
 
 .dark-mode tr {
@@ -696,14 +696,4 @@ td {
 .dark-mode .btn-search:hover {
     background-color: #334270;
 }
-@media (max-width: 1139px) {
-    .sidebar {
-        overflow-y: auto;
-    }
-}
 
-@media (max-width: 1139px) {
-    .sidebar-footer {
-        margin-top: 24px;
-    }
-}

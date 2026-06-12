@@ -163,8 +163,14 @@
                             </thead>
                             <tbody>
                                 {% for v in vendas_detalhadas %}
-                                <tr>
-                                    <td class="text-highlight">{{ v.produto.nome }}</td>
+                                <tr {% if v.produto.excluido %}class="venda-cancelada"{% endif %}>
+                                    <td class="text-highlight">
+                                        {% if v.produto.excluido %}
+                                            <span class="produto-excluido-tag">{{ v.produto.nome }}</span> <span class="tag-excluido-label">(Excluído)</span>
+                                        {% else %}
+                                            {{ v.produto.nome }}
+                                        {% endif %}
+                                    </td>
                                     <td>
                                         {% if v.vendedor %}
                                             {{ v.vendedor.first_name|default:v.vendedor.username }}

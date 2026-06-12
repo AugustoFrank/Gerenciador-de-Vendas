@@ -33,12 +33,18 @@ urlpatterns = [
     path('editar-colaborador/', views.editar_colaborador, name='editar_colaborador'),
     path('buscar-usuario-id/', views.buscar_usuario_por_id, name='buscar_usuario_id'),
     path('admin/adicionar-estoque/', views.adicionar_estoque_admin, name='adicionar_estoque_admin'),
+    path('admin/excluir-produtos/', views.excluir_produtos, name='excluir_produtos'),
     path('finalizar-venda/', views.finalizar_venda, name='finalizar_venda'),
     path('finalizar-carrinho/', views.finalizar_carrinho, name='finalizar_carrinho'),
     path('cancelar-venda/<int:venda_id>/', views.cancelar_venda, name='cancelar_venda'),
     path('admin/equipe/excluir/', views.excluir_colaboradores, name='excluir_colaboradores'),
     path('admin/relatorio-vendedores/', views.relatorio_vendedores, name='relatorio_vendedores'),
     path('admin/relatorio-faturamento/', views.relatorio_faturamento, name='relatorio_faturamento'),
+
+   path('admin/lixeira/', views.lixeira, name='lixeira'),
+   path('admin/restaurar-produto/', views.restaurar_produto, name='restaurar_produto'),
+   path('admin/restaurar-vendedor/', views.restaurar_vendedor, name='restaurar_vendedor'),
+   path('admin/restaurar-venda/', views.restaurar_venda, name='restaurar_venda'),
 ]
 
 if settings.DEBUG:

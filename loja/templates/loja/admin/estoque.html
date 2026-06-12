@@ -72,7 +72,10 @@
                     </div>
                 </div>
                 <div class="header-actions">
-                    <button id="btn-adc" class="btn-adc"><i class="fas fa-plus"></i> <span class="adc-produto">Adicionar Produto</span></button>
+			 <button id="btn-excluir" class="btn-excluir-produtos" style="display:none;">
+    <i class="fas fa-trash"></i> <span class="excluir-texto">Excluir</span>
+</button>	
+<button id="btn-adc" class="btn-adc"><i class="fas fa-plus"></i> <span class="adc-produto">Adicionar Produto</span></button>
                     <button id="dark-mode-toggle" class="btn-dark-mode"><i class="fas fa-sun"></i></button>
                 </div>
             </header>
@@ -111,6 +114,9 @@
                         <button class="btn-filtro-rapido" id="filtro-zerado">
                             <i class="fas fa-times-circle"></i> Sem Estoque
                         </button>
+			<button class="btn-filtro-rapido" id="filtro-excluidos">
+    <i class="fas fa-trash"></i> Excluídos
+</button>
                         <span class="filtro-contagem" id="filtro-contagem"></span>
                     </div>
 
@@ -118,6 +124,7 @@
                         <table>
                             <thead>
                                 <tr>
+					<th><input type="checkbox" id="check-todos"></th>
                                     <th>SKU</th>
                                     <th>PRODUTO</th>
                                     <th style="cursor: pointer;" onclick="ordenarTabela('estoque')">
@@ -136,8 +143,10 @@
                                     data-imposto="{{ produto.perc_imposto|stringformat:'.2f' }}"
                                     data-varejo="{{ produto.perc_varejo|stringformat:'.2f' }}"
                                     data-atacado="{{ produto.perc_atacado|stringformat:'.2f' }}"
-                                    data-promocao="{{ produto.em_promocao|yesno:'true,false' }}">
-                                    <td><strong>#{{ produto.referencia }}</strong></td>
+					data-promocao="{{ produto.em_promocao|yesno:'true,false' }}"
+data-excluido="{{ produto.excluido|yesno:'true,false' }}">
+				    <td><input type="checkbox" class="check-produto" value="{{ produto.referencia }}"></td>	
+<td><strong>#{{ produto.referencia }}</strong></td>
                                     <td class="produto-nome">{{ produto.nome }}</td>
                                     <td>
                                         <span class="badge-status {% if produto.estoque < 10 %}baixo{% else %}normal{% endif %}">
@@ -388,6 +397,6 @@
         </div>
 
     </div>
-    <script src="{% static 'js/scripts/admin/estoque/estoque-admin.js' %}" defer></script>
+	<script src="{% static 'js/scripts/admin/estoque/estoque-admin.js' %}?v=2" defer></script>
 </body>
 </html>

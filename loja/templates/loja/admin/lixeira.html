@@ -1,0 +1,215 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lixeira | Willy Bolsas</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/layouts/admin/lixeira/lixeira.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body id="page-lixeira">
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+    <div class="container">
+
+        <aside class="sidebar">
+            <div class="logo-container">
+                <img src="{% static 'img/logo willy.png' %}" alt="Willy Bolsas" class="logo">
+            </div>
+            <nav class="menu-lateral">
+                <a href="{% url 'visao_geral_admin' %}" class="menu-item {% if request.resolver_match.url_name == 'visao_geral_admin' %}active{% endif %}">
+                    <i class="fas fa-chart-pie" style="width:24px;text-align:center;"></i> Visão Geral
+                </a>
+                <a href="{% url 'admin_estoque' %}" class="menu-item {% if request.resolver_match.url_name == 'admin_estoque' %}active{% endif %}">
+                    <i class="fas fa-boxes" style="width:24px;text-align:center;"></i> Estoque Central
+                </a>
+                <a href="{% url 'admin_equipe' %}" class="menu-item {% if request.resolver_match.url_name == 'admin_equipe' %}active{% endif %}">
+                    <i class="fas fa-users" style="width:24px;text-align:center;"></i> Equipe
+                </a>
+                <a href="{% url 'relatorio_faturamento' %}" class="menu-item {% if request.resolver_match.url_name == 'relatorio_faturamento' %}active{% endif %}">
+                    <i class="fas fa-file-invoice-dollar" style="width:24px;text-align:center;"></i> Relatórios
+                </a>
+                <a href="{% url 'lixeira' %}" class="menu-item {% if request.resolver_match.url_name == 'lixeira' %}active{% endif %}">
+                    <i class="fas fa-trash" style="width:24px;text-align:center;"></i> Lixeira
+                </a>
+            </nav>
+            <div class="sidebar-user">
+                <i class="fas fa-user-shield"></i>
+                <span>{{ user.first_name|default:user.username }}</span>
+            </div>
+            <form method="post" action="{% url 'logout' %}" class="sidebar-footer">
+                {% csrf_token %}
+                <button type="submit" class="btn-logout">
+                    <div class="btn-logout-sign"><i class="fas fa-sign-out-alt"></i></div>
+                    <div class="btn-logout-text">Sair</div>
+                </button>
+            </form>
+        </aside>
+
+        <main>
+            <header>
+                <div class="header-left">
+                    <button id="menu-toggle" class="btn-menu-mobile">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="header-info">
+                        <h1>Lixeira</h1>
+                        <span>Itens excluídos do sistema. Restaure ou confirme a exclusão.</span>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button id="dark-mode-toggle" class="btn-dark-mode"><i class="fas fa-sun"></i></button>
+                </div>
+            </header>
+
+            <div class="dashboard-content">
+                <div class="lixeira-tabs">
+                    <button class="lixeira-tab ativo" data-tab="produtos">
+                        <i class="fas fa-box"></i> Produtos
+                        <span class="tab-badge">{{ produtos_excluidos.count }}</span>
+                    </button>
+                    <button class="lixeira-tab" data-tab="vendas">
+                        <i class="fas fa-receipt"></i> Vendas
+                        <span class="tab-badge">{{ vendas_canceladas.count }}</span>
+                    </button>
+                    <button class="lixeira-tab" data-tab="vendedores">
+                        <i class="fas fa-user"></i> Vendedores
+                        <span class="tab-badge">{{ vendedores_excluidos.count }}</span>
+                    </button>
+                </div>
+
+                <!-- ABA PRODUTOS -->
+                <div class="lixeira-painel ativo" id="painel-produtos">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>SKU</th>
+                                    <th>PRODUTO</th>
+                                    <th>ESTOQUE</th>
+                                    <th>PREÇO VAREJO</th>
+                                    <th>PREÇO ATACADO</th>
+                                    <th>AÇÃO</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for produto in produtos_excluidos %}
+                                <tr>
+                                    <td><strong>#{{ produto.referencia }}</strong></td>
+                                    <td>{{ produto.nome }}</td>
+                                    <td>{{ produto.estoque }} un</td>
+                                    <td>R$ {{ produto.valor_venda_varejo|floatformat:"2g" }}</td>
+                                    <td>R$ {{ produto.valor_venda_atacado|floatformat:"2g" }}</td>
+                                    <td class="acoes-lixeira">
+                                        <button class="btn-restaurar" data-tipo="produto" data-id="{{ produto.referencia }}">
+                                            <i class="fas fa-undo"></i> Restaurar
+                                        </button>
+                                        <button class="btn-excluir-perm" data-tipo="produto" data-id="{{ produto.referencia }}" data-nome="{{ produto.nome }}">
+                                            <i class="fas fa-times"></i> Excluir
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr><td colspan="6" class="empty-msg">Nenhum produto excluído.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- ABA VENDAS -->
+                <div class="lixeira-painel" id="painel-vendas">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>PRODUTO</th>
+                                    <th>VENDEDOR</th>
+                                    <th>DATA</th>
+                                    <th>QTD</th>
+                                    <th>TOTAL</th>
+                                    <th>AÇÃO</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for venda in vendas_canceladas %}
+                                <tr>
+                                    <td>{{ venda.produto.nome }}</td>
+                                    <td>{{ venda.vendedor.first_name|default:venda.vendedor.username|default:"—" }}</td>
+                                    <td>{{ venda.data_venda|date:"d/m/Y H:i" }}</td>
+                                    <td>{{ venda.quantidade_vendida }} un</td>
+                                    <td>R$ {{ venda.preco_total|floatformat:"2g" }}</td>
+                                    <td class="acoes-lixeira">
+                                        <button class="btn-restaurar" data-tipo="venda" data-id="{{ venda.id }}">
+                                            <i class="fas fa-undo"></i> Restaurar
+                                        </button>
+                                        <button class="btn-excluir-perm" data-tipo="venda" data-id="{{ venda.id }}" data-nome="{{ venda.produto.nome }}">
+                                            <i class="fas fa-times"></i> Excluir
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr><td colspan="6" class="empty-msg">Nenhuma venda cancelada.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- ABA VENDEDORES -->
+                <div class="lixeira-painel" id="painel-vendedores">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>NOME</th>
+                                    <th>USUÁRIO</th>
+                                    <th>CARGO</th>
+                                    <th>AÇÃO</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for vendedor in vendedores_excluidos %}
+                                <tr>
+                                    <td>{{ vendedor.first_name|default:vendedor.username }}</td>
+                                    <td>{{ vendedor.username }}</td>
+                                    <td>{{ vendedor.perfil.cargo|capfirst }}</td>
+                                    <td class="acoes-lixeira">
+                                        <button class="btn-restaurar" data-tipo="vendedor" data-id="{{ vendedor.username }}">
+                                            <i class="fas fa-undo"></i> Restaurar
+                                        </button>
+                                        <button class="btn-excluir-perm" data-tipo="vendedor" data-id="{{ vendedor.username }}" data-nome="{{ vendedor.first_name|default:vendedor.username }}">
+                                            <i class="fas fa-times"></i> Excluir
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr><td colspan="4" class="empty-msg">Nenhum vendedor excluído.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- MODAL EXCLUSÃO PERMANENTE -->
+        <div id="modal-excluir-perm" class="modal-confirm hidden">
+            <div class="modal-confirm-box">
+                <div class="modal-confirm-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h3>Exclusão Permanente</h3>
+                <p id="modal-confirm-texto">Tem certeza? Esta ação não pode ser desfeita.</p>
+                <div class="modal-confirm-actions">
+                    <button id="modal-btn-cancelar" class="btn-modal-cancelar">Cancelar</button>
+                    <button id="modal-btn-confirmar" class="btn-modal-confirmar">Excluir Permanentemente</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script src="{% static 'js/scripts/admin/lixeira/lixeira.js' %}" defer></script>
+</body>
+</html>
