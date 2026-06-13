@@ -34,6 +34,9 @@
                 <a href="{% url 'relatorio_faturamento' %}" class="menu-item {% if request.resolver_match.url_name == 'relatorio_faturamento' %}active{% endif %}">
                     <i class="fas fa-file-invoice-dollar" style="width:24px;text-align:center;"></i> Relatórios
                 </a>
+                <a href="{% url 'lixeira' %}" class="menu-item {% if request.resolver_match.url_name == 'lixeira' %}active{% endif %}">
+                    <i class="fas fa-trash" style="width:24px;text-align:center;"></i> Lixeira
+                </a>
             </nav>
         
             <div class="sidebar-user">

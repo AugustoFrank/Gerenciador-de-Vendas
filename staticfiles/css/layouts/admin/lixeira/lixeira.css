@@ -1,0 +1,207 @@
+.lixeira-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.lixeira-tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    background: transparent;
+}
+
+.lixeira-tab.ativo {
+    border-color: #E07B33;
+    color: #E07B33;
+}
+
+.tab-badge {
+    background: rgba(0, 0, 0, 0.12);
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.lixeira-tab.ativo .tab-badge {
+    background: #E07B33;
+    color: #fff;
+}
+
+.lixeira-painel {
+    display: none;
+}
+
+.lixeira-painel.ativo {
+    display: block;
+}
+
+.acoes-lixeira {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.btn-restaurar {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: opacity 0.2s ease;
+    background: #d4edda;
+    color: #155724;
+}
+
+.btn-restaurar:hover {
+    opacity: 0.8;
+}
+
+.btn-excluir-perm {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: opacity 0.2s ease;
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.btn-excluir-perm:hover {
+    opacity: 0.8;
+}
+
+.empty-msg {
+    text-align: center;
+    padding: 40px;
+    font-size: 14px;
+    color: #888;
+}
+
+/* ── Modal Confirmação ───────────────────────────────────────── */
+.modal-confirm {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.modal-confirm.hidden {
+    display: none;
+}
+
+.modal-confirm-box {
+    background: #fff;
+    border-radius: 16px;
+    padding: 40px;
+    max-width: 420px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.modal-confirm-icon {
+    font-size: 48px;
+    color: #e53e3e;
+    margin-bottom: 16px;
+}
+
+.modal-confirm-box h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.modal-confirm-box p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 28px;
+    line-height: 1.5;
+}
+
+.modal-confirm-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.btn-modal-cancelar {
+    padding: 10px 24px;
+    border-radius: 8px;
+    border: 2px solid #ddd;
+    background: transparent;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-modal-cancelar:hover {
+    border-color: #999;
+}
+
+.btn-modal-confirmar {
+    padding: 10px 24px;
+    border-radius: 8px;
+    border: none;
+    background: #e53e3e;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.btn-modal-confirmar:hover {
+    opacity: 0.85;
+}
+
+/* ── Dark Mode ───────────────────────────────────────────────── */
+.dark-mode .modal-confirm-box {
+    background: #1E294A;
+    color: #E2E8F0;
+}
+
+.dark-mode .modal-confirm-box p {
+    color: #94A3B8;
+}
+
+.dark-mode .btn-modal-cancelar {
+    border-color: #334155;
+    color: #E2E8F0;
+}
+
+.dark-mode .btn-restaurar {
+    background: #1a3a2a;
+    color: #80b283;
+}
+
+.dark-mode .btn-excluir-perm {
+    background: #3a1a1a;
+    color: #f87171;
+}
+
+.dark-mode .lixeira-tab {
+    color: #94A3B8;
+}
+
+.dark-mode .lixeira-tab.ativo {
+    color: #E07B33;
+}

@@ -45,6 +45,9 @@ urlpatterns = [
    path('admin/restaurar-produto/', views.restaurar_produto, name='restaurar_produto'),
    path('admin/restaurar-vendedor/', views.restaurar_vendedor, name='restaurar_vendedor'),
    path('admin/restaurar-venda/', views.restaurar_venda, name='restaurar_venda'),
+   path('admin/excluir-perm-produto/', views.excluir_perm_produto, name='excluir_perm_produto'),
+   path('admin/excluir-perm-vendedor/', views.excluir_perm_vendedor, name='excluir_perm_vendedor'),
+   path('admin/excluir-perm-venda/', views.excluir_perm_venda, name='excluir_perm_venda'),
 ]
 
 if settings.DEBUG:

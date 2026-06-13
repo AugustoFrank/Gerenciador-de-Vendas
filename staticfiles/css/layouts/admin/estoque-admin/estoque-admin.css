@@ -76,6 +76,7 @@
     box-shadow: 0 4px 20px rgba(0,0,0,0.05);
     overflow: hidden;
     margin-top: 20px;
+    margin-bottom: 40px;
 }
 
 .inventario-header {
@@ -1241,4 +1242,35 @@ body.dark-mode #modalAdicionar .btn-cancelar {
     font-size: 16px !important;
     font-weight: 700 !important;
     padding: 4px 12px !important;
+}
+
+.btn-filtros-toggle {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .btn-filtros-toggle {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 14px;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        background: #fff;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .filtros-rapidos {
+        display: none;
+        width: 100%;
+    }
+
+    .filtros-rapidos.aberto {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-top: 8px;
+    }
 }

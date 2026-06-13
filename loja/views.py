@@ -631,6 +631,9 @@ def cancelar_venda(request, venda_id):
         venda = get_object_or_404(Venda, id=venda_id)
         venda.cancelada = True
         venda.save()
+        if venda.produto:
+            venda.produto.estoque += venda.quantidade_vendida
+            venda.produto.save()
     return redirect(request.META.get('HTTP_REFERER', 'relatorio_faturamento'))
 
 @login_required
@@ -676,4 +679,31 @@ def restaurar_venda(request):
         if venda.produto:
             venda.produto.estoque += venda.quantidade_vendida
             venda.produto.save()
+    return JsonResponse({'sucesso': True})
+
+@login_required
+@user_passes_test(eh_admin)
+@require_POST
+def excluir_perm_produto(request):
+    data = json.loads(request.body)
+    ids = data.get('ids', [])
+    Produto.objects.filter(referencia__in=ids, excluido=True).delete()
+    return JsonResponse({'sucesso': True})
+
+@login_required
+@user_passes_test(eh_admin)
+@require_POST
+def excluir_perm_vendedor(request):
+    data = json.loads(request.body)
+    ids = data.get('ids', [])
+    User.objects.filter(username__in=ids, is_active=False, perfil__cargo='vendedor').delete()
+    return JsonResponse({'sucesso': True})
+
+@login_required
+@user_passes_test(eh_admin)
+@require_POST
+def excluir_perm_venda(request):
+    data = json.loads(request.body)
+    ids = data.get('ids', [])
+    Venda.objects.filter(id__in=ids, cancelada=True).delete()
     return JsonResponse({'sucesso': True})

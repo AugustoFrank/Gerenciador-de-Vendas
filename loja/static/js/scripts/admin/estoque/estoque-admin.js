@@ -134,9 +134,9 @@ window.abrirModalEditar = function (linha) {
     const modal = document.getElementById('modalEditar');
     if (!modal) return;
 
-    const sku      = linha.cells[0].innerText.replace('#', '').trim();
+    const sku      = linha.cells[1].innerText.replace('#', '').trim();
     const nome     = linha.querySelector('.produto-nome').innerText;
-    const saldoRaw = linha.cells[2].innerText.replace(/[^\d]/g, '').trim() || '0';
+    const saldoRaw = linha.cells[3].innerText.replace(/[^\d]/g, '').trim() || '0';
     const compra   = linha.getAttribute('data-compra')   || '';
     const imposto  = linha.getAttribute('data-imposto')  || '';
     const varejo   = linha.getAttribute('data-varejo')   || '';
