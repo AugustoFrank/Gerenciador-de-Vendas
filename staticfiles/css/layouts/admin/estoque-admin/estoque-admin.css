@@ -170,6 +170,7 @@
     flex-wrap: wrap;
     padding: 12px 25px 16px 25px;
     align-items: center;
+    border: 2px solid #ff0000;
 }
 
 .btn-filtro-rapido {
@@ -465,15 +466,19 @@
     color: #A0ABC0;
 }
 
+.inventario-info-right span {
+    font-size: 12px;
+}
+
 .badge-count-tipos {
     background-color: #F0F2F5;
     color: #718096;
     padding: 6px 15px;
     border-radius: 20px;
-    font-size: 0.8rem;
+    font-size: 12px;
+    border: 1px solid #ff7b00;
     font-weight: 700;
 }
-
 /* Tabela Estilo Imagem */
 #page-estoque table {
     width: 100%;
@@ -1235,42 +1240,5 @@ body.dark-mode #modalAdicionar .btn-cancelar {
         font-size: 11px !important;
         padding: 4px 10px !important;
         white-space: nowrap !important;
-    }
-}
-
-.badge-count-tipos {
-    font-size: 16px !important;
-    font-weight: 700 !important;
-    padding: 4px 12px !important;
-}
-
-.btn-filtros-toggle {
-    display: none;
-}
-
-@media (max-width: 768px) {
-    .btn-filtros-toggle {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        padding: 8px 14px;
-        border-radius: 8px;
-        border: 1px solid #e5e7eb;
-        background: #fff;
-        cursor: pointer;
-        font-size: 13px;
-        font-weight: 600;
-    }
-
-    .filtros-rapidos {
-        display: none;
-        width: 100%;
-    }
-
-    .filtros-rapidos.aberto {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        margin-top: 8px;
     }
 }

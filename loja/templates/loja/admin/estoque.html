@@ -31,9 +31,6 @@
                 <a href="{% url 'relatorio_faturamento' %}" class="menu-item {% if request.resolver_match.url_name == 'relatorio_faturamento' %}active{% endif %}">
                     <i class="fas fa-file-invoice-dollar" style="width:24px;text-align:center;"></i> Relatórios
                 </a>
-                <a href="{% url 'lixeira' %}" class="menu-item {% if request.resolver_match.url_name == 'lixeira' %}active{% endif %}">
-                    <i class="fas fa-trash" style="width:24px;text-align:center;"></i> Lixeira
-                </a>
             </nav>
         
             <div class="sidebar-user">
@@ -76,58 +73,52 @@
                 </div>
                 <div class="header-actions">
 			 <button id="btn-excluir" class="btn-excluir-produtos" style="display:none;">
-    <i class="fas fa-trash"></i> <span class="excluir-texto">Excluir</span>
-</button>	
-<button id="btn-adc" class="btn-adc"><i class="fas fa-plus"></i> <span class="adc-produto">Adicionar Produto</span></button>
-                    <button id="dark-mode-toggle" class="btn-dark-mode"><i class="fas fa-sun"></i></button>
-                </div>
-            </header>
-
-            <div class="dashboard-content">
-                <div class="inventario-container fade-in">
-                    <div class="inventario-header">
-    <div class="inventario-info-left">
-        <div class="icon-warehouse-orange">
-            <i class="fas fa-warehouse fa-lg"></i>
-        </div>
-        <div>
-            <h3 style="margin: 0;">Inventário Geral</h3>
-            <p style="margin: 0; font-size: 13px; color: #666;">Saldo total e margens atuais</p>
-        </div>
-    </div>
-    <div class="inventario-info-right">
-        <div class="search-box">
-            <i class="fas fa-search"></i>
-            <input type="text" id="search-produto" placeholder="Buscar por SKU ou Nome...">
-        </div>
-        <span class="badge-count-tipos">{{ produtos_loja.count }} Itens cadastrados</span>
-    </div>
-</div>
-
-                    <div class="filtros-rapidos-container">
-                        <button class="btn-filtros-toggle" id="btn-filtros-toggle">
-                            <i class="fas fa-filter"></i> Filtros
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                        <div class="filtros-rapidos" id="filtros-rapidos">
-                            <button class="btn-filtro-rapido ativo" id="filtro-todos">
-                                <i class="fas fa-list"></i> Todos
-                            </button>
-                            <button class="btn-filtro-rapido" id="filtro-promocao">
-                                <i class="fas fa-tag"></i> Em Promoção
-                            </button>
-                            <button class="btn-filtro-rapido" id="filtro-baixo">
-                                <i class="fas fa-exclamation-triangle"></i> Estoque Baixo
-                            </button>
-                            <button class="btn-filtro-rapido" id="filtro-zerado">
-                                <i class="fas fa-times-circle"></i> Sem Estoque
-                            </button>
-                            <button class="btn-filtro-rapido" id="filtro-excluidos">
-                                <i class="fas fa-trash"></i> Excluídos
-                            </button>
-                        </div>
+                <i class="fas fa-trash"></i> <span class="excluir-texto">Excluir</span>
+            </button>	
+            <button id="btn-adc" class="btn-adc"><i class="fas fa-plus"></i> <span class="adc-produto">Adicionar Produto</span></button>
+                                <button id="dark-mode-toggle" class="btn-dark-mode"><i class="fas fa-sun"></i></button>
+                            </div>
+                        </header>
+                    
+                        <div class="dashboard-content">
+                            <div class="inventario-container fade-in">
+                                <div class="inventario-header">
+                <div class="inventario-info-left">
+                    <div class="icon-warehouse-orange">
+                        <i class="fas fa-warehouse fa-lg"></i>
                     </div>
-                    <span class="filtro-contagem" id="filtro-contagem"></span>
+                    <div>
+                        <h3 style="margin: 0;">Inventário Geral</h3>
+                        <p style="margin: 0; font-size: 13px; color: #666;">Saldo total e margens atuais</p>
+                    </div>
+                </div>
+                <div class="inventario-info-right">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="search-produto" placeholder="Buscar por SKU ou Nome...">
+                    </div>
+                    <span class="badge-count-tipos">{{ produtos_loja.count }}</span>
+                </div>
+            </div>
+
+                    <div class="filtros-rapidos">
+                        <button class="btn-filtro-rapido ativo" id="filtro-todos">
+                            <i class="fas fa-list"></i> Todos
+                        </button>
+                        <button class="btn-filtro-rapido" id="filtro-promocao">
+                            <i class="fas fa-tag"></i> Em Promoção
+                        </button>
+                        <button class="btn-filtro-rapido" id="filtro-baixo">
+                            <i class="fas fa-exclamation-triangle"></i> Estoque Baixo
+                        </button>
+                        <button class="btn-filtro-rapido" id="filtro-zerado">
+                            <i class="fas fa-times-circle"></i> Sem Estoque
+                        </button>
+			            <button class="btn-filtro-rapido" id="filtro-excluidos">
+                            <i class="fas fa-trash"></i> Excluídos
+                        </button>
+                        <span class="filtro-contagem" id="filtro-contagem"></span>
+                    </div>
 
                     <div class="table-responsive">
                         <table>
