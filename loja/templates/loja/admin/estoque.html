@@ -31,6 +31,10 @@
                 <a href="{% url 'relatorio_faturamento' %}" class="menu-item {% if request.resolver_match.url_name == 'relatorio_faturamento' %}active{% endif %}">
                     <i class="fas fa-file-invoice-dollar" style="width:24px;text-align:center;"></i> Relatórios
                 </a>
+
+                <a href="{% url 'lixeira' %}" class="menu-item {% if request.resolver_match.url_name == 'lixeira' %}active{% endif %}">
+                    <i class="fas fa-trash" style="width:24px;text-align:center;"></i> Lixeira
+                </a>
             </nav>
         
             <div class="sidebar-user">
@@ -97,7 +101,6 @@
                         <i class="fas fa-search"></i>
                         <input type="text" id="search-produto" placeholder="Buscar por SKU ou Nome...">
                     </div>
-                    <span class="badge-count-tipos">{{ produtos_loja.count }}</span>
                 </div>
             </div>
 
@@ -226,8 +229,10 @@ data-excluido="{{ produto.excluido|yesno:'true,false' }}">
                     <div class="promocao-toggle-box">
                         <label class="promocao-toggle-label" for="modal-adicionar-promocao">
                             <i class="fas fa-tag"></i>
-                            <span>Produto em Promoção</span>
-                            <small>Quando ativado, o desconto automático de 10% não se aplica a este item no terminal de vendas.</small>
+                            <div class="promocao-toggle-label-text">
+                                <span>Produto em Promoção</span>
+                                <small>Quando ativado, o desconto automático de 10% não se aplica a este item no terminal de vendas.</small>
+                            </div>
                         </label>
                         <label class="switch-toggle">
                             <input type="checkbox" name="em_promocao" id="modal-adicionar-promocao" value="true">
@@ -335,8 +340,10 @@ data-excluido="{{ produto.excluido|yesno:'true,false' }}">
                     <div class="promocao-toggle-box">
                         <label class="promocao-toggle-label" for="editar-promocao">
                             <i class="fas fa-tag"></i>
-                            <span>Produto em Promoção</span>
-                            <small>Quando ativado, o desconto automático de 10% não se aplica a este item no terminal de vendas.</small>
+                            <div class="promocao-toggle-label-text">
+                                <span>Produto em Promoção</span>
+                                <small>Quando ativado, o desconto automático de 10% não se aplica a este item no terminal de vendas.</small>
+                            </div>
                         </label>
                         <label class="switch-toggle">
                             <input type="checkbox" name="em_promocao" id="editar-promocao" value="true">

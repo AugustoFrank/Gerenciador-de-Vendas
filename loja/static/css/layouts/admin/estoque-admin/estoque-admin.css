@@ -170,7 +170,6 @@
     flex-wrap: wrap;
     padding: 12px 25px 16px 25px;
     align-items: center;
-    border: 2px solid #ff0000;
 }
 
 .btn-filtro-rapido {
@@ -469,16 +468,6 @@
 .inventario-info-right span {
     font-size: 12px;
 }
-
-.badge-count-tipos {
-    background-color: #F0F2F5;
-    color: #718096;
-    padding: 6px 15px;
-    border-radius: 20px;
-    font-size: 12px;
-    border: 1px solid #ff7b00;
-    font-weight: 700;
-}
 /* Tabela Estilo Imagem */
 #page-estoque table {
     width: 100%;
@@ -679,11 +668,6 @@ body.dark-mode #modalAdicionar .btn-cancelar {
 .dark-mode .inventario-header {
     background-color: #1e293b;
     border-color: #334155;
-}
-
-.dark-mode .badge-count-tipos {
-    background-color: #334155;
-    color: #cbd5e1;
 }
 
 @keyframes fadeIn {

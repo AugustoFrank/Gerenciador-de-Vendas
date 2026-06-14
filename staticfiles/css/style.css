@@ -444,11 +444,7 @@ td {
     transition: background-color 0.3s ease;
 }
 
-.dark-mode .badge-count-tipos {
-    background-color: #141C31 !important;
-    color: #A0ABC0 !important;
-    border: 1px solid #2A365D !important;
-}
+
 
 /* ==========================================
    RESPONSIVIDADE E MENU HAMBURGUER (MOBILE)
