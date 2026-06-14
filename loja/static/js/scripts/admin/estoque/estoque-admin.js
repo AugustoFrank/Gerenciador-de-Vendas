@@ -407,27 +407,16 @@ function calcularPreviewEditar() {
     });
 })();
 // Accordion Preview de Precificação
-document.addEventListener('DOMContentLoaded', function() {
-    const header = document.getElementById('preview-header');
+document.addEventListener('click', function(e) {
+    const header = e.target.closest('#preview-header, #preview-header-editar');
     if (!header) return;
-    header.addEventListener('click', function() {
-        const body = document.getElementById('preview-body');
-        const chevron = document.getElementById('preview-chevron');
-        const aberto = body.style.display === 'block';
-        body.style.display = aberto ? 'none' : 'block';
-        chevron.style.transform = aberto ? 'rotate(0deg)' : 'rotate(180deg)';
-    });
-});
-
-// Accordion Preview Editar
-document.addEventListener('DOMContentLoaded', function() {
-    const headerEditar = document.getElementById('preview-header-editar');
-    if (!headerEditar) return;
-    headerEditar.addEventListener('click', function() {
-        const body = document.getElementById('preview-body-editar');
-        const chevron = document.getElementById('preview-chevron-editar');
-        const aberto = body.style.display === 'block';
-        body.style.display = aberto ? 'none' : 'block';
-        chevron.style.transform = aberto ? 'rotate(0deg)' : 'rotate(180deg)';
-    });
+    const isEditar = header.id === 'preview-header-editar';
+    const bodyId = isEditar ? 'preview-body-editar' : 'preview-body';
+    const chevronId = isEditar ? 'preview-chevron-editar' : 'preview-chevron';
+    const body = document.getElementById(bodyId);
+    const chevron = document.getElementById(chevronId);
+    if (!body) return;
+    const aberto = body.style.display === 'block';
+    body.style.display = aberto ? 'none' : 'block';
+    if (chevron) chevron.style.transform = aberto ? 'rotate(0deg)' : 'rotate(180deg)';
 });
