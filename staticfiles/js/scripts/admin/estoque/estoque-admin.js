@@ -153,8 +153,11 @@ window.abrirModalEditar = function (linha) {
     const chkPromo = document.getElementById('editar-promocao');
     if (chkPromo) chkPromo.checked = promocao;
 
-    const previewEditar = document.getElementById('preview-precificacao-editar');
     setTimeout(calcularPreviewEditar, 100);
+    const bodyEditar = document.getElementById("preview-body-editar");
+    const chevronEditar = document.getElementById("preview-chevron-editar");
+    if (bodyEditar) { bodyEditar.style.display = "block"; }
+    if (chevronEditar) { chevronEditar.style.transform = "rotate(180deg)"; }
 
     modal.classList.remove('hidden');
     modal.style.display = 'flex';
