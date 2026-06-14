@@ -417,3 +417,29 @@ document.addEventListener('DOMContentLoaded', function() {
         chevron.style.transform = aberto ? 'rotate(0deg)' : 'rotate(180deg)';
     });
 });
+
+// Accordion Preview Editar
+document.addEventListener('DOMContentLoaded', function() {
+    const headerEditar = document.getElementById('preview-header-editar');
+    if (!headerEditar) return;
+    headerEditar.addEventListener('click', function() {
+        const body = document.getElementById('preview-body-editar');
+        const chevron = document.getElementById('preview-chevron-editar');
+        const aberto = body.style.display === 'block';
+        body.style.display = aberto ? 'none' : 'block';
+        chevron.style.transform = aberto ? 'rotate(0deg)' : 'rotate(180deg)';
+    });
+});
+
+// Accordion Preview Editar
+document.addEventListener('DOMContentLoaded', function() {
+    const headerEditar = document.getElementById('preview-header-editar');
+    if (!headerEditar) return;
+    headerEditar.addEventListener('click', function() {
+        const body = document.getElementById('preview-body-editar');
+        const chevron = document.getElementById('preview-chevron-editar');
+        const aberto = body.style.display === 'block';
+        body.style.display = aberto ? 'none' : 'block';
+        chevron.style.transform = aberto ? 'rotate(0deg)' : 'rotate(180deg)';
+    });
+});
