@@ -427,3 +427,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const chevron = document.getElementById('preview-chevron-editar');
         const aberto = body.style.display === 'block';
         body.style.display = aberto ? 'none' : 'block';
+        chevron.style.transform = aberto ? 'rotate(0deg)' : 'rotate(180deg)';
+    });
+});
