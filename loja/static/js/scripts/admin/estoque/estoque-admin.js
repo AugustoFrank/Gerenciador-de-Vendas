@@ -407,3 +407,15 @@ function calcularPreviewEditar() {
         }
     });
 })();
+// Accordion Preview de Precificação
+document.addEventListener('DOMContentLoaded', function() {
+    const header = document.getElementById('preview-header');
+    if (!header) return;
+    header.addEventListener('click', function() {
+        const body = document.getElementById('preview-body');
+        const chevron = document.getElementById('preview-chevron');
+        const aberto = body.style.display === 'block';
+        body.style.display = aberto ? 'none' : 'block';
+        chevron.style.transform = aberto ? 'rotate(0deg)' : 'rotate(180deg)';
+    });
+});
