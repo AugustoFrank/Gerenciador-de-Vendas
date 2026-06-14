@@ -123,7 +123,6 @@ window.abrirModalAdicionar = function () {
     if (chkPromo) chkPromo.checked = false;
 
     const preview = document.getElementById('preview-precificacao');
-    if (preview) preview.style.display = 'none';
 
     modal.classList.remove('hidden');
     modal.style.display = 'flex';
@@ -155,7 +154,6 @@ window.abrirModalEditar = function (linha) {
     if (chkPromo) chkPromo.checked = promocao;
 
     const previewEditar = document.getElementById('preview-precificacao-editar');
-    if (previewEditar) previewEditar.style.display = 'none';
     setTimeout(calcularPreviewEditar, 100);
 
     modal.classList.remove('hidden');
