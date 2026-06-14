@@ -247,7 +247,7 @@
     align-items: center;
     gap: 4px;
     background: #fef3c7;
-    color: #78350F;
+    color: #E65100;
     font-size: 11px;
     font-weight: 700;
     padding: 3px 10px;
@@ -273,8 +273,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #FFFAF0;
-    border: 1px solid #F6D860;
+    background: #FFF3E0;
+    border: 1px solid #FB8C00;
     border-radius: 10px;
     padding: 14px 16px;
     margin-bottom: 16px;
@@ -299,12 +299,12 @@
 .promocao-toggle-label span {
     font-size: 13px;
     font-weight: 700;
-    color: #78350F;
+    color: #E65100;
 }
 
 .promocao-toggle-label small {
     font-size: 11px;
-    color: #92400E;
+    color: #BF360C;
     line-height: 1.4;
 }
 
@@ -731,10 +731,10 @@ body.dark-mode #modalAdicionar .btn-cancelar {
 
 /* Container de Quantidade (Destaque) */
 .container-qtd-entrada {
-    background: #F0F4FF;
+    background: #E8EEFF;
     padding: 15px;
     border-radius: 10px;
-    border: 1px solid #C7D4F0;
+    border: 1px solid #7B96F0;
     margin-bottom: 15px;
 }
 
@@ -742,14 +742,14 @@ body.dark-mode #modalAdicionar .btn-cancelar {
     display: block;
     font-size: 12px;
     font-weight: bold;
-    color: #3B5BDB;
+    color: #2A44C8;
     margin-bottom: 5px;
 }
 
 .input-destaque {
     width: 100%;
     padding: 10px;
-    border: 1.5px solid #C7D4F0;
+    border: 1.5px solid #7B96F0;
     border-radius: 6px;
     font-size: 16px;
     font-weight: bold;
