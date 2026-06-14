@@ -211,9 +211,8 @@ function calcularPreview() {
     const card  = document.getElementById('preview-precificacao');
 
     if (!card) return;
-    if (custo <= 0) { card.style.display = 'none'; return; }
+    if (custo <= 0) return;
 
-    card.style.display = 'block';
 
     const valImp = custo * (pImp  / 100);
     const base   = custo + valImp;
@@ -244,9 +243,8 @@ function calcularPreviewEditar() {
     const card  = document.getElementById('preview-precificacao-editar');
 
     if (!card) return;
-    if (custo <= 0) { card.style.display = 'none'; return; }
+    if (custo <= 0) return;
 
-    card.style.display = 'block';
 
     const valImp = custo * (pImp  / 100);
     const base   = custo + valImp;
