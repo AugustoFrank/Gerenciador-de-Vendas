@@ -469,10 +469,10 @@
 .badge-count-tipos {
     background-color: #F0F2F5;
     color: #718096;
-    padding: 6px 15px;
+    padding: 3px 10px;
     border-radius: 20px;
     font-size: 12px;
-    font-weight: 700;
+    font-weight: 600;
 }
 
 /* Tabela Estilo Imagem */
