@@ -389,7 +389,7 @@ function renderGraficos() {
     // Auto-submit se restaurou datas do localStorage
     if (restaurou) {
         const form = document.getElementById('form-relatorio');
-        if (form) setTimeout(() => form.submit(), 100);
+        if (form) form.submit();
     }
 
     // Salva ao clicar em qualquer submit do form
