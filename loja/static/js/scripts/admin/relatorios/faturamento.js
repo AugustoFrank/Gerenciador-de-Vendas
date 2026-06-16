@@ -386,12 +386,11 @@ function renderGraficos() {
         if (salvo) fim.value = salvo;
     }
 
-    // Salva ao submeter
-    const form = document.getElementById('form-relatorio');
-    if (form) {
-        form.addEventListener('submit', function() {
+    // Salva ao clicar em qualquer submit do form
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('#form-relatorio [type="submit"]')) {
             localStorage.setItem('relatorio-data-inicio', inicio.value);
             localStorage.setItem('relatorio-data-fim', fim.value);
-        });
-    }
+        }
+    });
 })();
