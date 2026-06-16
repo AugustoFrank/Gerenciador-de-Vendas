@@ -389,8 +389,32 @@ function renderGraficos() {
     // Auto-submit se restaurou datas do localStorage
     if (restaurou) {
         const form = document.getElementById('form-relatorio');
-        if (form) form.submit();
+        if (form) {
+            const overlay = document.createElement('div');
+            overlay.id = 'loading-overlay';
+            overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#131A33 0%,#1e2d5a 50%,#131A33 100%);display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:24px;';
+            const st = document.createElement('style');
+            st.textContent = '@keyframes pulse-logo{0%,100%{transform:scale(1);}50%{transform:scale(1.08);}}@keyframes fade-dots{0%,100%{opacity:0.2;}50%{opacity:1;}}#loading-overlay img{animation:pulse-logo 1.6s ease-in-out infinite;width:90px;filter:drop-shadow(0 0 18px rgba(255,122,0,0.5))}.loading-dots span{display:inline-block;width:8px;height:8px;border-radius:50%;background:#FF7A00;margin:0 4px;animation:fade-dots 1.2s ease-in-out infinite}.loading-dots span:nth-child(2){animation-delay:0.2s}.loading-dots span:nth-child(3){animation-delay:0.4s}';
+            const img = document.createElement('img');
+            img.src = '/static/img/logo willy.png';
+            const p = document.createElement('p');
+            p.style.cssText = 'color:#fff;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:12px;';
+            p.textContent = 'Carregando...';
+            const dots = document.createElement('div');
+            dots.className = 'loading-dots';
+            dots.innerHTML = '<span></span><span></span><span></span>';
+            const txt = document.createElement('div');
+            txt.style.cssText = 'text-align:center;';
+            txt.appendChild(p);
+            txt.appendChild(dots);
+            overlay.appendChild(st);
+            overlay.appendChild(img);
+            overlay.appendChild(txt);
+            document.body.appendChild(overlay);
+            form.submit();
+        }
     }
+
 
     // Salva ao clicar em qualquer submit do form
     document.addEventListener('click', function(e) {

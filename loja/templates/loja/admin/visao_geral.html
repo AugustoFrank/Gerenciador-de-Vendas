@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Administrativo | Willy Bolsas</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/layouts/admin/geral/geral.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -61,6 +62,9 @@
                     </div>
                 </div>
                 <div class="header-actions">
+                    <button id="btn-novidades" class="btn-novidades" title="Novidades">
+                        <i class="fas fa-star"></i>
+                    </button>
                     <button id="dark-mode-toggle" class="btn-dark-mode">
                         <i class="fas fa-sun"></i>
                     </button>
@@ -147,6 +151,47 @@
         </main>
     </div>
 
+
+    <!-- MODAL NOVIDADES -->
+    <div id="modal-novidades" class="modal-novidades-overlay hidden">
+        <div class="modal-novidades-box">
+            <div class="modal-novidades-header">
+                <div class="modal-novidades-title">
+                    <i class="fas fa-star"></i>
+                    <span>Novidades do Sistema</span>
+                </div>
+                <button id="btn-fechar-novidades" class="btn-fechar-novidades">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-novidades-body">
+                <div class="novidade-item">
+                    <div class="novidade-icon"><i class="fas fa-trash-alt"></i></div>
+                    <div class="novidade-content">
+                        <strong>Lixeira</strong>
+                        <p>Produtos, vendas e usuários excluídos agora vão para a Lixeira, onde podem ser restaurados ou removidos permanentemente.</p>
+                    </div>
+                </div>
+                <div class="novidade-item">
+                    <div class="novidade-icon"><i class="fas fa-times-circle"></i></div>
+                    <div class="novidade-content">
+                        <strong>Exclusão de Vendas no Histórico</strong>
+                        <p>Agora é possível cancelar vendas diretamente pelo histórico. O estoque é estornado automaticamente.</p>
+                    </div>
+                </div>
+                <div class="novidade-item">
+                    <div class="novidade-icon"><i class="fas fa-filter"></i></div>
+                    <div class="novidade-content">
+                        <strong>Filtro de Datas Salvo</strong>
+                        <p>O filtro de datas nos Relatórios agora é salvo automaticamente. Ao voltar para a tela, o período anterior já estará selecionado.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-novidades-footer">
+                <button id="btn-entendi-novidades" class="btn-entendi">Entendi!</button>
+            </div>
+        </div>
+    </div>
     <script src="{% static 'js/scripts/admin/geral/geral.js' %}" defer></script>
     <!-- <script src="{% static 'js/script.js' %}" type="module" defer></script> -->
 

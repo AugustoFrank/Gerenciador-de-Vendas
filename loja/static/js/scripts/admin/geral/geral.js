@@ -41,3 +41,33 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 });
+
+// Modal Novidades
+(function() {
+    const VERSAO = 'novidades-v1';
+    const modal = document.getElementById('modal-novidades');
+    const btnAbrir = document.getElementById('btn-novidades');
+    const btnFechar = document.getElementById('btn-fechar-novidades');
+    const btnEntendi = document.getElementById('btn-entendi-novidades');
+
+    function abrirModal() {
+        if (modal) modal.classList.remove('hidden');
+    }
+
+    function fecharModal() {
+        if (modal) modal.classList.add('hidden');
+        localStorage.setItem(VERSAO, 'visto');
+    }
+
+    // Abre automaticamente se nunca viu
+    if (!localStorage.getItem(VERSAO)) abrirModal();
+
+    if (btnAbrir) btnAbrir.addEventListener('click', abrirModal);
+    if (btnFechar) btnFechar.addEventListener('click', fecharModal);
+    if (btnEntendi) btnEntendi.addEventListener('click', fecharModal);
+
+    // Fecha clicando fora
+    if (modal) modal.addEventListener('click', function(e) {
+        if (e.target === modal) fecharModal();
+    });
+})();
