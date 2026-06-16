@@ -370,3 +370,28 @@ function renderGraficos() {
         }
     }
 }
+// Persistência de datas via localStorage
+(function() {
+    const inicio = document.getElementById('date-picker');
+    const fim = document.getElementById('date-picker-end');
+    if (!inicio || !fim) return;
+
+    // Restaura apenas se o backend não enviou valor
+    if (!inicio.value) {
+        const salvo = localStorage.getItem('relatorio-data-inicio');
+        if (salvo) inicio.value = salvo;
+    }
+    if (!fim.value) {
+        const salvo = localStorage.getItem('relatorio-data-fim');
+        if (salvo) fim.value = salvo;
+    }
+
+    // Salva ao submeter
+    const form = document.getElementById('form-relatorio');
+    if (form) {
+        form.addEventListener('submit', function() {
+            localStorage.setItem('relatorio-data-inicio', inicio.value);
+            localStorage.setItem('relatorio-data-fim', fim.value);
+        });
+    }
+})();
