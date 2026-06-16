@@ -377,13 +377,19 @@ function renderGraficos() {
     if (!inicio || !fim) return;
 
     // Restaura apenas se o backend não enviou valor
+    let restaurou = false;
     if (!inicio.value) {
         const salvo = localStorage.getItem('relatorio-data-inicio');
-        if (salvo) inicio.value = salvo;
+        if (salvo) { inicio.value = salvo; restaurou = true; }
     }
     if (!fim.value) {
         const salvo = localStorage.getItem('relatorio-data-fim');
-        if (salvo) fim.value = salvo;
+        if (salvo) { fim.value = salvo; restaurou = true; }
+    }
+    // Auto-submit se restaurou datas do localStorage
+    if (restaurou) {
+        const form = document.getElementById('form-relatorio');
+        if (form) setTimeout(() => form.submit(), 100);
     }
 
     // Salva ao clicar em qualquer submit do form
