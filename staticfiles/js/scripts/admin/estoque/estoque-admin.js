@@ -154,10 +154,6 @@ window.abrirModalEditar = function (linha) {
     if (chkPromo) chkPromo.checked = promocao;
 
     setTimeout(calcularPreviewEditar, 100);
-    const bodyEditar = document.getElementById("preview-body-editar");
-    const chevronEditar = document.getElementById("preview-chevron-editar");
-    if (bodyEditar) { bodyEditar.style.display = "block"; }
-    if (chevronEditar) { chevronEditar.style.transform = "rotate(180deg)"; }
 
     modal.classList.remove('hidden');
     modal.style.display = 'flex';
@@ -420,3 +416,48 @@ document.addEventListener('click', function(e) {
     body.style.display = aberto ? 'none' : 'block';
     if (chevron) chevron.style.transform = aberto ? 'rotate(0deg)' : 'rotate(180deg)';
 });
+
+/* ============================================================
+   DROPDOWN DE FILTROS — MOBILE
+   ============================================================ */
+(function () {
+    const btnFiltrosMobile = document.getElementById('btn-filtros-mobile');
+    const menuFiltros      = document.getElementById('filtros-rapidos-menu');
+
+    if (!btnFiltrosMobile || !menuFiltros) return;
+
+    function abrirMenu() {
+        menuFiltros.classList.add('aberto');
+        btnFiltrosMobile.classList.add('aberto');
+    }
+
+    function fecharMenu() {
+        menuFiltros.classList.remove('aberto');
+        btnFiltrosMobile.classList.remove('aberto');
+    }
+
+    function toggleMenu() {
+        const estaAberto = menuFiltros.classList.contains('aberto');
+        if (estaAberto) {
+            fecharMenu();
+        } else {
+            abrirMenu();
+        }
+    }
+
+    btnFiltrosMobile.addEventListener('click', function (event) {
+        event.stopPropagation();
+        toggleMenu();
+    });
+
+    menuFiltros.querySelectorAll('.btn-filtro-rapido').forEach(function (btn) {
+        btn.addEventListener('click', fecharMenu);
+    });
+
+    document.addEventListener('click', function (event) {
+        const cliqueDentro = menuFiltros.contains(event.target) || btnFiltrosMobile.contains(event.target);
+        if (!cliqueDentro) {
+            fecharMenu();
+        }
+    });
+})();

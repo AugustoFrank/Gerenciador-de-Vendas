@@ -956,34 +956,12 @@ body.dark-mode #modalAdicionar .btn-cancelar {
     border-color: #334155;
 }
  
-/* ==========================================
-   RESPONSIVIDADE: BOTÃO EDITAR
-   ========================================== */
-@media (max-width: 768px) {
-    .btn-table-action .btn-edit-text {
-        display: none;
-    }
- 
-    .btn-table-action {
-        padding: 7px 10px;
-    }
- 
-    .form-row {
-        flex-direction: column;
-    }
-}
-.dark-mode .btn-filtro-rapido.ativo-amarelo {
-    background: #f59e0b;
-    color: #fff;
-    border-color: #f59e0b;
-}
+/* ============================================================
+   RESPONSIVIDADE — ESTOQUE CENTRAL
+   Padrão espelhado da aba Relatórios (faturamento.css)
+   ============================================================ */
 
-.dark-mode .btn-filtro-rapido.ativo-vermelho {
-    background: #EF4444;
-    color: #fff;
-    border-color: #EF4444;
-}
-
+/* ── Regras base (sempre ativas, fora de media query) ───────── */
 .inventario-info-right {
     display: flex;
     align-items: center;
@@ -1005,9 +983,49 @@ body.dark-mode #modalAdicionar .btn-cancelar {
     max-width: 580px;
 }
 
-/* ==========================================
-   RESPONSIVIDADE
-   ========================================== */
+.table-responsive {
+    overflow-x: auto;
+}
+
+.table-responsive table {
+    min-width: 700px;
+}
+
+.inventario-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.inventario-info-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.icon-warehouse-orange {
+    background: #FFF3E0;
+    color: #FF7A00;
+    padding: 10px;
+    border-radius: 10px;
+    flex-shrink: 0;
+}
+
+/* ── Botão Editar (tabela) — ícone + texto colapsável ───────── */
+.btn-edit-table {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+/* ============================================================
+   BREAKPOINTS — cascata decrescente (padrão Relatórios)
+   ============================================================ */
+
 @media (max-width: 1139px) {
     .btn-menu-mobile {
         display: block !important;
@@ -1043,13 +1061,28 @@ body.dark-mode #modalAdicionar .btn-cancelar {
         font-size: 1.5rem;
     }
 
-    .adc-produto {
+    .adc-produto,
+    .excluir-texto {
         display: none;
     }
 
-    .btn-adc {
+    .btn-adc,
+    .btn-excluir-produtos {
         padding: 0 12px;
         width: 40px;
+        justify-content: center;
+    }
+
+    .btn-table-action .btn-edit-text {
+        display: none;
+    }
+
+    .btn-table-action {
+        padding: 7px 10px;
+    }
+
+    .form-row {
+        flex-direction: column;
     }
 }
 
@@ -1089,68 +1122,18 @@ body.dark-mode #modalAdicionar .btn-cancelar {
         font-size: 13px;
     }
 
-    .btn-filtro-rapido span {
-        display: none;
-    }
-
-    .btn-filtro-rapido {
-        padding: 7px 10px;
-    }
-}
-
-@media (max-width: 480px) {
-    .dashboard-content {
-        margin: 12px 12px 0 12px;
-    }
-
-    .header-info h1 {
-        font-size: 1.1rem;
-    }
-
-    .table-responsive {
-        overflow-x: auto;
-    }
-
-    .table-responsive table {
-        min-width: 600px;
-    }
-
-    .inventario-container {
-        padding: 14px;
-    }
-
-    .filtros-rapidos {
-        flex-wrap: wrap;
-    }
-}
-
-@media (max-width: 400px) {
-    .header-info h1 {
-        font-size: 1rem;
-    }
-
-    .dashboard-content {
-        margin: 10px 10px 0 10px;
-    }
-}
-
-.table-responsive {
-    overflow-x: auto;
-}
-
-.table-responsive table {
-    min-width: 700px;
-}
-
-@media (max-width: 635px) {
     .filtros-rapidos {
         overflow-x: auto;
         flex-wrap: nowrap;
         padding-bottom: 4px;
     }
 
+    .btn-filtro-rapido {
+        padding: 7px 10px;
+    }
+
     .btn-filtro-rapido span {
-        display: inline !important;
+        display: none;
     }
 
     .badge-count-tipos,
@@ -1167,26 +1150,48 @@ body.dark-mode #modalAdicionar .btn-cancelar {
         font-size: 11px;
         padding: 4px 10px;
     }
+
+    .btn-edit-table .btn-edit-text {
+        display: none;
+    }
 }
 
 @media (max-width: 480px) {
-    .inventario-info-right {
-        flex-shrink: 0;
+    .dashboard-content {
+        margin: 12px 12px 0 12px;
     }
 
-    .badge-count-tipos {
-        font-size: 10px;
-        padding: 4px 8px;
-        white-space: nowrap;
+    .header-info h1 {
+        font-size: 1.1rem;
+    }
+
+    .table-responsive table {
+        min-width: 600px;
+    }
+
+    .inventario-container {
+        padding: 14px;
+    }
+
+    .filtros-rapidos {
+        flex-wrap: wrap;
+    }
+
+    .inventario-info-right {
+        flex-shrink: 0;
+        width: 100%;
+    }
+
+    .inventario-header {
+        flex-direction: column;
+        align-items: flex-start;
     }
 
     .search-box {
         flex: 1;
         min-width: 0;
     }
-}
 
-@media (max-width: 480px) {
     .badge-count-tipos {
         font-size: 9px !important;
         padding: 3px 6px !important;
@@ -1197,46 +1202,112 @@ body.dark-mode #modalAdicionar .btn-cancelar {
     }
 }
 
-.inventario-header {
+@media (max-width: 400px) {
+    .header-info h1 {
+        font-size: 1rem;
+    }
+
+    .dashboard-content {
+        margin: 10px 10px 0 10px;
+    }
+}
+
+/* ============================================================
+   DROPDOWN DE FILTROS — MOBILE
+   ============================================================ */
+.filtros-rapidos-container {
+    position: relative;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin-bottom: 20px;
+    gap: 8px;
+    padding: 12px 25px 16px 25px;
 }
 
-.inventario-info-left {
-    display: flex;
+.btn-filtros-mobile {
+    display: none;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
+    padding: 8px 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 20px;
+    background: #fff;
+    color: #1E294A;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
 }
 
-.icon-warehouse-orange {
-    background: #FFF3E0;
-    color: #FF7A00;
-    padding: 10px;
-    border-radius: 10px;
-    flex-shrink: 0;
+.btn-filtros-mobile:hover {
+    border-color: #0A84FF;
+    color: #0A84FF;
 }
 
-@media (max-width: 480px) {
-    .inventario-header {
+.btn-filtros-mobile-chevron {
+    font-size: 10px;
+    transition: transform 0.2s ease;
+}
+
+.btn-filtros-mobile.aberto .btn-filtros-mobile-chevron {
+    transform: rotate(180deg);
+}
+
+.dark-mode .btn-filtros-mobile {
+    background: #1e293b;
+    border-color: #334155;
+    color: #E2E8F0;
+}
+
+.dark-mode .btn-filtros-mobile:hover {
+    border-color: #0A84FF;
+    color: #0A84FF;
+}
+
+@media (max-width: 960px) {
+    .filtros-rapidos-container {
+        padding: 10px 16px 14px 16px;
+        flex-wrap: wrap;
+    }
+
+    .btn-filtros-mobile {
+        display: flex;
+    }
+
+    .filtros-rapidos {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 16px;
+        right: 16px;
         flex-direction: column;
-        align-items: flex-start;
+        flex-wrap: nowrap;
+        gap: 6px;
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 10px;
+        margin-top: 6px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        z-index: 50;
+        overflow-x: visible;
     }
 
-    .inventario-info-right {
+    .filtros-rapidos.aberto {
+        display: flex;
+    }
+
+    .filtros-rapidos .btn-filtro-rapido {
         width: 100%;
+        justify-content: flex-start;
+        padding: 10px 14px;
     }
 
-    .search-box {
-        flex: 1;
+    .filtros-rapidos .btn-filtro-rapido span {
+        display: inline;
     }
 
-    .badge-count-tipos {
-        font-size: 11px !important;
-        padding: 4px 10px !important;
-        white-space: nowrap !important;
+    .dark-mode .filtros-rapidos {
+        background: #1e293b;
+        border-color: #334155;
     }
 }
