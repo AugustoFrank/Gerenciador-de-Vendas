@@ -2,6 +2,7 @@ import os
 from decimal import Decimal
 import random
 from datetime import datetime, time, timedelta
+import pytz
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from django.contrib.auth import update_session_auth_hash, authenticate, login as auth_login, logout as auth_logout
@@ -63,9 +64,10 @@ def redirecionamento_login(request):
 @login_required
 def visao_geral(request):
     # LOGICA CORRIGIDA: Range de tempo para evitar erro de fuso horário
-    hoje = timezone.now().date()
-    inicio_dia = make_aware(datetime.combine(hoje, time.min))
-    fim_dia = make_aware(datetime.combine(hoje, time.max))
+    tz = pytz.timezone("America/Sao_Paulo")
+    hoje = timezone.now().astimezone(tz).date()
+    inicio_dia = tz.localize(datetime.combine(hoje, time.min))
+    fim_dia = tz.localize(datetime.combine(hoje, time.max))
 
     vendas_usuario = Venda.objects.filter(data_venda__range=(inicio_dia, fim_dia), vendedor=request.user, cancelada=False)
     alertas = Produto.objects.filter(estoque__lt=10)
@@ -115,9 +117,10 @@ def visao_geral_admin(request):
     data_inicio_str = request.GET.get('data_inicio')
     data_fim_str = request.GET.get('data_fim')
 
-    hoje = timezone.now().date()
-    inicio_dia = make_aware(datetime.combine(hoje, time.min))
-    fim_dia = make_aware(datetime.combine(hoje, time.max))
+    tz = pytz.timezone("America/Sao_Paulo")
+    hoje = timezone.now().astimezone(tz).date()
+    inicio_dia = tz.localize(datetime.combine(hoje, time.min))
+    fim_dia = tz.localize(datetime.combine(hoje, time.max))
     periodo_label = "Hoje"
 
     if data_inicio_str and data_fim_str:
@@ -491,9 +494,10 @@ def relatorio_vendedores(request):
     data_fim_str = request.GET.get('data_fim')
 
     # Configuração padrão de datas (Hoje)
-    hoje = timezone.now().date()
-    inicio_dia = make_aware(datetime.combine(hoje, time.min))
-    fim_dia = make_aware(datetime.combine(hoje, time.max))
+    tz = pytz.timezone("America/Sao_Paulo")
+    hoje = timezone.now().astimezone(tz).date()
+    inicio_dia = tz.localize(datetime.combine(hoje, time.min))
+    fim_dia = tz.localize(datetime.combine(hoje, time.max))
     periodo_label = "Hoje"
 
     if data_inicio_str and data_fim_str:
@@ -539,14 +543,15 @@ def relatorio_faturamento(request):
     data_inicio_str = request.GET.get('data_inicio')
     data_fim_str    = request.GET.get('data_fim')
  
-    hoje       = timezone.now().date()
-    inicio_dia = make_aware(datetime.combine(hoje, time.min))
-    fim_dia    = make_aware(datetime.combine(hoje, time.max))
+    tz = pytz.timezone("America/Sao_Paulo")
+    hoje       = timezone.now().astimezone(tz).date()
+    inicio_dia = tz.localize(datetime.combine(hoje, time.min))
+    fim_dia    = tz.localize(datetime.combine(hoje, time.max))
     periodo_label = "Hoje"
  
     if data_inicio_str and data_fim_str:
-        inicio_dia    = make_aware(datetime.strptime(data_inicio_str, '%Y-%m-%d'))
-        fim_dia       = make_aware(datetime.combine(datetime.strptime(data_fim_str, '%Y-%m-%d'), time.max))
+        inicio_dia    = tz.localize(datetime.combine(datetime.strptime(data_inicio_str, "%Y-%m-%d"), time.min))
+        fim_dia       = tz.localize(datetime.combine(datetime.strptime(data_fim_str, "%Y-%m-%d"), time.max))
         periodo_label = f"{inicio_dia.strftime('%d/%m')} a {fim_dia.strftime('%d/%m')}"
  
     vendas_queryset = Venda.objects.filter(

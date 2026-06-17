@@ -558,6 +558,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 /* Título */
@@ -686,6 +688,8 @@ body.dark-mode #modalAdicionar .btn-cancelar {
     border-radius: 12px;
     width: 95%;
     max-width: 550px;
+    max-height: 90vh;
+    overflow-y: auto;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
@@ -991,6 +995,14 @@ body.dark-mode #modalAdicionar .btn-cancelar {
     overflow-y: auto;
     width: 90%;
     max-width: 600px;
+}
+
+#modalEditar.modal-estoque .modal-content,
+#modalAdicionar.modal-estoque .modal-content {
+    max-height: 90vh;
+    overflow-y: auto;
+    width: 90%;
+    max-width: 580px;
 }
 
 /* ==========================================
