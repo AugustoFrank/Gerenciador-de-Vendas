@@ -21,7 +21,11 @@ window.changeView = function(view) {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    if (window.changeView) window.changeView('list');
+    if (window.innerWidth <= 755) {
+        if (window.changeView) window.changeView('grid');
+    } else {
+        if (window.changeView) window.changeView('list');
+    }
 });
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -7,16 +7,21 @@
 
 .view-list table {
     margin-top: 32px;
+    min-width: 600px;
 }
 
-.view-list, 
+.view-list,
 .view-section {
     display: none;
 }
 
-.view-list.active, 
+.view-list.active,
 .view-section.active {
     display: block;
+}
+
+.view-list th {
+    white-space: nowrap;
 }
 
 table .btn-card-action {
@@ -55,12 +60,11 @@ table .btn-card-action:hover {
     margin-bottom: 8px;
 }
 
-
-
+/* ── Barra de busca (dentro do header) ───── */
 .header-actions .search-box {
     display: flex;
     align-items: center;
-    background: var(--bg-card); /* Ajusta conforme seu modo escuro */
+    background: var(--bg-card);
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 5px 12px;
@@ -77,7 +81,7 @@ table .btn-card-action:hover {
 }
 
 .dark-mode .header-actions .search-box {
-    background: var(--bg-card-dark); /* Ajusta conforme seu modo escuro */
+    background: var(--bg-card-dark);
     color: #FFFFFF;
     border-color: #333;
 }
@@ -88,7 +92,6 @@ table .btn-card-action:hover {
     cursor: pointer;
 }
 
-/* Checkbox flutuante no Card */
 .user-card {
     position: relative;
 }
@@ -98,7 +101,7 @@ table .btn-card-action:hover {
     top: 10px;
     right: 10px;
     z-index: 10;
-    accent-color: #f43f5e; /* Cor de destaque para o excluir */
+    accent-color: #f43f5e;
 }
 
 .filter-bar {
@@ -123,8 +126,7 @@ table .btn-card-action:hover {
     padding: 10px 16px;
 }
 
-/* 1320px, 1139px, 1024px, 878px, 755px, 680px, 635px, 480px, 450px, 420px, 360px, 330px */
-
+/* ── Breakpoints ────────────────────────── */
 @media (max-width: 1320px) {
     .view-list {
         margin: 24px 32px 0 32px;
@@ -135,16 +137,19 @@ table .btn-card-action:hover {
     .view-list {
         margin: 24px 24px 0 24px;
     }
-
     .btn-menu-mobile {
         display: block;
     }
-
+    .header-left {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+    }
     .sidebar-overlay.active {
         display: block;
         opacity: 1;
     }
-
     .sidebar {
         position: fixed;
         top: 0;
@@ -161,7 +166,6 @@ table .btn-card-action:hover {
     .view-list {
         margin: 24px 16px 0 16px;
     }
-
     .filter-bar {
         justify-content: center;
         margin-right: 16px;
@@ -172,13 +176,173 @@ table .btn-card-action:hover {
     .view-list {
         margin: 24px 8px 0 8px;
     }
-
-    .search-box {
-        width: 150px;
+    .adc-texto {
+        display: none;
     }
+    .excluir-texto {
+        display: none;
+    }
+    .btn-adc,
+    #btn-adiciona-modal {
+        width: 40px;
+        min-width: 40px;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+    }
+    #btn-excluir-massa {
+        width: 40px;
+        min-width: 40px;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+    }
+    .btn-edit-text {
+        display: none;
+    }
+    .btn-table-action,
+    table .btn-card-action {
+        width: 32px;
+        height: 32px;
+        padding: 0;
+    }
+    .header-actions .search-box {
+        max-width: 220px;
+        min-width: 0;
+        flex: 1;
+    }
+    .header-actions .search-box input {
+        width: 100%;
+    }
+}
 
-    .search-box input {
+@media (max-width: 755px) {
+    header,
+    main header {
+        flex-wrap: wrap;
+        height: auto;
+        gap: 10px;
+        margin: 16px 16px 0 16px;
+    }
+    .header-left {
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        gap: 10px;
+        flex: 1;
+        min-width: 0;
+        width: 100%;
+    }
+    .header-info h1 {
+        font-size: 1.1rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .header-actions {
+        gap: 8px;
+        flex-wrap: wrap;
+        width: 100%;
+        justify-content: flex-end;
+    }
+    .header-actions .search-box {
+        order: 10;
+        width: 100%;
+        max-width: 100%;
+        flex: 1 1 100%;
+        margin-right: 0;
+    }
+    .header-actions .search-box input {
+        width: 100%;
+    }
+    .view-toggle {
+        display: none;
+    }
+    #view-list {
+        display: none !important;
+    }
+    #view-grid {
+        display: block !important;
+    }
+    .view-section {
+        margin: 12px 8px 0 8px;
+    }
+    .grid-container {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        padding: 10px;
+    }
+    .user-card {
+        width: 100%;
+        height: auto;
+        min-height: 0;
+        border-radius: 12px;
+    }
+    .card-banner {
+        height: 60px;
+    }
+    .card-avatar {
+        width: 52px;
+        height: 52px;
+        margin: -26px auto 0;
+        border-width: 3px;
+    }
+    .card-content {
+        padding: 6px 8px;
+    }
+    .card-content h3 {
+        font-size: 0.72rem;
+    }
+    .userid {
+        font-size: 0.65rem;
+        margin-bottom: 3px;
+    }
+    .badge,
+    .badge-orange {
+        font-size: 0.6rem;
+        padding: 2px 6px;
+        margin: 2px auto;
+    }
+    .card-metrics {
+        padding: 6px 8px;
+        gap: 4px;
+    }
+    .metric span {
+        font-size: 0.55rem;
+    }
+    .metric strong {
+        font-size: 0.7rem;
+    }
+    .btn-card-action {
+        font-size: 0.72rem;
+        padding: 8px;
+    }
+}
+
+@media (max-width: 635px) {
+    .header-info span {
+        display: none;
+    }
+    .view-list {
+        padding: 16px;
+    }
+    .filter-bar {
+        margin-right: 8px;
+        gap: 8px;
+    }
+    .filter-bar select {
+        width: 130px;
         font-size: 12px;
+        padding: 8px 10px;
     }
+}
 
+@media (max-width: 480px) {
+    .field-comissao .inpt-grid {
+        margin-top: 0;
+    }
 }

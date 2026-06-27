@@ -3,11 +3,11 @@ import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-!-8g(dkr%1&f38l*bw0_#h97hho=r^pp($zh=tm8jw=^d!tc5f'
+SECRET_KEY = 'LyQxMgssWUtlCJ9yo6VxooMLW9jn_jmTGEXleB4E6Ky78PeW3sWG13-ZHQtGBbaj0-o'
 
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['vps67288.publiccloud.com.br', 'localhost', '127.0.0.1']
 CSRF_TRUSTED_ORIGINS = ['https://vps67288.publiccloud.com.br']
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'loja',
+    'axes',
 ]
 
 MIDDLEWARE = [
@@ -31,6 +32,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'axes.middleware.AxesMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 ]
 
@@ -93,4 +95,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOWED_ORIGINS = ['https://vps67288.publiccloud.com.br']
+# ── Rate Limit (django-axes) ────────────────────────────────
+AUTHENTICATION_BACKENDS = [
+    'axes.backends.AxesStandaloneBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+AXES_FAILURE_LIMIT = 5
+AXES_COOLOFF_TIME = 1
+AXES_LOCKOUT_PARAMETERS = ['ip_address']

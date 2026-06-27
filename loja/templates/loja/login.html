@@ -20,24 +20,21 @@
 
             <form class="formulario" method="POST" action="{% url 'login' %}">
                 {% csrf_token %}
-                
+
                 <div class="grupo-entrada">
                     <label class="etiqueta" for="id_matricula">ID DO USUÁRIO</label>
                     <input type="text" class="campo-texto" id="id_matricula" name="matricula_digitada" placeholder="ex: 00123" required autocomplete="off">
+                    <span class="hint-id" id="hint-id-valido"></span>
                 </div>
-                
-                <div class="grupo-entrada" style="margin-top: 15px;">
-                    <label class="etiqueta" for="id_username">SEU NOME DE ACESSO</label>
-                    <!-- Campo preenchido automaticamente pelo JS -->
-                    <input type="text" class="campo-texto" id="id_username" name="username" readonly style="background-color: #F3F4F6; color: #86868B; cursor: not-allowed;" placeholder="Buscando...">
-                </div>
-                
-                <div class="grupo-entrada" style="margin-top: 15px;">
+
+                <input type="hidden" id="id_username" name="username">
+
+                <div class="grupo-entrada">
                     <label class="etiqueta" for="id_password">SENHA</label>
                     <input type="password" class="campo-texto" id="id_password" name="password" placeholder="........" required>
                 </div>
-            
-                <button type="submit" class="botao-entrar" style="margin-top: 20px;">ENTRAR NO SISTEMA</button>
+
+                <button type="submit" class="botao-entrar">ENTRAR NO SISTEMA</button>
             </form>
 
             <!-- Div de Erro para o JS usar -->

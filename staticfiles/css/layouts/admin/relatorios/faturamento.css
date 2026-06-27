@@ -80,7 +80,9 @@
 
 /* ── Cards de faturamento ──────────────────────────────────── */
 .faturamento-cards {
+    display: grid !important;
     grid-template-columns: repeat(4, 1fr) !important;
+    gap: 24px !important;
     margin: 20px 0 30px 0 !important;
 }
 
@@ -208,7 +210,6 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
 }
 
-
 .grafico-card canvas {
     max-height: 220px;
 }
@@ -228,9 +229,9 @@
 .venda-cancelada td {
     background: rgba(220, 53, 69, 0.10);
 }
+
 .venda-cancelada td span,
 .venda-cancelada td {
-    /* text-decoration: line-through;    */
     font-style: italic;
     color: #a0a0a0;
 }
@@ -238,13 +239,11 @@
 body.dark-mode .willy-table tbody tr.venda-cancelada td {
     background-color: rgba(121, 49, 56, 0.12) !important;
     color: #f87171 !important;
-    /* text-decoration: line-through; */
     font-style: italic;
 }
 
 body.dark-mode .willy-table tbody tr.venda-cancelada td span {
     color: #f87171 !important;
-    /* text-decoration: line-through; */
     font-style: italic;
 }
 
@@ -402,12 +401,8 @@ body.dark-mode .willy-table tbody tr.venda-cancelada td span {
 /* ============================================================
    RESPONSIVIDADE
    ============================================================ */
-@media (max-width: 1320px) {
-    .metrics-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-    }
-}
 
+/* ── 1139px: sidebar vai para modo mobile ──────────────────── */
 @media (max-width: 1139px) {
     .metric-data h2 {
         font-size: 1.2rem;
@@ -426,14 +421,36 @@ body.dark-mode .willy-table tbody tr.venda-cancelada td span {
         position: fixed;
         top: 0;
         left: 0;
+        width: 260px;
         height: 100vh;
+        min-height: unset;
         z-index: 999;
         transform: translateX(-100%);
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         box-shadow: 4px 0 15px rgba(0, 0, 0, 0.2);
+        overflow-y: auto;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    /* Corrige o container para não contar a sidebar escondida */
+    .container {
+        flex-direction: column;
+    }
+
+    /* Neutraliza margens laterais fixas do global */
+    .metrics-grid,
+    .dashboard-grid,
+    .faturamento-cards,
+    .metrics-vendedores {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
     }
 }
 
+/* ── 878px ─────────────────────────────────────────────────── */
 @media (max-width: 878px) {
     .metric-card {
         padding: 16px;
@@ -444,14 +461,37 @@ body.dark-mode .willy-table tbody tr.venda-cancelada td span {
         grid-template-columns: repeat(2, 1fr) !important;
     }
 
+    .faturamento-cards {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    .metrics-vendedores {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
     .graficos-grid {
         grid-template-columns: 1fr;
     }
 }
 
+/* ── 755px ─────────────────────────────────────────────────── */
 @media (max-width: 755px) {
     .header-left span {
         display: none;
+    }
+
+    header,
+    main header {
+        flex-wrap: wrap;
+        gap: 12px;
+        height: auto;
+        margin-bottom: 8px;
+    }
+
+    .header-actions {
+        width: 100%;
+        justify-content: flex-end;
+        gap: 8px;
     }
 
     .report-tabs {
@@ -489,6 +529,7 @@ body.dark-mode .willy-table tbody tr.venda-cancelada td span {
     }
 }
 
+/* ── 680px ─────────────────────────────────────────────────── */
 @media (max-width: 680px) {
     .report-tabs {
         gap: 14px;
@@ -533,6 +574,7 @@ body.dark-mode .willy-table tbody tr.venda-cancelada td span {
     }
 }
 
+/* ── 635px ─────────────────────────────────────────────────── */
 @media (max-width: 635px) {
     .metric-card {
         padding: 14px;
@@ -542,13 +584,13 @@ body.dark-mode .willy-table tbody tr.venda-cancelada td span {
         font-size: 1.15rem;
     }
 
-    .btn-exportar {
-        padding: 6px 10px;
-        font-size: 12px;
-    }
-
     .btn-exportar span {
         display: none;
+    }
+
+    .btn-exportar {
+        padding: 8px 12px;
+        height: 40px;
     }
 
     .metric-card h2 {
@@ -556,7 +598,17 @@ body.dark-mode .willy-table tbody tr.venda-cancelada td span {
     }
 }
 
+/* ── 480px ─────────────────────────────────────────────────── */
 @media (max-width: 480px) {
+    .faturamento-cards {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+    }
+
+    .metrics-vendedores {
+        grid-template-columns: 1fr;
+    }
+
     .metric-card {
         padding: 12px;
     }
@@ -565,13 +617,12 @@ body.dark-mode .willy-table tbody tr.venda-cancelada td span {
         font-size: 1rem;
     }
 
-    .btn-exportar {
-        padding: 6px 10px;
-        font-size: 12px;
-    }
-
     .btn-exportar span {
         display: none;
+    }
+
+    .btn-exportar {
+        padding: 8px 12px;
     }
 
     .metric-card h2 {
@@ -596,6 +647,7 @@ body.dark-mode .willy-table tbody tr.venda-cancelada td span {
     }
 }
 
+/* ── 450px ─────────────────────────────────────────────────── */
 @media (max-width: 450px) {
     .dashboard-content {
         padding: 14px;
@@ -611,11 +663,6 @@ body.dark-mode .willy-table tbody tr.venda-cancelada td span {
 
     .btn-exportar {
         padding: 6px 10px;
-        font-size: 12px;
-    }
-
-    .btn-exportar span {
-        display: none;
     }
 
     .tabs-relatorios {
@@ -665,6 +712,7 @@ body.dark-mode .willy-table tbody tr.venda-cancelada td span {
     }
 }
 
+/* ── 420px ─────────────────────────────────────────────────── */
 @media (max-width: 420px) {
     .dashboard-content {
         padding: 12px;
@@ -687,6 +735,7 @@ body.dark-mode .willy-table tbody tr.venda-cancelada td span {
     }
 }
 
+/* ── 400px ─────────────────────────────────────────────────── */
 @media (max-width: 400px) {
     .dashboard-content {
         padding: 12px;
@@ -732,6 +781,7 @@ body.dark-mode .willy-table tbody tr.venda-cancelada td span {
     }
 }
 
+/* ── 360px ─────────────────────────────────────────────────── */
 @media (max-width: 360px) {
     .dashboard-content {
         padding: 10px;
@@ -771,6 +821,7 @@ body.dark-mode .willy-table tbody tr.venda-cancelada td span {
     }
 }
 
+/* ── 330px ─────────────────────────────────────────────────── */
 @media (max-width: 330px) {
     .dashboard-content {
         padding: 8px;

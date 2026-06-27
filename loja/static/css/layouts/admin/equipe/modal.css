@@ -26,8 +26,8 @@
     background: #FFFFFF;
     padding: 32px 24px;
     border-radius: 15px;
-    width: 600px;
-    height: auto; 
+    width: min(600px, 92vw);
+    height: auto;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
@@ -55,7 +55,6 @@
     flex-direction: column;
     align-items: center;
     margin-bottom: 25px;
-    margin-top: -10px;
 }
 
 .avatar-preview {
@@ -263,4 +262,109 @@
 
 .form-row.row-nivel-comissao .field-comissao .label-grid {
     margin-top: 14px;
+}
+
+/* ============================================================
+   RESPONSIVIDADE MODAL
+   ============================================================ */
+@media (max-width: 680px) {
+    .modal-card {
+        width: 92vw;
+        max-width: 600px;
+        padding: 20px 14px;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    .modal-body span {
+        font-size: 15px;
+    }
+
+    .label-grid {
+        font-size: 11px;
+    }
+
+    .inpt-grid {
+        height: 40px;
+        font-size: 12px;
+        padding: 8px;
+    }
+
+    .form-row {
+        flex-wrap: nowrap;
+        gap: 10px;
+    }
+
+    .input-field,
+    .field-comissao {
+        min-width: 0;
+        flex: 1;
+    }
+
+    .color-picker-circles {
+        flex-wrap: wrap;
+        height: auto;
+        gap: 8px;
+    }
+
+    .color-radio {
+        width: 24px;
+        height: 24px;
+    }
+}
+
+/* ── Trava scroll do body quando modal está aberto ─────────── */
+body.no-scroll {
+    overflow: hidden;
+}
+
+/* ── Iniciais dinâmicas no modal ───────────────────────────── */
+.avatar-iniciais-modal {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ffffff;
+    background-color: #1E294A;
+    border-radius: 50%;
+}
+
+/* ── Hint do ID gerado ─────────────────────────────────────── */
+.label-hint {
+    font-size: 11px;
+    color: #10B981;
+    font-weight: 600;
+    margin-top: -4px;
+}
+
+/* ── Botão cancelar com outline ────────────────────────────── */
+.btn-cancel {
+    border: 1px solid #D1D5DB;
+}
+
+.btn-cancel:hover {
+    border-color: #9CA3AF;
+}
+
+/* ── Controle de visibilidade do avatar (foto vs iniciais) ─── */
+.avatar-preview img {
+    display: none;
+}
+
+.avatar-preview img.avatar-img-visivel {
+    display: block;
+}
+
+.avatar-iniciais-oculta {
+    display: none !important;
+}
+
+/* ── Campo ID readonly ──────────────────────────────────────── */
+.inpt-grid[readonly] {
+    background-color: #F3F4F6;
+    color: #6B7280;
+    cursor: not-allowed;
 }

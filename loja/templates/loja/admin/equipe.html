@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Equipe | Willy Bolsas</title>
     <link rel="stylesheet" href="{% static './css/style.css' %}">
+    <link rel="stylesheet" href="{% static './css/layouts/admin/equipe/grid-list.css' %}">
+    <link rel="stylesheet" href="{% static './css/layouts/admin/equipe/modal.css' %}">
+    <link rel="stylesheet" href="{% static './css/layouts/admin/equipe/editar-perfil.css' %}">
     <link rel="stylesheet" href="{% static './css/layouts/admin/equipe/main.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -52,7 +55,7 @@
 
         <main>
             <header>
-                <div class="header-left" style="display: flex; align-items: center; gap: 15px;">
+                <div class="header-left">
                     <button id="menu-toggle" class="btn-menu-mobile">
                         <i class="fas fa-bars"></i>
                     </button>
@@ -63,7 +66,7 @@
                 </div>
                 <div class="header-actions">
                     <button id="btn-excluir-massa" class="btn-cancelar hidden" onclick="document.getElementById('form-excluir-equipe').submit()">
-                        <i class="fa-solid fa-trash"></i> Excluir Selecionados
+                        <i class="fa-solid fa-trash"></i> <span class="excluir-texto">Excluir Selecionados</span>
                     </button>
 
                     <div class="search-box">
@@ -80,8 +83,8 @@
                         </button>
                     </div>
 
-                    <button id="btn-adiciona-modal" class="btn-adc" onclick="toggleModal('modal-colaborador')">
-                        <i class="fas fa-user-plus"></i> Adicionar Colaborador
+                    <button id="btn-adiciona-modal" class="btn-adc">
+                        <i class="fas fa-user-plus"></i> <span class="adc-texto">Adicionar Colaborador</span>
                     </button>
                 
                     <button id="dark-mode-toggle" class="btn-dark-mode">
@@ -93,7 +96,7 @@
             <form id="form-excluir-equipe" method="POST" action="{% url 'excluir_colaboradores' %}">
                 {% csrf_token %}
                     
-                <div id="view-list" class="view-list active dash-card" style="margin: 32px 48px; padding: 24px; border-radius: 12px; overflow-x: auto;">
+                <div id="view-list" class="view-list active dash-card">
                     <table>
                         <thead>
                             <tr>
@@ -140,7 +143,9 @@
                             {% if perfil.foto %}
                                 <img src="{{ perfil.foto.url }}" class="card-avatar" alt="Avatar">
                             {% else %}
-                                <img src="{% static 'img/icon.jpg' %}" class="card-avatar" alt="Avatar">
+                                <div class="card-avatar card-avatar-iniciais" style="background-color: {{ perfil.cor_banner }};">
+                                    {{ perfil.usuario.first_name|default:perfil.usuario.username|first|upper }}
+                                </div>
                             {% endif %}
                             <div class="card-content">
                                 <h3>{{ perfil.usuario.first_name|default:perfil.usuario.username }}</h3>
@@ -168,8 +173,9 @@
                             <div><span>NOVO COLABORADOR</span></div>
                             <div class="avatar-upload-container">
                                 <label for="newAvatarInput">
-                                    <div class="avatar-preview">
-                                        <img id="newAvatarPreview" src="{% static 'img/icon.jpg' %}" alt="Avatar">
+                                    <div class="avatar-preview" id="newAvatarPreviewWrapper">
+                                        <img id="newAvatarPreview" src="" alt="Avatar">
+                                        <div id="newAvatarIniciais" class="avatar-iniciais-modal">?</div>
                                     </div>
                                     <span class="avatar-alterar-btn">ALTERAR</span>
                                 </label>
@@ -180,7 +186,7 @@
                                 <div class="form-row" style="margin-bottom: 20px;">
                                     <div class="input-field">
                                         <label class="label-grid">ID DE ACESSO</label>
-                                        <input type="text" id="novo_username" name="username" class="inpt-grid" placeholder="Ex: 96970" maxlength="5" required>
+                                        <input type="text" id="novo_username" name="username" class="inpt-grid" placeholder="Ex: 96970" maxlength="5" readonly required>
                                     </div>
                                     <div class="input-field">
                                         <label class="label-grid">SENHA DE ACESSO</label>
@@ -190,7 +196,7 @@
                                 <div class="form-row" style="margin-bottom: 20px;">
                                     <div class="input-field">
                                         <label class="label-grid">NOME COMPLETO</label>
-                                        <input type="text" name="nome_completo" class="inpt-grid" placeholder="João da Silva" required>
+                                        <input type="text" id="novo_nome_completo" name="nome_completo" class="inpt-grid" placeholder="João da Silva" required>
                                     </div>
                                     <div class="input-field">
                                         <label class="label-grid">DATA DE NASCIMENTO</label>
@@ -217,7 +223,7 @@
                                     </div>
                                     <div class="input-field field-comissao">
                                         <label class="label-grid">COMISSÃO (%)</label>
-                                        <input type="text" name="comissao" class="inpt-grid" placeholder="5.0" style="margin-top: 14px;">
+                                        <input type="text" name="comissao" class="inpt-grid" placeholder="5.0">
                                     </div>
                                 </div>
                             </div>
@@ -253,7 +259,7 @@
                                 <div class="form-row" style="margin-bottom: 20px;">
                                     <div class="input-field">
                                         <label class="label-grid">NOME COMPLETO</label>
-                                        <input type="text" name="nome_completo" class="inpt-grid">
+                                        <input type="text" id="novo_nome_completo" name="nome_completo" class="inpt-grid">
                                     </div>
                                     <div class="input-field">
                                         <label class="label-grid">REDEFINIR SENHA</label>

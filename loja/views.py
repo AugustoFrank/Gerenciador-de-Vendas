@@ -379,8 +379,8 @@ def consulta_estoque_venda(request):
 def buscar_usuario_por_id(request):
     id_digitado = request.GET.get('id')
     try:
-        perfil = Perfil.objects.select_related('usuario').get(matricula=id_digitado)
-        return JsonResponse({'sucesso': True, 'nome': perfil.usuario.first_name or perfil.usuario.username})
+        Perfil.objects.get(matricula=id_digitado)
+        return JsonResponse({'sucesso': True})
     except Perfil.DoesNotExist:
         return JsonResponse({'sucesso': False})
     
